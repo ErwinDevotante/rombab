@@ -27,16 +27,16 @@ include 'table-auth.php';
     <!-- Bootstrap -->
     <script src="node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
 </head>
-<body>
+<body class="bg-black">
     <div class="container d-flex justify-content-center align-items-center" style="height: 100vh;">
     <main class="px-3">
         <img src="/assets/rombab-logo.png" class="img-logo img-fluid" alt="Your Photo">
         <img src="/assets/unlimited_korean_grill.png" class="img-sub-logo img-fluid" alt="Your Photo">
-        <p class="lead">Welcome, <?php echo $row['name']; ?>!</p>
+        <p class="lead text-white">Welcome, <?php echo $row['name']; ?>!</p>
         <p class="lead">
             <?php 
             if ($row['session_tb'] == "1"){
-                echo '<a href="menus/activated-table.php" class="btn btn-lg btn-secondary fw-bold border-white">Tap to start</a>';
+                echo '<a href="menus/activated-table.php" class="btn btn-lg btn-primary fw-bold border-white">Tap to start</a>';
             }
             else if($row['session_tb'] == "2") {
                 echo '<a href="deactivated-table.php" class="btn btn-lg btn-primary fw-bold border-white">Tap to start</a>';

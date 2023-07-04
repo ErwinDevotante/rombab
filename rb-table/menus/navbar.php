@@ -10,7 +10,7 @@
                     <a class="nav-link active text-white" href="activated-table.php"><h2>Menu</h2></a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link active text-white" href="#"><h2>Cart</h2></a>
+                    <a class="nav-link active text-white" href=""><h2>Cart</h2></a>
                 </li>
             </ul>
         </div>

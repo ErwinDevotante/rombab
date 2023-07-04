@@ -6,13 +6,6 @@ include '../conn.php';
     $result = mysqli_query($connection, "SELECT * FROM users where user_id = '$id' ");
     $row = mysqli_fetch_array($result);
 
-    //if(isset($_POST["submit"])){
-    //$appointment = $_POST["appointment_id"];
-    //$table_name = $_GET['save'];
-    //$query_act = "UPDATE appointment SET table_id = $table_name WHERE appointment_id = $appointment";
-    //$result_act = mysqli_query($connection, $query_act);
-    //}
-
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -76,18 +69,12 @@ include '../conn.php';
                 <tbody>
                     
                     <?php 
-                    $appointment = "SELECT appointment.table_id, appointment.appointment_name, appointment.appointment_session, appointment_id,
-                    users.user_id, users.name, users.session_tb, users.user_role 
-                    FROM appointment INNER JOIN users 
-                    ON appointment.appointment_id=users.user_id
-                    WHERE users.user_role = '4'";
-                    
-
                     $result_tb = mysqli_query($connection, "SELECT appointment.table_id, appointment.appointment_name, appointment.appointment_session, appointment_id,
                                                             users.user_id, users.name, users.session_tb, users.user_role 
-                                                            FROM appointment INNER JOIN users 
-                                                            ON users.user_id=appointment.appointment_id
-                                                            WHERE users.user_role = '4'");
+                                                            FROM appointment RIGHT JOIN users 
+                                                            ON users.user_id=appointment.table_id
+                                                            WHERE users.user_role = '4' 
+                                                            ORDER BY users.user_id ASC");
                     while ($row = mysqli_fetch_array($result_tb)) { ?> 
                         <tr>
                             <td> <?php echo $row['name'];
@@ -105,20 +92,20 @@ include '../conn.php';
                             </td>
                             <td>
                                 <?php if(($row['session_tb'] == '1' && $row['appointment_session'] == '2') || ($row['session_tb'] == '1' && ($row['table_id'] === null && $row['appointment_session'] === null))){  ?>
-                                <select class="form-control" name="appointment_id" id="appointment">
-                                        <option hidden value="0">Select customer here</option>
+                                <select class="form-control" name="appointment_id" id="appointment" required>
+                                        <option hidden value="">Select customer here</option>
                                         <?php $result_dropdown = mysqli_query($connection, "SELECT * FROM appointment WHERE appointment_session IS NULL ");
                                         while ($dropdown = mysqli_fetch_assoc($result_dropdown)){
                                             echo '<option value="' . $dropdown['appointment_id'] . '">' . $dropdown['appointment_name'] . '</option>';
                                         }?>
                                 </select>
-                                <a name="save" type="submit" class="btn btn-primary mt-2" href="activate-table-edit.php?id_save=<?php echo $row["appointment_id"]; ?>&save=1&table=<?php echo $row["user_id"]; ?>">SAVE</a>
+                                    <a name="save" type="submit" class="btn btn-primary mt-2" href="activate-table-edit.php?id_save=<?php echo $row["appointment_id"]; ?>&save=1&table_save=<?php echo $row["user_id"]; ?>">SAVE</a>
                                 <?php } 
                                     else if ($row['session_tb'] == '1' && ($row['appointment_session'] == '1' && $row['table_id'] !== null)){ ?>
                                         <select class="form-control" name="appointment" id="appointment" disabled>
                                                 <option> [OCCUPIED] <?php echo $row['appointment_name']; ?> </option>
                                         </select>
-                                        <a name="delete-appointment" type="submit" class="btn btn-info mt-2" href="activate-table-edit.php?id_reset=<?php echo $row["appointment_id"]; ?>&reset=2&table_reset=<?php echo $row["user_id"]; ?>">RESET</a>
+                                        <a name="reset" type="submit" class="btn btn-info mt-2" href="activate-table-edit.php?id_reset=<?php echo $row["appointment_id"]; ?>&reset=2&table_reset=<?php echo $row["user_id"]; ?>">RESET</a>
                                     <?php }
                                     else {?>
                                         <select class="form-control" name="appointment" id="appointment" disabled>

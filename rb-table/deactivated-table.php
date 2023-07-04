@@ -26,10 +26,10 @@ include 'table-auth.php';
     <!-- Bootstrap -->
     <script src="node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
 </head>
-<body>
+<body class="bg-black">
 
     <div class="container d-flex justify-content-center align-items-center" style="height: 100vh;">
-    <main class="px-3">
+    <main class="px-3 text-white">
         <h1>Please wait to activate your table.</h1>
         <p class="lead">Welcome again, <?php echo $row['name']; ?>!</p>
         <p class="lead">

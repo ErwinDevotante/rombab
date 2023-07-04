@@ -20,10 +20,11 @@ include '../conn.php';
             echo
             "<script> alert('Registration Successful'); </script>";
         }
+        unset($_POST);
+        header('Location: create-walkin-appointment.php');
     }
-
-    unset($_POST);
-    header('Location: create-walkin-appointment.php');
+    //important!
+    
 
 ?>
 <!DOCTYPE html>

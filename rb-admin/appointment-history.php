@@ -59,7 +59,8 @@ include '../conn.php';
                     <th class="text-center" scope="col">Table No</th>
                     <th class="text-center" scope="col"># of People</th>
                     <th class="text-center" scope="col">Date</th>
-                    <th class="text-center" scope="col">Time</th>
+                    <th class="text-center" scope="col">Time-in</th>
+                    <th class="text-center" scope="col">Time-out</th>
                     <th class="text-center" scope="col">Note</th>
                 </tr>
             </thead>
@@ -75,7 +76,8 @@ include '../conn.php';
                             <td class="text-center"><?php echo $row["count"]; ?></td>
                             <td class="text-center"><?php echo $row["date"]; ?></td>
                             <td class="text-center"><?php echo $row["time"]; ?></td>
-                            <td><?php echo $row["note"]; ?></td>
+                            <td class="text-center"><?php echo $row["time"]; ?></td>
+                            <td class="w-25"><?php echo $row["note"]; ?></td>
                         </tr>
                         <?php 
                     } 
