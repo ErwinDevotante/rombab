@@ -1,0 +1,99 @@
+* {
+    margin: 0;
+    font-family: 'Poppins', sans-serif;
+}
+
+html, body {
+    height: 100%;
+}
+
+.bg-grill {
+    background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('assets/background-pic.jpg');
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    height: 100%;
+}
+
+.bg-black {
+    background-color: black;
+}
+
+.bg-red {
+    background-color: #8b0000;
+}
+
+.btn-primary {
+    background-color: #8b0000 ;
+    border: 1px solid red;
+}
+
+.btn-primary:hover {
+    background-color: #d21404 ;
+    border: 1px solid red;
+}
+
+.btn:active {
+    background-color: #8b0000 !important;
+    border: red 1px solid !important;
+}
+
+.btn-outline-primary {
+    color: white;
+    border-color: #8b0000;
+}
+
+.btn-outline-primary:hover {
+    border-color: red;
+    background-color: #d21404;
+}
+
+.btn-primary:disabled {
+    background-color: #bbbbbb;
+}
+
+.login {
+    width: 500px;
+    height: max-content;
+    padding: 20px;
+    border-radius: 15px;
+    background: black;
+}
+
+.login h1 {
+    font-size: 36px;
+    margin-bottom: 25px;
+}
+
+.login form {
+    font-size: 20px;
+}
+
+.login form .form-group {
+    margin-bottom: 12px;
+}
+
+.login form input[type="submit"] {
+    font-size: 20px;
+    margin-top: 15px;
+}
+
+
+.img-logo {
+    height: auto;
+    width: 450px;
+}
+.img-sub-logo {
+    padding-top: 10px;
+    padding-bottom: 20px;
+    height:auto;
+    width: 800px;
+}
+
+.card-columns {
+    column-count: 5;
+}
+
+.card-columns .card-red{
+    background-color: #8b0000;
+}
