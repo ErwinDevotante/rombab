@@ -32,8 +32,8 @@ include 'table-auth.php';
     <main class="px-3">
         <img src="/assets/rombab-logo.png" class="img-logo img-fluid" alt="Your Photo">
         <img src="/assets/unlimited_korean_grill.png" class="img-sub-logo img-fluid" alt="Your Photo">
-        <p class="lead text-white">Welcome, <?php echo $row['name']; ?>!</p>
-        <p class="lead">
+        <p class="lead text-white text-center">Welcome, <?php echo $row['name']; ?>!</p>
+        <div class="lead text-center">
             <?php 
             if ($row['session_tb'] == "1"){
                 echo '<a href="menus/activated-table.php" class="btn btn-lg btn-primary fw-bold border-white">Tap to start</a>';
@@ -42,7 +42,7 @@ include 'table-auth.php';
                 echo '<a href="deactivated-table.php" class="btn btn-lg btn-primary fw-bold border-white">Tap to start</a>';
             }
             ?>
-        </p>
+        </div>
     </main>
     </div>
 

@@ -68,7 +68,7 @@ if(isset($_POST["submit"])){
         </div>
         
         <form class="needs-validation" method="POST">
-        <div class="form-group">
+        <div class="form-group  was-validated">
             <label class="form-label text-white" for="roles">Select Log-in Options</label>
                     <select name="roles" class="form-control" id="roles" required>
                         <option value="1">Super Admin</option>

@@ -25,6 +25,8 @@ include '../table-auth.php';
     <script src="../../node_modules/jquery/dist/jquery.min.js"></script>
     <!-- Bootstrap -->
     <script src="../../node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script src="https://kit.fontawesome.com/fe96d845ef.js" crossorigin="anonymous"></script>
 </head>
 <body class="bg-black">
 
