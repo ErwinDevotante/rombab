@@ -75,6 +75,7 @@ include '../conn.php';
                                                             ON users.user_id=appointment.table_id
                                                             WHERE users.user_role = '4' 
                                                             ORDER BY users.user_id ASC");
+                    if(mysqli_num_rows($result_tb) > 0){
                     while ($row = mysqli_fetch_array($result_tb)) { ?> 
                         <tr>
                             <td> <?php echo $row['name'];
@@ -120,7 +121,7 @@ include '../conn.php';
                             <td class="text-center"><a href="activate-table-edit.php?id=<?php echo $row["user_id"]; ?>&session=0" name="not-available-tbl" type="submit" class="btn btn-warning" >Not Available</a></td>
                         </tr>
                     <?php 
-                    } 
+                    } }
                     ?>
                 </tbody>
         </table>

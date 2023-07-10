@@ -1,6 +1,5 @@
 <aside class="main-sidebar sidebar-dark-primary elevation-4">
     <!-- Brand Logo -->
- 
 
     <!-- Sidebar -->
     <div class="sidebar">
@@ -10,7 +9,7 @@
           <img src="http://localhost:3000/assets/rombab-logo.png" class="img-circle elevation-2" alt="User Image">
         </div>
         <div class="info">
-          <a href="#" class="d-block">ROMANTIC BABOY</a>
+          <a href="http://localhost:3000/rb-admin/admin-index.php" class="d-block">ROMANTIC BABOY</a>
         </div>
       </div>
 

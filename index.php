@@ -26,7 +26,7 @@ if(isset($_POST["submit"])){
       }
       else if($roles == 3){ //kitchen
         echo '<script type="text/javascript">'; 
-        echo 'alert("Log-in Sucessfully!");'; echo 'window.location.href = "rb-kitchen/kitchen.php";';
+        echo 'alert("Log-in Sucessfully!");'; echo 'window.location.href = "rb-kitchen/kitchen-index.php";';
         echo '</script>';
       }
       else if($roles == 4){ //table
