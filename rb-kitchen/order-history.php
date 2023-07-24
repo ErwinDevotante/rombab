@@ -1,11 +1,10 @@
 <?php 
-$a = 1;
+$a = 3;
 session_start();
 include '../conn.php';
   $id = $_SESSION['user_id'];
 	$result = mysqli_query($connection, "SELECT * FROM users where user_id = '$id'");
 	$row = mysqli_fetch_array($result);
-
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -45,71 +44,36 @@ include '../conn.php';
     include "top-bar.php";
     include "side-bar.php"; 
     ?>
-
-  <!-- Content Wrapper. Contains page content -->
-  <div class="content-wrapper bg-black">
-    <div class="content-header">
-      <div class="container-fluid">
-        <div class="row mb-2">
-          <div class="col-sm-6">
-            <h1 class="m-0 text-white">Kitchen System</h1>
-          </div>
+    <div class="content-wrapper bg-black">
+        <div class="content p-4">
+            <div class="container-fluid text-center p-4">
+                <h1>Orders History</h1>
+            </div>
+            <table class="table table-hover table-bordered table-dark mt-5">
+            <thead>
+                <tr>
+                    <th class="text-center" scope="col">Table No.</th>
+                    <th class="text-center" scope="col">Products</th>
+                    <th class="text-center" scope="col">Date and Time</th>
+                </tr>
+            </thead>
+                <tbody>
+                <?php 
+                    $result_tb = mysqli_query($connection, "SELECT * FROM `orders`
+                    LEFT JOIN `users` ON orders.user_table = users.user_id
+                    WHERE status = 1");
+                    while ($row = mysqli_fetch_array($result_tb)) { ?> 
+                        <tr>
+                            <td class="text-center w-25"><?php echo $row["name"]; ?></td>
+                            <td class="w-50"><?php echo $row["total_products"]; ?></td>
+                            <td class="text-center w-25"><?php echo $row["time_date"]; ?></td>
+                        </tr>
+                        <?php 
+                    } 
+                    ?>
+                </tbody>  
+        </table>
         </div>
-      </div>
     </div>
-
-    <section class="content">
-      <div class="container-fluid">
-        <div class="row">
-          
-        <div class="col-lg-3 col-6">
-			    <a href="see-orders.php" class="small-box-footer">
-            <div class="small-box bg-yellow">
-              <div class="inner">
-                <h3>See</h3> <h4 class="font-weight-bold">Orders</h4>
-                <p>View Pending Orders</p>
-              </div>
-              <div class="icon">
-                <i class="ion ion-android-restaurant"></i>
-              </div>
-             </div>
-			    </a>
-        </div>
-
-        <div class="col-lg-3 col-6">
-			    <a href="order-history.php" class="small-box-footer">
-            <div class="small-box bg-red">
-              <div class="inner">
-                <h4 class="font-weight-bold">Order</h4>
-                <h3>History</h3><p>Check Order History</p>
-              </div>
-              <div class="icon">
-                <i class="ion ion-document-text"></i>
-              </div>
-            </div>
-			    </a>
-        </div>
-
-        <div class="col-lg-3 col-6">
-			    <a href="#" class="small-box-footer">
-            <div class="small-box bg-green">
-              <div class="inner">
-                <h4 class="font-weight-bold">Log</h4>
-                <h3>Report</h3><p>Check Log Report</p>
-              </div>
-              <div class="icon">
-                <i class="ion ion-ios-paper"></i>
-              </div>
-            </div>
-			    </a>
-        </div>
-    
-        </div>
-      </div>
-    </section>
-
-  </div>
-</div>
-
 </body>
 </html>

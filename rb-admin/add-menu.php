@@ -123,7 +123,7 @@ if(isset($_POST["upload"])) {
                     $view_menus = mysqli_query($connection, "SELECT * FROM menus ORDER BY menu_id DESC");
                     while ($row = mysqli_fetch_array($view_menus)) { ?> 
                         <tr>
-                            <td class="text-center w-25"><img src ='menu-images/<?php echo $row["menu_image"]; ?>' class="img-fluid img-thumbnail"></td>
+                            <td class="text-center w-25"><img src ='menu-images/<?php echo $row["menu_image"]; ?>' class="img-fluid img-thumbnail custom-image"></td>
                             <td class="text-center"><?php echo $row["menu_name"]; ?></td>
                             <td class="text-center"><?php echo $row["menu_category"]; ?></td>
                             <td class="text-center w-25">

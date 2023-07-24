@@ -36,10 +36,10 @@
             </a>
         </li> 
         <li class="nav-item has-treeview menu-open m-1">
-            <a href="#" class="nav-link <?php if($a==3){ echo 'active'; }?>">
+            <a href="order-history.php" class="nav-link <?php if($a==3){ echo 'active'; }?>">
                <i class="ion ion-document-text nav-icon"></i>
               <p>
-                Order History
+                Orders History
               </p>
             </a>
         </li> 

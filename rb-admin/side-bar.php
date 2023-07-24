@@ -31,7 +31,7 @@
             <a href="#" class="nav-link <?php if($a==2){ echo 'active'; }?>">
                <i class="ion ion-ios-filing-outline nav-icon"></i>
               <p>
-               Daily Inventory
+               Inventory
               </p>
             </a>
         </li> 
@@ -57,7 +57,7 @@
             <a href="http://localhost:3000/rb-admin/manage-appointment.php" class="nav-link <?php if($a==4){ echo 'active'; }?>">
                <i class="ion ion-clipboard nav-icon"></i>
               <p>
-                Manage Appointment
+                Appointments
               </p>
             </a>
           </li>
@@ -65,7 +65,7 @@
             <a href="#" class="nav-link <?php if($a==5){ echo 'active'; }?>">
                <i class="ion ion-ios-paper-outline nav-icon"></i>
               <p>
-                Online Appointment
+                Online
               </p>
             </a>
           </li>
@@ -73,7 +73,7 @@
             <a href="http://localhost:3000/rb-admin/create-walkin-appointment.php" class="nav-link <?php if($a==6){ echo 'active'; }?>">
                <i class="ion ion-android-walk nav-icon"></i>
               <p>
-                Walk-In Appointment
+                Walk-Ins
               </p>
             </a>
           </li> 

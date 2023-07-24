@@ -1,6 +1,5 @@
 <?php 
 include '../../conn.php';
-include '../table-auth.php';
 ?>
 <!DOCTYPE html>
 <html lang="en">

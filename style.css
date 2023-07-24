@@ -90,10 +90,29 @@ html, body {
     width: 800px;
 }
 
-.card-columns {
-    column-count: 5;
+.card-columns-container {
+    column-count: 3;
+    column-gap: 1rem; /* Adjust the gap between columns as needed */
 }
 
-.card-columns .card-red{
+.card {
     background-color: #8b0000;
+    color: white;
+    display: inline-block;
+    width: 100%;
+    margin-bottom: 1rem; /* Adjust the space between cards as needed */
+    break-inside: avoid; /* Prevents a card from being split across columns */
+    page-break-inside: avoid; /* Prevents a card from being split across pages (for printing) */
+}
+
+.custom-image img {
+    width: 100%;
+    height: auto;
+    object-fit: cover;
+    /* Set the desired aspect ratio here, for example, 4:3 */
+    padding-top: 75%; /* (3 / 4) * 100% */
+}
+
+.productname {
+    padding: 0.5rem;
 }
