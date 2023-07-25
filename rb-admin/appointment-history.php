@@ -66,9 +66,11 @@ include '../conn.php';
             </thead>
                 <tbody>
                 <?php 
-                    $result_tb = mysqli_query($connection, "SELECT * FROM appointment INNER JOIN users 
-                    ON users.user_id=appointment.appointment_id
+                    $result_tb = mysqli_query($connection, "SELECT * FROM appointment_history
+                    INNER JOIN users ON users.user_id=appointment_history.table_history_id
+                    INNER JOIN appointment ON appointment.appointment_id=appointment_history.appointment_user_id
                     WHERE appointment.appointment_session = '2'");
+                    if(mysqli_num_rows($result_tb) > 0) {
                     while ($row = mysqli_fetch_array($result_tb)) { ?> 
                         <tr>
                             <td class="text-center"><?php echo $row["appointment_name"]; ?></td>
@@ -76,12 +78,15 @@ include '../conn.php';
                             <td class="text-center"><?php echo $row["count"]; ?></td>
                             <td class="text-center"><?php echo $row["date"]; ?></td>
                             <td class="text-center"><?php echo $row["time"]; ?></td>
-                            <td class="text-center"><?php echo $row["time"]; ?></td>
+                            <td class="text-center"><?php echo $row["time-out"]; ?></td>
                             <td class="w-25"><?php echo $row["note"]; ?></td>
                         </tr>
                         <?php 
-                    } 
-                    ?>
+                    } } else { ?>
+                        <tr>
+                            <td class="text-center" colspan="7">No record found!</td>
+                        </tr>
+                    <?php } ?>
                 </tbody>  
         </table>
         

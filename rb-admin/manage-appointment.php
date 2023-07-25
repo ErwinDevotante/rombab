@@ -88,21 +88,22 @@ include '../conn.php';
                                 <?php }
                                 else if ($row['session_tb'] == '2')  {?>
                                     <p class="text-red font-weight-bold">[Deactivate]</p>
+                                <?php } else { ?>
+                                    <p class="text-blue font-weight-bold">[OCCUPIED] </p>
                                 <?php } ?>
-                        
                             </td>
                             <td>
-                                <?php if(($row['session_tb'] == '1' && $row['appointment_session'] == '2') || ($row['session_tb'] == '1' && ($row['table_id'] === null && $row['appointment_session'] === null))){  ?>
+                                <!-- <?php //if(($row['session_tb'] == '1' && $row['appointment_session'] == '2') || ($row['session_tb'] == '1' && ($row['table_id'] === null && $row['appointment_session'] === null))){  ?>
                                 <select class="form-control" name="appointment_id" id="appointment" required>
                                         <option hidden value="">Select customer here</option>
-                                        <?php $result_dropdown = mysqli_query($connection, "SELECT * FROM appointment WHERE appointment_session IS NULL ");
-                                        while ($dropdown = mysqli_fetch_assoc($result_dropdown)){
-                                            echo '<option value="' . $dropdown['appointment_id'] . '">' . $dropdown['appointment_name'] . '</option>';
-                                        }?>
+                                        <?//php $result_dropdown = mysqli_query($connection, "SELECT * FROM appointment WHERE appointment_session IS NULL ");
+                                       // while ($dropdown = mysqli_fetch_assoc($result_dropdown)){
+                                            //echo '<option value="' . $dropdown['appointment_id'] . '">' . $dropdown['appointment_name'] . '</option>';
+                                        //}?>
                                 </select>
-                                    <a name="save" type="submit" class="btn btn-primary mt-2" href="activate-table-edit.php?id_save=<?php echo $row["appointment_id"]; ?>&save=1&table_save=<?php echo $row["user_id"]; ?>">SAVE</a>
-                                <?php } 
-                                    else if ($row['session_tb'] == '1' && ($row['appointment_session'] == '1' && $row['table_id'] !== null)){ ?>
+                                     <a name="save" type="submit" class="btn btn-primary mt-2" href="activate-table-edit.php?id_save=<?php echo $row["appointment_id"]; ?>&save=1&table_save=<?php echo $row["user_id"]; ?>">SAVE</a> -->
+                                <?php //} 
+                                    if ($row['session_tb'] == '3' && ($row['appointment_session'] == '1' && $row['table_id'] !== null)){ ?>
                                         <select class="form-control" name="appointment" id="appointment" disabled>
                                                 <option> [OCCUPIED] <?php echo $row['appointment_name']; ?> </option>
                                         </select>
@@ -112,9 +113,7 @@ include '../conn.php';
                                         <select class="form-control" name="appointment" id="appointment" disabled>
                                             <option>Not available</option>
                                         </select>
-                                    <?php }?>
-
-                                
+                                    <?php }?>                   
                             </td>
                             <td class="text-center"><a href="activate-table-edit.php?id=<?php echo $row["user_id"]; ?>&session=1" name="activate-tbl" type="submit" class="btn btn-success">Activate</a></td>
                             <td class="text-center"><a href="activate-table-edit.php?id=<?php echo $row["user_id"]; ?>&session=2" name="deactivate-tbl" type="submit" class="btn btn-danger">Deactivate</a></td>

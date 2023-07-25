@@ -7,27 +7,79 @@ include '../conn.php';
     $row = mysqli_fetch_array($result);
 
 $msg = " ";
-if(isset($_POST["upload"])) {
-    // the path to sotre the upload image
-    $target = "menu-images/".basename($_FILES['menu-image']['name']);
+if (isset($_POST["upload"])) {
     // Get all the submitted data from the form
     $image = $_FILES['menu-image']['name'];
     $menu_text = $_POST['menu-text'];
     $category = $_POST['menu-category'];
 
-    $insert = "INSERT INTO menus (menu_image, menu_name, menu_category) VALUES ('$image', '$menu_text', '$category')";
-    mysqli_query($connection, $insert);
+    // Check for redundant data before inserting
+    $check_query = "SELECT * FROM menus WHERE menu_name = '$menu_text' AND menu_category = '$category'";
+    $result = mysqli_query($connection, $check_query);
 
-    if (move_uploaded_file($_FILES['menu-image']['tmp_name'], $target)){
-        $msg = "Image uploaded successfully";
+    if (mysqli_num_rows($result) > 0) {
+        // Redundant data found, show an error message
+        $msg = "Menu item with the same name and category already exists.";
     } else {
-        $msg = "There was a problem uploading image";
-    }
+        // No redundant data, proceed with insertion
+        $target = "menu-images/" . basename($_FILES['menu-image']['name']);
+        $insert_query = "INSERT INTO menus (menu_image, menu_name, menu_category) VALUES ('$image', '$menu_text', '$category')";
 
-    unset($_POST);
-    header('Location: add-menu.php');
+        if (move_uploaded_file($_FILES['menu-image']['tmp_name'], $target) && mysqli_query($connection, $insert_query)) {
+            $msg = "Image uploaded successfully";
+        } else {
+            $msg = "There was a problem uploading image or inserting data.";
+        }
+
+        // Redirect back to the add-menu.php page after inserting
+        header('Location: add-menu.php');
+        exit();
+    }
 }
 
+if (isset($_POST["confirm_update"])) {
+    $menu_id = $_POST['update-id'];
+    $menu_text = $_POST['update-name'];
+    $category = $_POST['update-category'];
+    
+    // Check if a new image file is uploaded
+    if ($_FILES['update-image']['name'] !== '') {
+        // Update the image file and move it to the target directory
+        $target = "menu-images/" . basename($_FILES['update-image']['name']);
+        $image = $_FILES['update-image']['name'];
+
+        if (move_uploaded_file($_FILES['update-image']['tmp_name'], $target)) {
+            $update_query = "UPDATE `menus` SET menu_image = '$image', menu_name = '$menu_text', menu_category = '$category' WHERE menu_id = '$menu_id'";
+        } else {
+            // Handle the case when image upload fails
+            $msg = "There was a problem updating the image.";
+            // You can add further error handling here if needed.
+        }
+    } else {
+        // No new image selected, update only the other fields
+        $update_query = "UPDATE `menus` SET menu_name = '$menu_text', menu_category = '$category' WHERE menu_id = '$menu_id'";
+    }
+
+    // Execute the update query
+    if (isset($update_query)) {
+        mysqli_query($connection, $update_query);
+        // Redirect back to the add-menu.php page after updating
+        header('Location: add-menu.php');
+        exit();
+    }
+}
+
+if (isset($_POST["delete_btn"])) {
+    $menu_id_to_delete = $_POST["delete_btn"];
+
+    // Perform the deletion query
+    $delete_query = "DELETE FROM `menus` WHERE menu_id = '$menu_id_to_delete'";
+    mysqli_query($connection, $delete_query);
+
+    // Redirect back to the add-menu.php page after deleting
+    header('Location: add-menu.php');
+    exit();
+}
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -121,26 +173,100 @@ if(isset($_POST["upload"])) {
                 <tbody id = "menu_table">
                 <?php 
                     $view_menus = mysqli_query($connection, "SELECT * FROM menus ORDER BY menu_id DESC");
-                    while ($row = mysqli_fetch_array($view_menus)) { ?> 
-                        <tr>
+                    if(mysqli_num_rows($view_menus) > 0) {
+                    while ($row = mysqli_fetch_array($view_menus)) { ?>
+                    <form method="post" action="add-menu.php" enctype="multipart/form-data">
+                        <tr id="<?php echo $row["menu_id"]; ?>">
+                            <td style="display: none"><?php echo $row["menu_id"]; ?></td> <!--hidden-->
                             <td class="text-center w-25"><img src ='menu-images/<?php echo $row["menu_image"]; ?>' class="img-fluid img-thumbnail custom-image"></td>
                             <td class="text-center"><?php echo $row["menu_name"]; ?></td>
                             <td class="text-center"><?php echo $row["menu_category"]; ?></td>
                             <td class="text-center w-25">
-                                <a href="#" class="btn btn-primary">UPDATE</a>
-                                <a href="#" class="btn btn-danger">DELETE</a>
+                                <button type="button" class="btn btn-primary update_btn" id="update_btn">UPDATE</button>
+                                <button type="submit" class="btn btn-danger" name="delete_btn" value="<?php echo $row["menu_id"]; ?>">DELETE</button>
                             </td>
                         </tr>
-                        <?php
-                        } ?>
+                    </form>
+                    <?php } } else {?>
+                        <tr>
+                            <td class="text-center" colspan="4">No record found!</td>
+                        </tr>
+                    <?php } ?>
                 </tbody>  
             </table>
+        </div>
+    </div>
+
+    <div class="modal fade" id="editmodal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Update Menu</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+
+                <form action="add-menu.php" method="POST" enctype="multipart/form-data">
+                    <div class="modal-body">
+                        <input type="hidden" name="update-id" id="update-id">
+
+                        <div class="form-group">
+                            <label> Menu Image </label>
+                            <img src="" class="img-fluid img-thumbnail" id="image-preview">
+                        </div>
+
+                        <div class="form-group">
+                            <label>Update Menu Image</label>
+                            <input type="file" class="form-control" id="update-image" name="update-image">
+                        </div>
+
+                        <div class="form-group">
+                            <label>Menu Name</label>
+                            <input type="text" class="form-control" id="update-name" name="update-name" placeholder="Enter Menu Name" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Menu Category</label>
+                            <select name="update-category" class="form-control" id="update-category" required>
+                                <option hidden value="">-----Select Here-----</option>
+                                <option value="Samgyupsal">Samgyupsal</option>
+                                <option value="Side Dishes">Side Dishes</option>
+                                <option value="Others">Others</option>
+                                <option value="New Offers">New Offers</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" aria-label="Close">CLOSE</button>
+                        <button type="submit" name="confirm_update" class="btn btn-primary">UPDATE</button>
+                    </div>
+                </form>
+            </div>
         </div>
     </div>
 </body>
 </html>
 
 <script>
+    $(document).ready(function () {
+    $('.update_btn').on('click', function () {
+        $('#editmodal').modal('show');
+        $tr = $(this).closest('tr');
+        var data = $tr.children("td").map(function () {
+            return $(this).text();
+        }).get();
+        console.log(data);
+        $('#update-id').val(data[0]);
+
+        // Handle the image file and preview
+        var imageUrl = $tr.find('img').attr('src');
+        $('#image-preview').attr('src', imageUrl);
+        $('#update-image').attr('data-preview', imageUrl);
+        $('#update-name').val(data[2]);
+        $('#update-category').val(data[3]);
+    });
+});
+
     $(document).ready(function(){  
            $('#search').keyup(function(){  
                 search_table($(this).val());  

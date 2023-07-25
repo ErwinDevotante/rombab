@@ -17,18 +17,25 @@ $table_save = $_GET['table_save'];
 
 if ($id_save !==null && $save !==null && $table !== null) {
 
-    $query_save = "UPDATE appointment SET table_id = $table_save, appointment_session = $save WHERE appointment_id = $id_save";
+    $query_save = "UPDATE `appointment` SET table_id = $table_save, appointment_session = $save WHERE appointment_id = $id_save";
     $result_save = mysqli_query($connection, $query_save);
 }
 
-$id_reset = $_GET['id_reset'];
-$reset = $_GET['reset'];
-$table_reset = $_GET['table_reset'];
+$id_reset = $_GET['id_reset']; // appointment ID
+$reset = $_GET['reset']; // 2
+$table_reset = $_GET['table_reset']; //table_no
+$time = date('H:i:s');
 //reset
 if ($id_reset !==null && $reset !==null && $table_reset !== null) {
 
-    $query_reset= "UPDATE appointment SET table_id = $table_reset, appointment_session = $reset WHERE appointment_id = $id_reset";
+    $query_reset= "UPDATE `appointment` SET table_id = '0', appointment_session = $reset WHERE appointment_id = $id_reset";
     $result_reset = mysqli_query($connection, $query_reset);
+
+    $query_history = "INSERT INTO `appointment_history` VALUES('', '$id_reset', '$time', '$table_reset')";
+    $result_query_history = mysqli_query($connection, $query_history);
+
+    $ctivate_table_query = "UPDATE users SET session_tb = '1' WHERE user_id = '$table_reset'";
+    $result_activate_table = mysqli_query($connection, $ctivate_table_query);
 }
 
     unset($_GET);

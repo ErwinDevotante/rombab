@@ -6,26 +6,59 @@ include '../conn.php';
     $result = mysqli_query($connection, "SELECT * FROM users where user_id = '$id' ");
     $row = mysqli_fetch_array($result);
 
-    if(isset($_POST["submit"])){
+    function updateSessionTb($connection) {
+        $query_check_available_tables = "SELECT * FROM appointment WHERE table_id IS NULL LIMIT 1";
+        $result_check_available_tables = mysqli_query($connection, $query_check_available_tables);
+    
+        if (mysqli_num_rows($result_check_available_tables) > 0) {
+            // There is an available table, update session_tb to 3
+            $update_session_tb_query = "UPDATE users SET session_tb = '3' WHERE user_id = '{$_SESSION['user_id']}'";
+            mysqli_query($connection, $update_session_tb_query);
+        } else {
+            // No available table, keep session_tb as it is (no changes needed)
+        }
+    }
+
+    if (isset($_POST["submit"])) {
         $name = $_POST["customer"];
         $pax = $_POST["pax"];
         $note = $_POST["note"];
         $date = date('Y-m-d');
         $time = date('H:i:s');
     
-        $query = "INSERT INTO appointment VALUES('','$name', NULL ,'$pax','$date','$time', '$note', NULL)";
-        $result_add = mysqli_query($connection, $query);
-
-        if ($result_add){
-            echo
-            "<script> alert('Registration Successful'); </script>";
+        // Check if there is an activated table in the users table
+        $activated_table_query = "SELECT * FROM users WHERE session_tb = '1'";
+        $activated_table_result = mysqli_query($connection, $activated_table_query);
+        $activated_table_row = mysqli_fetch_array($activated_table_result);
+    
+        if (mysqli_num_rows($activated_table_result) > 0) {
+            // An activated table is available, assign the table to the appointment
+            $table_id = $activated_table_row['user_id'];
+    
+            // Update the appointment table with the assigned table_id
+            $query = "INSERT INTO appointment VALUES('', '$name', '$table_id', '$pax', '$date', '$time', '$note', '1')";
+            $result_add = mysqli_query($connection, $query);
+    
+            // Deactivate the assigned table in the users table
+            $update_table_query = "UPDATE users SET session_tb = '3' WHERE user_id = '$table_id'";
+            $result_update_table = mysqli_query($connection, $update_table_query);
+            
+            if ($result_add && $result_update_table) {
+                echo "<script> alert('Registration Successful'); </script>";
+            } else {
+                echo "<script> alert('Failed to assign table.'); </script>";
+            }
+        } else {
+            $query_add = "INSERT INTO appointment VALUES('', '$name', NULL , '$pax', '$date', '$time', '$note', '1')";
+            $result_query_add = mysqli_query($connection, $query_add);
+            // No activated table is available, you can add further logic to handle this case, e.g., wait and display a message
+            echo "<script> alert('No available activated table. Please wait for a table to become available.'); </script>";
         }
+        
         unset($_POST);
         header('Location: create-walkin-appointment.php');
     }
-    //important!
-    
-
+    updateSessionTb($connection);
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -63,10 +96,42 @@ include '../conn.php';
 
     <?php 
     include "top-bar.php";
-    include "side-bar.php"; 
+    include "side-bar.php";
     ?>
 
     <div class="content-wrapper bg-black">
+    <?php 
+    $query_search = "SELECT user_id FROM users WHERE session_tb = '1'";
+    $result_search = mysqli_query($connection, $query_search);
+
+    $query_search_tblNULL = mysqli_query($connection, "SELECT * FROM appointment WHERE table_id is NULL");
+
+    if (mysqli_num_rows($result_search) > 0 && mysqli_num_rows($query_search_tblNULL) > 0) {
+        // An available table is found, fetch the first row and return its user_id
+        $row = mysqli_fetch_array($result_search);
+        $available_table_id = $row['user_id'];
+
+        // Update the appointment table with the assigned table_id
+        $new_appointment_query = "UPDATE appointment SET table_id = '$available_table_id', appointment_session = '1' WHERE table_id IS NULL LIMIT 1";
+        $result_new_appointment = mysqli_query($connection, $new_appointment_query);
+
+        // Deactivate the assigned table in the users table
+        $deactivate_table_query = "UPDATE users SET session_tb = '3' WHERE user_id = '$available_table_id'";
+        $result_deactivate_table = mysqli_query($connection, $deactivate_table_query);
+
+        if ($result_new_appointment && $result_deactivate_table) {
+            // Return the assigned table_id to update the appointment table
+            echo $available_table_id;
+        } else {
+            // Error occurred during assignment
+            echo "NULL";
+        }
+    } else {
+        // No available table is found, return NULL
+        echo "NULL";
+    }
+
+    ?>
     <div class="content p-4">
 
     <div class="container-fluid text-center p-4">
@@ -104,11 +169,15 @@ include '../conn.php';
             </thead>
                 <tbody>
                 <?php 
-                    $result_tb = mysqli_query($connection, "SELECT * FROM appointment where table_id IS NULL");
+                    $result_tb = mysqli_query($connection, "SELECT * FROM appointment
+                    LEFT JOIN users ON users.user_id=appointment.table_id
+                    WHERE table_id is NULL 
+                    OR appointment_session = '1'");
                     while ($row = mysqli_fetch_array($result_tb)) { ?> 
                         <tr>
                             <td class="text-center"><?php echo $row["appointment_name"]; ?></td>
-                            <td class="text-center"><?php echo $row["table_id"]; ?></td>
+                            <td class="text-center" style="display: none;" id="table_id"><?php echo $row["table_id"]; ?></td>
+                            <td class="text-center"><?php echo $row["name"]; ?></td>
                             <td class="text-center"><?php echo $row["count"]; ?></td>
                             <td class="text-center"><?php echo $row["date"]; ?></td>
                             <td class="text-center"><?php echo $row["time"]; ?></td>
@@ -127,3 +196,29 @@ include '../conn.php';
 
 </body>
 </html>
+
+<script>
+function checkForAvailableTable() {
+    $.ajax({
+        url: 'create-walkin-appointment.php',
+        method: 'GET',
+        success: function(data) {
+            // Update the appointment table with the result from the AJAX request
+            if (data === 'NULL') {
+                // No available table
+                // You can add further logic here, such as displaying a message
+            } else {
+                // An available table is found, update the appointment table
+                var availableTableId = data;
+                $("#table_id").text(availableTableId); // Assuming the table_id cell has the ID "table_id"
+            }
+        }
+    });
+}
+
+// Call the checkForAvailableTable function and updateSessionTb function every 5 seconds (adjust the interval as needed)
+setInterval(function() {
+    checkForAvailableTable();
+    updateSessionTb();
+}, 5000); // 5000 milliseconds = 5 seconds
+</script>
