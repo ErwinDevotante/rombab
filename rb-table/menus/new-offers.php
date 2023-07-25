@@ -55,14 +55,14 @@
     ?>
 
     <div class="container-fluid text-center p-1 text-white">
-        <h1>SAMGYUPSAL MENU</h1>
+        <h1>NEW OFFERS!</h1>
     </div>
 
     <div class="container py-5">
         <div class="card-columns-container">
             <?php 
                     $result_tb = mysqli_query($connection, "SELECT * FROM `menus`
-                                            WHERE menu_category = 'Samgyupsal' ");
+                                            WHERE menu_category = 'New Offers' ");
                         if(mysqli_num_rows($result_tb) > 0){
                         while ($row = mysqli_fetch_array($result_tb)) { ?> 
                             <form action="" method="post">
@@ -75,9 +75,13 @@
                                 </div>
                             </form>
                         <?php }
-                        }  ?>
+                        } else {?> 
         </div>
     </div>
+    <div class="text-white text-center">
+        <h3>No available new offers...</h3>
+    </div>
+    <?php } ?>
 
 </body>
 </html>

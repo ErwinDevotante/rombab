@@ -51,11 +51,11 @@ include '../../conn.php';
                     </div>
              
                     <div class="col-md-12 ">
-                    <a href="#" class="btn btn-primary w-100 h-75 mb-5"><h1 class="mt-3">OTHERS</h1></a>
+                    <a href="others.php" class="btn btn-primary w-100 h-75 mb-5"><h1 class="mt-3">OTHERS</h1></a>
                     </div>
                
                     <div class="col-md-12 ">
-                    <a href="#" class="btn btn-primary w-100 h-75 mb-5"><h1 class="mt-3">NEW OFFERS</h1></a>
+                    <a href="new-offers.php" class="btn btn-primary w-100 h-75 mb-5"><h1 class="mt-3">NEW OFFERS</h1></a>
                     </div>
                 </div>
             </div>
