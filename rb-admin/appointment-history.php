@@ -31,13 +31,61 @@ include '../conn.php';
     <link rel="stylesheet" href="../../node_modules/overlayScrollbars/css/OverlayScrollbars.min.css">
     <!-- JQuery -->
     <script src="../../node_modules/jquery/dist/jquery.min.js"></script>
-    <!-- Bootstrap -->
+    <!-- Bootstrap CSS-->
     <script src="../../node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <!-- overlayScrollbars -->
     <script src="../../node_modules/overlayScrollbars/js/jquery.overlayScrollbars.min.js"></script>
     <!-- AdminLTE App -->
     <script src="../../node_modules/admin-lte/js/adminlte.js"></script>
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="../../node_modules/bootstrap/dist/css/bootstrap.min.css">
+
+    <!-- DataTables CSS -->
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.min.css">
+    <!-- DataTables JS -->
+    <script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
 </head>
+<style>
+  /* Custom styles for DataTables */
+  #sortTable_wrapper .dataTables_length,
+  #sortTable_wrapper .dataTables_filter,
+  #sortTable_wrapper .dataTables_paginate
+  #sortTable_wrapper .dataTables_paginate .paginate_button {
+    color: white; /* Set the text color for "Show entries," search, and pagination */
+  }
+  #sortTable_info {
+    color: white; /* Set the text color for "No. of entries" text */
+  }
+   /* Custom styles for DataTables */
+   #sortTable {
+    color: white; /* Set the text color for the entire table */
+  }
+
+  #sortTable thead th {
+    color: white; /* Set the text color for table headers */
+  }
+
+  #sortTable tbody td {
+    color: white; /* Set the text color for table cells */
+  }
+
+  #sortTable_length .dataTables_length select option,
+  #sortTable_length .dataTables_length label,
+  #sortTable_length .dataTables_length span {
+    color: white; /* Set the text color for "Show entries" text inside the drop-down box */
+  }
+
+  #sortTable_info,
+  #sortTable_length .dataTables_length label,
+  #sortTable_filter input[type="search"] {
+    color: white; /* Set the text color for "No. of entries" text and search input */
+  }
+
+  #sortTable_wrapper .dataTables_paginate .paginate_button {
+    color: white; /* Set the text color for pagination buttons */
+    background-color: transparent; /* Optional: Set the background-color of pagination buttons to transparent */
+  }
+</style>
 <body class="hold-transition sidebar-mini layout-fixed">
     <div class="wrapper" >
 
@@ -51,8 +99,7 @@ include '../conn.php';
             <div class="container-fluid text-center p-4">
                 <h1>Appointment History</h1>
             </div>
-
-            <table class="table table-hover table-bordered table-dark mt-5">
+            <table class="table table-hover table-dark mt-5 text-white" id="sortTable">
             <thead>
                 <tr>
                     <th class="text-center" scope="col">Name</th>
@@ -95,3 +142,13 @@ include '../conn.php';
     </div>
 </body>
 </html>
+
+<script>
+     $(document).ready(function() {
+    // Initialize DataTable for the table element with class "table"
+    $('#sortTable').DataTable({
+      order: [[3, 'desc']]
+    });
+    });
+</script>
+
