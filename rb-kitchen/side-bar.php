@@ -19,7 +19,7 @@
           <!-- Add icons to the links using the .nav-icon class
                with font-awesome or any other icon font library -->
           <li class="nav-item has-treeview menu-open m-1">
-            <a href="http://localhost:3000/rb-kitchen/kitchen-index.php" class="nav-link <?php if($a==1){ echo 'active'; }?>">
+            <a href="kitchen-index.php" class="nav-link <?php if($a==1){ echo 'active'; }?>">
               <i class="ion ion-speedometer nav-icon"></i>
               <p>
                 Dashboard
@@ -44,7 +44,7 @@
             </a>
         </li> 
         <li class="nav-item has-treeview menu-open m-1">
-            <a href="#" class="nav-link <?php if($a==4){ echo 'active'; }?>">
+            <a href="log-reports.php" class="nav-link <?php if($a==4){ echo 'active'; }?>">
                <i class="ion ion-ios-paper nav-icon"></i>
               <p>
                 Log Report

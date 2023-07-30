@@ -1,10 +1,14 @@
 <?php 
-$a = 7;
+$a = 3;
 session_start();
 include '../conn.php';
     $id = $_SESSION['user_id'];
     $result = mysqli_query($connection, "SELECT * FROM users where user_id = '$id' ");
     $row = mysqli_fetch_array($result);
+
+    date_default_timezone_set('Asia/Manila');
+    // Get the current date in the Philippines timezone in the format "Y-m-d"
+    $currentDate = date('Y-m-d');
 
 ?>
 <!DOCTYPE html>
@@ -13,7 +17,7 @@ include '../conn.php';
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Romantic Baboy | Appointment History</title>
+    <title>Romantic Baboy | Inventory Reports</title>
     <!--Google Fonts-->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -31,14 +35,12 @@ include '../conn.php';
     <link rel="stylesheet" href="../../node_modules/overlayScrollbars/css/OverlayScrollbars.min.css">
     <!-- JQuery -->
     <script src="../../node_modules/jquery/dist/jquery.min.js"></script>
-    <!-- Bootstrap CSS-->
+    <!-- Bootstrap -->
     <script src="../../node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <!-- overlayScrollbars -->
     <script src="../../node_modules/overlayScrollbars/js/jquery.overlayScrollbars.min.js"></script>
     <!-- AdminLTE App -->
     <script src="../../node_modules/admin-lte/js/adminlte.js"></script>
-    <!-- Bootstrap CSS -->
-    <link rel="stylesheet" href="../../node_modules/bootstrap/dist/css/bootstrap.min.css">
 
     <!-- DataTables CSS -->
     <link rel="stylesheet" href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.min.css">
@@ -89,68 +91,67 @@ include '../conn.php';
 <body class="hold-transition sidebar-mini layout-fixed">
     <div class="wrapper" >
 
-    <?php 
-    include "top-bar.php";
-    include "side-bar.php"; 
-    ?>
+        <?php 
+        include "top-bar.php";
+        include "side-bar.php";
+        ?>
 
-    <div class="content-wrapper bg-black">
-        <div class="content p-4">
+        <div class="content-wrapper bg-black">
+            <div class="content p-4">
+
             <div class="container-fluid text-center p-4">
-                <h1>Appointment History</h1>
+                <h1>Inventory Reports</h1>
+                <p>Start Time: <?php echo $currentDate ?></p>
+                <p>End Time: <?php echo $currentDate ?></p>
+                <form method="POST" action="pdf.php" target="_blank">
+                    <input type="submit" class="btn btn-primary" name="pdf_creater" value="PRINT">
+                </form>
             </div>
-            <table class="table table-hover table-dark mt-5 text-white" id="sortTable">
+
+            <table class="table table-hover table-bordered table-dark mt-2" id="sortTable">
             <thead>
                 <tr>
-                    <th class="text-center" scope="col">Name</th>
+                    <th class="text-center" scope="col">Item</th>
                     <th class="text-center" scope="col">Description</th>
-                    <th class="text-center" scope="col">Table No</th>
-                    <th class="text-center" scope="col"># of People</th>
-                    <th class="text-center" scope="col">Date</th>
-                    <th class="text-center" scope="col">Time-in</th>
-                    <th class="text-center" scope="col">Time-out</th>
-                    <th class="text-center" scope="col">Note</th>
+                    <th class="text-center" scope="col">OUM</th>
+                    <th class="text-center" scope="col">Stocks</th>
+                    <th class="text-center" scope="col">Status</th>
                 </tr>
             </thead>
-                <tbody>
+                <tbody id = "menu_table">
                 <?php 
-                    $result_tb = mysqli_query($connection, "SELECT * FROM appointment_history
-                    INNER JOIN users ON users.user_id=appointment_history.table_history_id
-                    INNER JOIN appointment ON appointment.appointment_id=appointment_history.appointment_user_id
-                    WHERE appointment.appointment_session = '2'");
-                    if(mysqli_num_rows($result_tb) > 0) {
-                    while ($row = mysqli_fetch_array($result_tb)) { ?> 
+                    $view_items = mysqli_query($connection, "SELECT * FROM inventory
+                                                INNER JOIN statuses ON statuses.status_id = inventory.item_status
+                                                ORDER BY item_id DESC");
+                    if(mysqli_num_rows($view_items) > 0) {
+                    while ($row = mysqli_fetch_array($view_items)) { ?>
+                        <form method="post" action="inventory.php" enctype="multipart/form-data">
+                            <tr>
+                                <td><?php echo $row["item_name"]; ?></td>
+                                <td><?php echo $row["item_desc"]; ?></td>
+                                <td><?php echo $row["unit_of_measure"]; ?></td>
+                                <td><?php echo $row["stock"]; ?></td>
+                                <td><?php echo $row["status"]; ?></td>
+                            </tr>
+                        </form>
+                    <?php } } else {?>
                         <tr>
-                            <td class="text-center"><?php echo $row["appointment_name"]; ?></td>
-                            <td class="text-center"><?php echo $row["appointment_desc"]; ?></td>
-                            <td class="text-center"><?php echo $row["name"]; ?></td>
-                            <td class="text-center"><?php echo $row["count"]; ?></td>
-                            <td class="text-center"><?php echo $row["date"]; ?></td>
-                            <td class="text-center"><?php echo $row["time"]; ?></td>
-                            <td class="text-center"><?php echo $row["time-out"]; ?></td>
-                            <td class="w-25"><?php echo $row["note"]; ?></td>
-                        </tr>
-                        <?php 
-                    } } else { ?>
-                        <tr>
-                            <td class="text-center" colspan="8">No record found!</td>
+                            <td class="text-center" colspan="5">No record found!</td>
                         </tr>
                     <?php } ?>
                 </tbody>  
-        </table>
-        
+            </table>
+
+            </div>
         </div>
-    </div>
     </div>
 </body>
 </html>
-
 <script>
      $(document).ready(function() {
     // Initialize DataTable for the table element with class "table"
     $('#sortTable').DataTable({
-      order: [[3, 'desc']]
+      order: [[0, 'asc']]
     });
     });
 </script>
-

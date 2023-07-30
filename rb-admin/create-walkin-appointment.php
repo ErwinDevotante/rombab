@@ -25,6 +25,7 @@ include '../conn.php';
         $note = $_POST["note"];
         $date = date('Y-m-d');
         $time = date('H:i:s');
+        $description = "Walk-In";
     
         // Check if there is an activated table in the users table
         $activated_table_query = "SELECT * FROM users WHERE session_tb = '1'";
@@ -36,7 +37,7 @@ include '../conn.php';
             $table_id = $activated_table_row['user_id'];
     
             // Update the appointment table with the assigned table_id
-            $query = "INSERT INTO appointment VALUES('', '$name', '$table_id', '$pax', '$date', '$time', '$note', '1')";
+            $query = "INSERT INTO appointment VALUES('', '$name', '$description', '$table_id', '$pax', '$date', '$time', '$note', '1')";
             $result_add = mysqli_query($connection, $query);
     
             // Deactivate the assigned table in the users table
@@ -172,7 +173,8 @@ include '../conn.php';
                     $result_tb = mysqli_query($connection, "SELECT * FROM appointment
                     LEFT JOIN users ON users.user_id=appointment.table_id
                     WHERE table_id is NULL 
-                    OR appointment_session = '1'");
+                    OR appointment_session = '1' AND appointment_desc = 'Walk-In'");
+                    if(mysqli_num_rows($result_tb) > 0) {
                     while ($row = mysqli_fetch_array($result_tb)) { ?> 
                         <tr>
                             <td class="text-center"><?php echo $row["appointment_name"]; ?></td>
@@ -185,6 +187,11 @@ include '../conn.php';
                         </tr>
                         <?php 
                     } 
+                    } else { ?>
+                        <tr>
+                            <td class="text-center" colspan="7">No record found!</td>
+                        </tr>
+                    <?php }
                     ?>
                 </tbody>  
         </table>

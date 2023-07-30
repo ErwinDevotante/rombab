@@ -62,7 +62,7 @@
         <div class="card-columns-container">
             <?php 
                     $result_tb = mysqli_query($connection, "SELECT * FROM `menus`
-                                            WHERE menu_category = 'New Offers' ");
+                                            WHERE menu_category = 'New Offers' and menu_availability = '0'");
                         if(mysqli_num_rows($result_tb) > 0){
                         while ($row = mysqli_fetch_array($result_tb)) { ?> 
                             <form action="" method="post">

@@ -1,10 +1,14 @@
 <?php 
-$a = 3;
+$a = 4;
 session_start();
 include '../conn.php';
-  $id = $_SESSION['user_id'];
+    $id = $_SESSION['user_id'];
 	$result = mysqli_query($connection, "SELECT * FROM users where user_id = '$id'");
 	$row = mysqli_fetch_array($result);
+
+    $inventory_tb = "SELECT * FROM inventory
+                    INNER JOIN statuses ON statuses.status_id = inventory.item_status
+                    WHERE item_status = '0'";
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -93,32 +97,91 @@ include '../conn.php';
     <div class="content-wrapper bg-black">
         <div class="content p-4">
             <div class="container-fluid text-center p-4">
-                <h1>Orders History</h1>
+                <h1>Log Reports</h1>
             </div>
-            <table class="table table-hover table-bordered table-dark mt-5" id="sortTable">
+
+            <table class="table table-hover table-bordered table-dark mt-2" id="sortTable">
             <thead>
                 <tr>
-                    <th class="text-center" scope="col">Table No.</th>
-                    <th class="text-center" scope="col">Products</th>
+                    <th class="text-center" scope="col">ID</th>
+                    <th class="text-center" scope="col">Item</th>
+                    <th class="text-center" scope="col">Description</th>
+                    <th class="text-center" scope="col">OUM</th>
+                    <th class="text-center" scope="col">Stocks</th>
+                </tr>
+            </thead>
+                <tbody id = "menu_table">
+                <?php 
+                    $view_items = mysqli_query($connection, $inventory_tb);
+                    if(mysqli_num_rows($view_items) > 0) {
+                    while ($row = mysqli_fetch_array($view_items)) { ?>
+                        <form method="post" action="inventory.php" enctype="multipart/form-data">
+                            <tr>
+                                <td><?php echo $row["item_id"]; ?></td>
+                                <td><?php echo $row["item_name"]; ?></td>
+                                <td><?php echo $row["item_desc"]; ?></td>
+                                <td><?php echo $row["unit_of_measure"]; ?></td>
+                                <td><?php echo $row["stock"]; ?></td>
+                            </tr>
+                        </form>
+                    <?php } } else {?>
+                        <tr>
+                            <td class="text-center" colspan="5">No record found!</td>
+                        </tr>
+                    <?php } ?>
+                </tbody>  
+            </table>
+
+            <div class="p-4">
+                <form method="post" action="log-reports.php" enctype="multipart/form-data">
+                    <div class="form-row">
+                        <div class="form-group col">
+                            <label>Item ID</label>
+                            <input type="number" class="form-control" name="item-qty" placeholder="Enter Item ID" required>
+                        </div>
+                        <div class="form-group col">
+                            <label>Quantity</label>
+                            <input type="number" class="form-control" name="item-qty" step="any" placeholder="Enter Number of Stock" required>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <input class="btn btn-primary" type="submit" name="upload" value="LOG ITEM">
+                    </div>
+                </form>
+            </div>
+
+            <table class="table table-hover table-bordered table-dark mt-2" id="sortTable_log">
+            <thead>
+                <tr>
+                    <th class="text-center" scope="col">ID</th>
+                    <th class="text-center" scope="col">Item</th>
+                    <th class="text-center" scope="col">Quantity</th>
                     <th class="text-center" scope="col">Date and Time</th>
                 </tr>
             </thead>
-                <tbody>
+                <tbody id = "menu_table">
                 <?php 
-                    $result_tb = mysqli_query($connection, "SELECT * FROM `orders`
-                    LEFT JOIN `users` ON orders.user_table = users.user_id
-                    WHERE status = 1");
-                    while ($row = mysqli_fetch_array($result_tb)) { ?> 
+                    $view_items = mysqli_query($connection, "SELECT * FROM log_reports
+                                                            LEFT JOIN inventory ON inventory.item_id = log_reports.report_item_id
+                                                            WHERE report_user_id = $id");
+                    if(mysqli_num_rows($view_items) > 0) {
+                    while ($row = mysqli_fetch_array($view_items)) { ?>
+                        <form method="post" action="inventory.php" enctype="multipart/form-data">
+                            <tr>
+                                <td><?php echo $row["item_id"]; ?></td>
+                                <td><?php echo $row["item_name"]; ?></td>
+                                <td><?php echo $row["report_qty"]; ?></td>
+                                <td><?php echo $row["date_time"]; ?></td>
+                            </tr>
+                        </form>
+                    <?php } } else {?>
                         <tr>
-                            <td class="text-center w-25"><?php echo $row["name"]; ?></td>
-                            <td class="w-50"><?php echo $row["total_products"]; ?></td>
-                            <td class="text-center w-25"><?php echo $row["time_date"]; ?></td>
+                            <td class="text-center" colspan="4">No record found!</td>
                         </tr>
-                        <?php 
-                    } 
-                    ?>
+                    <?php } ?>
                 </tbody>  
-        </table>
+            </table>
+            
         </div>
     </div>
 </body>
@@ -127,7 +190,7 @@ include '../conn.php';
      $(document).ready(function() {
     // Initialize DataTable for the table element with class "table"
     $('#sortTable').DataTable({
-      order: [[2, 'desc']]
+      order: [[0, 'asc']]
     });
     });
 

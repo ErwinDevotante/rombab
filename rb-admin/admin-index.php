@@ -13,7 +13,7 @@ include '../conn.php';
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Romantic Baboy | Admin</title>
+    <title>Romantic Baboy | Admin Dashboard</title>
     <!--Google Fonts-->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -63,10 +63,10 @@ include '../conn.php';
         <div class="row">
           
         <div class="col-lg-3 col-6">
-			    <a href="#" class="small-box-footer">
-            <div class="small-box bg-yellow">
+			    <a href="inventory.php" class="small-box-footer">
+            <div class="small-box bg-red">
               <div class="inner">
-                <h3>Daily</h3> <h4 class="font-weight-bold">Inventory</h4>
+                <h3>Inventory</h3> <h4 class="font-weight-bold">Items</h4>
                 <p>Managing Inventory</p>
               </div>
               <div class="icon">
@@ -77,11 +77,11 @@ include '../conn.php';
         </div>
 
         <div class="col-lg-3 col-6">
-			    <a href="#" class="small-box-footer">
+			    <a href="inventory-history.php" class="small-box-footer">
             <div class="small-box bg-red">
               <div class="inner">
                 <h4 class="font-weight-bold">Inventory</h4>
-                <h3>History</h3><p>Check History</p>
+                <h3>Reports</h3><p>Check Reports</p>
               </div>
               <div class="icon">
                 <i class="ion ion-document-text"></i>
@@ -91,8 +91,8 @@ include '../conn.php';
         </div>
 
         <div class="col-lg-3 col-6">
-			    <a href="http://localhost:3000/rb-admin/add-menu.php" class="small-box-footer">
-            <div class="small-box bg-green">
+			    <a href="add-menu.php" class="small-box-footer">
+            <div class="small-box bg-red">
               <div class="inner">
                 <h4 class="font-weight-bold">Add</h4>
                 <h3>Menu</h3><p>Add Restaurant Menu</p>
@@ -123,8 +123,8 @@ include '../conn.php';
         <div class="row">
        
           <div class="col-lg-3 col-6">
-			      <a href="http://localhost:3000/rb-admin/manage-appointment.php" class="small-box-footer">
-              <div class="small-box bg-info">
+			      <a href="manage-appointment.php" class="small-box-footer">
+              <div class="small-box bg-red">
                 <div class="inner">
                   <h3>Manage</h3><h5 class="font-weight-bold">Appointment</h5>
                   <p>Managing tables</p>
@@ -137,8 +137,8 @@ include '../conn.php';
           </div>
 
           <div class="col-lg-3 col-6">
-			      <a href="#" class="small-box-footer">
-              <div class="small-box bg-yellow">
+			      <a href="online-appointment.php" class="small-box-footer">
+              <div class="small-box bg-red">
                 <div class="inner">
                   <h3>Online</h3><h5 class="font-weight-bold">Appointment</h5>
                   <p>Create for online appointment</p>
@@ -151,7 +151,7 @@ include '../conn.php';
           </div>
 
           <div class="col-lg-3 col-6">
-			      <a href="http://localhost:3000/rb-admin/create-walkin-appointment.php" class="small-box-footer">
+			      <a href="create-walkin-appointment.php" class="small-box-footer">
               <div class="small-box bg-red">
                 <div class="inner">
                   <h3>Walk-in</h3><h5 class="font-weight-bold">Appointment</h5>
@@ -165,8 +165,8 @@ include '../conn.php';
           </div>
 
           <div class="col-lg-3 col-6">
-			      <a href="http://localhost:3000/rb-admin/appointment-history.php" class="small-box-footer">
-              <div class="small-box bg-green">
+			      <a href="appointment-history.php" class="small-box-footer">
+              <div class="small-box bg-red">
                 <div class="inner">
                 <h5 class="font-weight-bold">Appointment</h5><h3>History</h3>
                   <p>View Appoinment History</p>
@@ -198,43 +198,14 @@ include '../conn.php';
         <div class="row">
 
           <div class="col-lg-3 col-6">
-			      <a href="http://localhost:3000/rb-admin/super-admin/add-table.php" class="small-box-footer">
-            <div class="small-box bg-yellow">
+			      <a href="add-account.php" class="small-box-footer">
+            <div class="small-box bg-red">
               <div class="inner">
                 <h3>Table</h3>
                 <p>Add Account</p>
               </div>
               <div class="icon">
-                <i class="ion ion-plus-circled"></i>
-              </div>
-            </div>
-			      </a>
-          </div>
-
-          <div class="col-lg-3 col-6">
-			      <a href="http://localhost:3000/rb-admin/super-admin/add-admin.php" class="small-box-footer">
-            <div class="small-box bg-red">
-              <div class="inner">
-                <h3>Admin</h3>
-                <p>Add Account</p>
-              </div>
-              <div class="icon">
-                <i class="ion ion-plus-circled"></i>
-              </div>
-            </div>
-			      </a>
-          </div>
-        
-          <div class="col-lg-3 col-6">
-            <!-- small box -->
-			      <a href="http://localhost:3000/rb-admin/super-admin/add-kitchen.php" class="small-box-footer">
-            <div class="small-box bg-green">
-              <div class="inner">
-                <h3>Kitchen</h3>
-                <p>Add Account</p>
-              </div>
-              <div class="icon">
-                <i class="ion ion-plus-circled"></i>
+                <i class="ion ion-person-add"></i>
               </div>
             </div>
 			      </a>

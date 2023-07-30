@@ -115,9 +115,18 @@ include '../conn.php';
                                         </select>
                                     <?php }?>                   
                             </td>
-                            <td class="text-center"><a href="activate-table-edit.php?id=<?php echo $row["user_id"]; ?>&session=1" name="activate-tbl" type="submit" class="btn btn-success">Activate</a></td>
-                            <td class="text-center"><a href="activate-table-edit.php?id=<?php echo $row["user_id"]; ?>&session=2" name="deactivate-tbl" type="submit" class="btn btn-danger">Deactivate</a></td>
-                            <td class="text-center"><a href="activate-table-edit.php?id=<?php echo $row["user_id"]; ?>&session=0" name="not-available-tbl" type="submit" class="btn btn-warning" >Not Available</a></td>
+                                <?php 
+                                    if ($row['session_tb'] == '3' && ($row['appointment_session'] == '1' && $row['table_id'] !== null)){ ?>
+                                        <td class="text-center"><a class="btn btn-success disabled">Activate</a></td>
+                                        <td class="text-center"><a class="btn btn-danger disabled">Deactivate</a></td>
+                                        <td class="text-center"><a class="btn btn-warning disabled" >Not Available</a></td>
+                                    <?php }
+                                    else {?>
+                                        <td class="text-center"><a href="activate-table-edit.php?id=<?php echo $row["user_id"]; ?>&session=1" name="activate-tbl" type="submit" class="btn btn-success">Activate</a></td>
+                                        <td class="text-center"><a href="activate-table-edit.php?id=<?php echo $row["user_id"]; ?>&session=2" name="deactivate-tbl" type="submit" class="btn btn-danger">Deactivate</a></td>
+                                        <td class="text-center"><a href="activate-table-edit.php?id=<?php echo $row["user_id"]; ?>&session=0" name="not-available-tbl" type="submit" class="btn btn-warning" >Not Available</a></td>
+                                    <?php }?> 
+                            
                         </tr>
                     <?php 
                     } }

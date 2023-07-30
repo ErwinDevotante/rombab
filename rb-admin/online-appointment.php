@@ -1,88 +1,231 @@
-<?php
-// Replace these with your actual values
-$VERIFY_TOKEN = "your_verification_token";
-$PAGE_ACCESS_TOKEN = "your_page_access_token";
-$DB_HOST = "localhost";
-$DB_USER = "root";
-$DB_PASS = "";
-$DB_NAME = "romantic_baboy_dbase";
+<?php 
+$a = 5;
+session_start();
+include '../conn.php';
+    $id = $_SESSION['user_id'];
+    $result = mysqli_query($connection, "SELECT * FROM users where user_id = '$id' ");
+    $row = mysqli_fetch_array($result);
 
-// Verify the Facebook webhook
-if ($_SERVER['REQUEST_METHOD'] === 'GET') {
-    $hub_verify_token = $_GET['hub_verify_token'];
-    if ($hub_verify_token === $VERIFY_TOKEN) {
-        echo $_GET['hub_challenge'];
-        exit;
+    function updateSessionTb($connection) {
+        $query_check_available_tables = "SELECT * FROM appointment WHERE table_id IS NULL LIMIT 1";
+        $result_check_available_tables = mysqli_query($connection, $query_check_available_tables);
+    
+        if (mysqli_num_rows($result_check_available_tables) > 0) {
+            // There is an available table, update session_tb to 3
+            $update_session_tb_query = "UPDATE users SET session_tb = '3' WHERE user_id = '{$_SESSION['user_id']}'";
+            mysqli_query($connection, $update_session_tb_query);
+        } else {
+            // No available table, keep session_tb as it is (no changes needed)
+        }
+    }
+
+    if (isset($_POST["submit"])) {
+        $name = $_POST["customer"];
+        $pax = $_POST["pax"];
+        $note = $_POST["note"];
+        $date = date('Y-m-d');
+        $time = date('H:i:s');
+        $description = "Online";
+    
+        // Check if there is an activated table in the users table
+        $activated_table_query = "SELECT * FROM users WHERE session_tb = '1'";
+        $activated_table_result = mysqli_query($connection, $activated_table_query);
+        $activated_table_row = mysqli_fetch_array($activated_table_result);
+    
+        if (mysqli_num_rows($activated_table_result) > 0) {
+            // An activated table is available, assign the table to the appointment
+            $table_id = $activated_table_row['user_id'];
+    
+            // Update the appointment table with the assigned table_id
+            $query = "INSERT INTO appointment VALUES('', '$name', '$description', '$table_id', '$pax', '$date', '$time', '$note', '1')";
+            $result_add = mysqli_query($connection, $query);
+    
+            // Deactivate the assigned table in the users table
+            $update_table_query = "UPDATE users SET session_tb = '3' WHERE user_id = '$table_id'";
+            $result_update_table = mysqli_query($connection, $update_table_query);
+            
+            if ($result_add && $result_update_table) {
+                echo "<script> alert('Registration Successful'); </script>";
+            } else {
+                echo "<script> alert('Failed to assign table.'); </script>";
+            }
+        } else {
+            $query_add = "INSERT INTO appointment VALUES('', '$name', NULL , '$pax', '$date', '$time', '$note', '1')";
+            $result_query_add = mysqli_query($connection, $query_add);
+            // No activated table is available, you can add further logic to handle this case, e.g., wait and display a message
+            echo "<script> alert('No available activated table. Please wait for a table to become available.'); </script>";
+        }
+        
+        unset($_POST);
+        header('Location: online-appointment.php');
+    }
+    updateSessionTb($connection);
+?>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Romantic Baboy | Appointment</title>
+    <!--Google Fonts-->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap" rel="stylesheet">
+    <!--Icon-->
+    <link rel="icon" type="image/x-icon" href="../../assets/rombab-logo.png">
+    <!-- Ionicons -->
+    <link rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
+    <!-- Bootstrap -->
+    <link rel="stylesheet" href="../../node_modules/bootstrap/dist/css/bootstrap.min.css">
+    <!-- Theme Style -->
+    <link rel="stylesheet" href="../../style.css">
+    <link rel="stylesheet" href="../../node_modules/admin-lte/css/adminlte.min.css">
+    <!-- overlayScrollbars -->
+    <link rel="stylesheet" href="../../node_modules/overlayScrollbars/css/OverlayScrollbars.min.css">
+    <!-- JQuery -->
+    <script src="../../node_modules/jquery/dist/jquery.min.js"></script>
+    <!-- Bootstrap -->
+    <script src="../../node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- overlayScrollbars -->
+    <script src="../../node_modules/overlayScrollbars/js/jquery.overlayScrollbars.min.js"></script>
+    <!-- AdminLTE App -->
+    <script src="../../node_modules/admin-lte/js/adminlte.js"></script>
+</head>
+<body class="hold-transition sidebar-mini layout-fixed">
+<div class="wrapper" >
+
+    <?php 
+    include "top-bar.php";
+    include "side-bar.php";
+    ?>
+
+    <div class="content-wrapper bg-black">
+    <?php 
+    $query_search = "SELECT user_id FROM users WHERE session_tb = '1'";
+    $result_search = mysqli_query($connection, $query_search);
+
+    $query_search_tblNULL = mysqli_query($connection, "SELECT * FROM appointment WHERE table_id is NULL");
+
+    if (mysqli_num_rows($result_search) > 0 && mysqli_num_rows($query_search_tblNULL) > 0) {
+        // An available table is found, fetch the first row and return its user_id
+        $row = mysqli_fetch_array($result_search);
+        $available_table_id = $row['user_id'];
+
+        // Update the appointment table with the assigned table_id
+        $new_appointment_query = "UPDATE appointment SET table_id = '$available_table_id', appointment_session = '1' WHERE table_id IS NULL LIMIT 1";
+        $result_new_appointment = mysqli_query($connection, $new_appointment_query);
+
+        // Deactivate the assigned table in the users table
+        $deactivate_table_query = "UPDATE users SET session_tb = '3' WHERE user_id = '$available_table_id'";
+        $result_deactivate_table = mysqli_query($connection, $deactivate_table_query);
+
+        if ($result_new_appointment && $result_deactivate_table) {
+            // Return the assigned table_id to update the appointment table
+            echo $available_table_id;
+        } else {
+            // Error occurred during assignment
+            echo "NULL";
+        }
     } else {
-        die("Invalid verification token");
-    }
-}
-
-// Get the incoming JSON data from Facebook
-$input = json_decode(file_get_contents('php://input'), true);
-
-// Process incoming messages
-if (!empty($input['entry'][0]['messaging'])) {
-    foreach ($input['entry'][0]['messaging'] as $message) {
-        $sender_id = $message['sender']['id'];
-        $message_text = $message['message']['text'];
-        $timestamp = $message['timestamp'];
-
-        // Store the user response in the database
-        storeUserResponse($sender_id, $message_text, $timestamp);
-
-        // Prepare the response to be sent back to the user
-        $response = "Thank you for your message!";
-
-        // Send the response back to the user
-        sendResponse($sender_id, $response);
-    }
-}
-
-function storeUserResponse($sender_id, $message_text, $timestamp) {
-    global $DB_HOST, $DB_USER, $DB_PASS, $DB_NAME;
-
-    // Create a connection to the database
-    $conn = new mysqli($DB_HOST, $DB_USER, $DB_PASS, $DB_NAME);
-
-    // Check connection
-    if ($conn->connect_error) {
-        die("Connection failed: " . $conn->connect_error);
+        // No available table is found, return NULL
+        echo "NULL";
     }
 
-    // Escape user input to prevent SQL injection
-    $sender_id = $conn->real_escape_string($sender_id);
-    $message_text = $conn->real_escape_string($message_text);
-    $timestamp = $conn->real_escape_string($timestamp);
+    ?>
+    <div class="content p-4">
 
-    // Insert the user response into the database
-    $sql = "INSERT INTO user_responses (sender_id, message_text, timestamp) 
-            VALUES ('$sender_id', '$message_text', '$timestamp')";
-    if ($conn->query($sql) === TRUE) {
-        // User response saved successfully
-    } else {
-        // Error saving the user response
-    }
+    <div class="container-fluid text-center p-4">
+        <h1>Online Appointment</h1>
+    </div>
 
-    // Close the database connection
-    $conn->close();
+    <section class="home-section">
+
+    <form action="" method="post">
+    <div class="form-group">
+        <label>Customer's Name</label>
+        <input type="text" class="form-control" id="customer" name="customer" placeholder="Enter name" required>
+    </div>
+    <div class="form-group">
+        <label>No of people on the table</label>
+        <input type="number" class="form-control" id="pax" name="pax" placeholder="Enter no of people" required>
+    </div>
+    <div class="form-group">
+        <label>Note</label>
+        <textarea type="text" class="form-control" id="note" name="note" placeholder="Enter note" rows="2"></textarea>
+    </div>
+    <button type="submit" name="submit" class="btn btn-primary">Submit</button>
+
+    
+        <table class="table table-hover table-bordered table-dark mt-5">
+            <thead>
+                <tr>
+                    <th class="text-center" scope="col">Name</th>
+                    <th class="text-center" scope="col">Table No</th>
+                    <th class="text-center" scope="col"># of People</th>
+                    <th class="text-center" scope="col">Date</th>
+                    <th class="text-center" scope="col">Time</th>
+                    <th class="text-center" scope="col">Note</th>
+                </tr>
+            </thead>
+                <tbody>
+                <?php 
+                    $result_tb = mysqli_query($connection, "SELECT * FROM appointment
+                    LEFT JOIN users ON users.user_id=appointment.table_id
+                    WHERE table_id is NULL 
+                    OR appointment_session = '1' AND appointment_desc = 'Online'");
+                    if(mysqli_num_rows($result_tb) > 0) {
+                    while ($row = mysqli_fetch_array($result_tb)) { ?> 
+                        <tr>
+                            <td class="text-center"><?php echo $row["appointment_name"]; ?></td>
+                            <td class="text-center" style="display: none;" id="table_id"><?php echo $row["table_id"]; ?></td>
+                            <td class="text-center"><?php echo $row["name"]; ?></td>
+                            <td class="text-center"><?php echo $row["count"]; ?></td>
+                            <td class="text-center"><?php echo $row["date"]; ?></td>
+                            <td class="text-center"><?php echo $row["time"]; ?></td>
+                            <td><?php echo $row["note"]; ?></td>
+                        </tr>
+                        <?php 
+                    } 
+                    } else { ?>
+                        <tr>
+                            <td class="text-center" colspan="7">No record found!</td>
+                        </tr>
+                    <?php }
+                    ?>
+                </tbody>  
+        </table>
+    </form>
+    </section>
+    </div>
+    </div>
+</div>
+
+</body>
+</html>
+
+<script>
+function checkForAvailableTable() {
+    $.ajax({
+        url: 'create-walkin-appointment.php',
+        method: 'GET',
+        success: function(data) {
+            // Update the appointment table with the result from the AJAX request
+            if (data === 'NULL') {
+                // No available table
+                // You can add further logic here, such as displaying a message
+            } else {
+                // An available table is found, update the appointment table
+                var availableTableId = data;
+                $("#table_id").text(availableTableId); // Assuming the table_id cell has the ID "table_id"
+            }
+        }
+    });
 }
 
-function sendResponse($recipient_id, $message_text) {
-    global $PAGE_ACCESS_TOKEN;
-
-    $url = "https://graph.facebook.com/v12.0/me/messages?access_token=" . $PAGE_ACCESS_TOKEN;
-    $data = array(
-        'recipient' => array('id' => $recipient_id),
-        'message' => array('text' => $message_text),
-    );
-    $options = array(
-        'http' => array(
-            'method' => 'POST',
-            'content' => json_encode($data),
-            'header' => "Content-Type: application/json",
-        ),
-    );
-    $context = stream_context_create($options);
-    file_get_contents($url, false, $context);
-}
+// Call the checkForAvailableTable function and updateSessionTb function every 5 seconds (adjust the interval as needed)
+setInterval(function() {
+    checkForAvailableTable();
+    updateSessionTb();
+}, 5000); // 5000 milliseconds = 5 seconds
+</script>

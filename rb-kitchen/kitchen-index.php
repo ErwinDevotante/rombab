@@ -91,7 +91,7 @@ include '../conn.php';
         </div>
 
         <div class="col-lg-3 col-6">
-			    <a href="#" class="small-box-footer">
+			    <a href="log-reports.php" class="small-box-footer">
             <div class="small-box bg-green">
               <div class="inner">
                 <h4 class="font-weight-bold">Log</h4>

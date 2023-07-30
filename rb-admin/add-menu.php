@@ -19,16 +19,17 @@ if (isset($_POST["upload"])) {
 
     if (mysqli_num_rows($result) > 0) {
         // Redundant data found, show an error message
-        $msg = "Menu item with the same name and category already exists.";
+        echo 'alert(Menu item with the same name and category already exists.)';
     } else {
         // No redundant data, proceed with insertion
         $target = "menu-images/" . basename($_FILES['menu-image']['name']);
-        $insert_query = "INSERT INTO menus (menu_image, menu_name, menu_category) VALUES ('$image', '$menu_text', '$category')";
+        $insert_query = "INSERT INTO menus (menu_image, menu_name, menu_category) 
+                        VALUES ('$image', '$menu_text', '$category')";
 
         if (move_uploaded_file($_FILES['menu-image']['tmp_name'], $target) && mysqli_query($connection, $insert_query)) {
-            $msg = "Image uploaded successfully";
+            echo 'alert(Image uploaded successfully)';
         } else {
-            $msg = "There was a problem uploading image or inserting data.";
+            echo 'alert(There was a problem uploading image or inserting data.)';
         }
 
         // Redirect back to the add-menu.php page after inserting
@@ -80,6 +81,30 @@ if (isset($_POST["delete_btn"])) {
     header('Location: add-menu.php');
     exit();
 }
+
+if (isset($_POST["activate_btn"])) {
+    $status_menu = $_POST["activate_btn"];
+
+    // Perform the update query
+    $update_query = "UPDATE `menus` SET menu_availability = '0' WHERE menu_id = '$status_menu'";
+    mysqli_query($connection, $update_query);
+
+    // Redirect back to the add-menu.php page after deleting
+    header('Location: add-menu.php');
+    exit();
+}
+
+if (isset($_POST["deactivate_btn"])) {
+    $status_menu = $_POST["deactivate_btn"];
+
+    // Perform the update query
+    $update_query = "UPDATE `menus` SET menu_availability = '1' WHERE menu_id = '$status_menu'";
+    mysqli_query($connection, $update_query);
+
+    // Redirect back to the add-menu.php page after deleting
+    header('Location: add-menu.php');
+    exit();
+}
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -87,7 +112,7 @@ if (isset($_POST["delete_btn"])) {
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Romantic Baboy | Inventory</title>
+    <title>Romantic Baboy | Add Menu</title>
     <!--Google Fonts-->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -128,23 +153,25 @@ if (isset($_POST["delete_btn"])) {
 
             <form method="post" action="add-menu.php" enctype="multipart/form-data">
                 <input type="hidden" name="size" value="1000000">
-                <div class="form-group">
-                    <label>Menu Image</label>
-                    <input type="file" class="form-control" name="menu-image" required>
-                </div>
-                <div class="form-group">
-                    <label>Menu Name</label>
-                    <input type="text" class="form-control" name="menu-text" placeholder="Enter Menu Name" required>
-                </div>
-                <div class="form-group">
-                    <label>Menu Category</label>
-                    <select name="menu-category" class="form-control" id="category" required>
-                        <option hidden value="">-----Select Here-----</option>
-                        <option value="Samgyupsal">Samgyupsal</option>
-                        <option value="Side Dishes">Side Dishes</option>
-                        <option value="Others">Others</option>
-                        <option value="New Offers">New Offers</option>
-                    </select>
+                <div class="form-row">
+                    <div class="form-group col">
+                        <label>Menu Image</label>
+                        <input type="file" class="form-control" name="menu-image" required>
+                    </div>
+                    <div class="form-group col">
+                        <label>Menu Name</label>
+                        <input type="text" class="form-control" name="menu-text" placeholder="Enter Menu Name" required>
+                    </div>
+                    <div class="form-group col">
+                        <label>Menu Category</label>
+                        <select name="menu-category" class="form-control" id="category" required>
+                            <option hidden value="">-----Select Here-----</option>
+                            <option value="Samgyupsal">Samgyupsal</option>
+                            <option value="Side Dishes">Side Dishes</option>
+                            <option value="Others">Others</option>
+                            <option value="New Offers">New Offers</option>
+                        </select>
+                    </div>
                 </div>
                 <div class="form-group">
                     <input class="btn btn-primary" type="submit" name="upload" value="Add Menu">
@@ -179,11 +206,22 @@ if (isset($_POST["delete_btn"])) {
                         <tr id="<?php echo $row["menu_id"]; ?>">
                             <td style="display: none"><?php echo $row["menu_id"]; ?></td> <!--hidden-->
                             <td class="text-center w-25"><img src ='menu-images/<?php echo $row["menu_image"]; ?>' class="img-fluid img-thumbnail custom-image"></td>
-                            <td class="text-center"><?php echo $row["menu_name"]; ?></td>
+                            <td class="text-center"><?php echo $row["menu_name"]; ?>
+                                <?php if($row["menu_availability"] == 1) { ?>
+                                    <div class="text-red font-weight-bold">[DEACTIVATED]</div>
+                                <?php } else if($row["menu_availability"] == 0) { ?>
+                                    <div class="text-green font-weight-bold">[ACTIVATED]</div>
+                                <?php } ?>
+                            </td>
                             <td class="text-center"><?php echo $row["menu_category"]; ?></td>
                             <td class="text-center w-25">
-                                <button type="button" class="btn btn-primary update_btn" id="update_btn">UPDATE</button>
-                                <button type="submit" class="btn btn-danger" name="delete_btn" value="<?php echo $row["menu_id"]; ?>">DELETE</button>
+                                <div class="p-2"><button type="button" class="btn btn-primary update_btn" id="update_btn">UPDATE</button></div>
+                                <div class="p-2"><button type="submit" class="btn btn-warning" name="delete_btn" value="<?php echo $row["menu_id"]; ?>">DELETE</button></div>
+                                <?php if($row["menu_availability"] == 1) { ?>
+                                    <div class="p-2"><button type="submit" class="btn btn-success" name="activate_btn" value="<?php echo $row["menu_id"]; ?>">ACTIVATE</button></div>
+                                <?php } else if($row["menu_availability"] == 0) { ?>
+                                    <div class="p-2"><button type="submit" class="btn btn-danger" name="deactivate_btn" value="<?php echo $row["menu_id"]; ?>">DEACTIVATE</button></div>
+                                <?php } ?>
                             </td>
                         </tr>
                     </form>

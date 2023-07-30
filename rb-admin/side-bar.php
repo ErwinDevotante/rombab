@@ -19,7 +19,7 @@
           <!-- Add icons to the links using the .nav-icon class
                with font-awesome or any other icon font library -->
           <li class="nav-item has-treeview menu-open m-1">
-            <a href="http://localhost:3000/rb-admin/admin-index.php" class="nav-link <?php if($a==1){ echo 'active'; }?>">
+            <a href="admin-index.php" class="nav-link <?php if($a==1){ echo 'active'; }?>">
               <i class="ion ion-speedometer nav-icon"></i>
               <p>
                 Dashboard
@@ -28,7 +28,7 @@
           </li>
 		
 		    <li class="nav-item has-treeview menu-open m-1">
-            <a href="#" class="nav-link <?php if($a==2){ echo 'active'; }?>">
+            <a href="inventory.php" class="nav-link <?php if($a==2){ echo 'active'; }?>">
                <i class="ion ion-ios-filing-outline nav-icon"></i>
               <p>
                Inventory
@@ -36,15 +36,15 @@
             </a>
         </li> 
         <li class="nav-item has-treeview menu-open m-1">
-            <a href="#" class="nav-link <?php if($a==3){ echo 'active'; }?>">
+            <a href="inventory-history.php" class="nav-link <?php if($a==3){ echo 'active'; }?>">
                <i class="ion ion-document-text nav-icon"></i>
               <p>
-                Inventory History
+                Inventory Reports
               </p>
             </a>
         </li> 
         <li class="nav-item has-treeview menu-open m-1">
-            <a href="http://localhost:3000/rb-admin/add-menu.php" class="nav-link <?php if($a==11){ echo 'active'; }?>">
+            <a href="add-menu.php" class="nav-link <?php if($a==11){ echo 'active'; }?>">
                <i class="ion ion-android-restaurant nav-icon"></i>
               <p>
                 Add Menu
@@ -54,7 +54,7 @@
 		  
 		
         <li class="nav-item has-treeview menu-open m-1">
-            <a href="http://localhost:3000/rb-admin/manage-appointment.php" class="nav-link <?php if($a==4){ echo 'active'; }?>">
+            <a href="manage-appointment.php" class="nav-link <?php if($a==4){ echo 'active'; }?>">
                <i class="ion ion-clipboard nav-icon"></i>
               <p>
                 Appointments
@@ -62,7 +62,7 @@
             </a>
           </li>
 		   <li class="nav-item has-treeview menu-open m-1">
-            <a href="#" class="nav-link <?php if($a==5){ echo 'active'; }?>">
+            <a href="online-appointment.php" class="nav-link <?php if($a==5){ echo 'active'; }?>">
                <i class="ion ion-ios-paper-outline nav-icon"></i>
               <p>
                 Online
@@ -70,7 +70,7 @@
             </a>
           </li>
           <li class="nav-item has-treeview menu-open m-1">
-            <a href="http://localhost:3000/rb-admin/create-walkin-appointment.php" class="nav-link <?php if($a==6){ echo 'active'; }?>">
+            <a href="create-walkin-appointment.php" class="nav-link <?php if($a==6){ echo 'active'; }?>">
                <i class="ion ion-android-walk nav-icon"></i>
               <p>
                 Walk-Ins
@@ -78,7 +78,7 @@
             </a>
           </li> 
 		  <li class="nav-item has-treeview menu-open m-1">
-            <a href="http://localhost:3000/rb-admin/appointment-history.php" class="nav-link <?php if($a==7){ echo 'active'; }?>">
+            <a href="appointment-history.php" class="nav-link <?php if($a==7){ echo 'active'; }?>">
                <i class="ion ion-mouse nav-icon"></i>
               <p>
                 Appointment History
@@ -88,26 +88,10 @@
 
       <?php if ($row['user_role'] == 1) { ?>
 		   <li class="nav-item has-treeview menu-open m-1">
-            <a href="http://localhost:3000/rb-admin/super-admin/add-table.php" class="nav-link <?php if($a==8){ echo 'active'; }?>">
-               <i class="ion ion-plus-circled nav-icon"></i>
+            <a href="add-account.php" class="nav-link <?php if($a==8){ echo 'active'; }?>">
+               <i class="ion ion-person-add nav-icon"></i>
               <p>
-                Add Table
-              </p>
-            </a>
-          </li> 
-		  <li class="nav-item has-treeview menu-open m-1">
-            <a href="http://localhost:3000/rb-admin/super-admin/add-admin.php" class="nav-link <?php if($a==9){ echo 'active'; }?>">
-              <i class="ion ion-plus-circled nav-icon"></i>
-              <p>
-                Add Admin
-              </p>
-            </a>
-          </li>
-      <li class="nav-item has-treeview menu-open m-1">
-            <a href="http://localhost:3000/rb-admin/super-admin/add-kitchen.php" class="nav-link <?php if($a==10){ echo 'active'; }?>">
-              <i class="ion ion-plus-circled nav-icon"></i>
-              <p>
-                Add Kitchen
+                Add Account
               </p>
             </a>
           </li> 
