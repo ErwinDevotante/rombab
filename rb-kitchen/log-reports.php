@@ -110,7 +110,7 @@ if (isset($_POST['log_item'])) {
     color: white; /* Set the text color for "Show entries" text inside the drop-down box */
   }
 
-  #sortTable_info,
+  #sortTable_info, #sortTable_log_info,
   #sortTable_length .dataTables_length label,
   #sortTable_filter input[type="search"] {
     color: white; /* Set the text color for "No. of entries" text and search input */
@@ -242,5 +242,5 @@ if (isset($_POST['log_item'])) {
     $('#sortTable_log').dataTable( {
         searching: false,
         lengthChange: false
-} );
+    } );
 </script>

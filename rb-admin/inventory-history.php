@@ -77,7 +77,7 @@ include '../conn.php';
     color: white; /* Set the text color for "Show entries" text inside the drop-down box */
   }
 
-  #sortTable_info,
+  #sortTable_info, #sortTable_log_info,
   #sortTable_length .dataTables_length label,
   #sortTable_filter input[type="search"] {
     color: white; /* Set the text color for "No. of entries" text and search input */
@@ -104,7 +104,7 @@ include '../conn.php';
                 <p>Start Time: <?php echo $currentDate ?></p>
                 <p>End Time: <?php echo $currentDate ?></p>
                 <form method="POST" action="pdf.php" target="_blank">
-                    <input type="submit" class="btn btn-primary" name="pdf_creater" value="PRINT">
+                    <input type="submit" class="btn btn-danger" name="pdf_creater" value="PRINT DAILY REPORT">
                 </form>
             </div>
 
@@ -142,16 +142,67 @@ include '../conn.php';
                 </tbody>  
             </table>
 
+            <div class="container-fluid text-center p-4">
+                <h1>Log Reports</h1>
+            </div>
+
+            <table class="table table-hover table-bordered table-dark mt-2" id="sortTable_log">
+            <thead>
+                <tr>
+                    <th class="text-center" scope="col">ID</th>
+                    <th class="text-center" scope="col">Item</th>
+                    <th class="text-center" scope="col">Kitchen User</th>
+                    <th class="text-center" scope="col">Quantity</th>
+                    <th class="text-center" scope="col">Date and Time</th>
+                </tr>
+            </thead>
+                <tbody id = "menu_table">
+                <?php 
+                    $view_items = mysqli_query($connection, "SELECT * FROM log_reports
+                                                            LEFT JOIN inventory ON inventory.item_id = log_reports.report_item_id
+                                                            LEFT JOIN users ON users.user_id = log_reports.report_user_id");
+                    if(mysqli_num_rows($view_items) > 0) {
+                    while ($row = mysqli_fetch_array($view_items)) { ?>
+                        <form method="post" action="inventory.php" enctype="multipart/form-data">
+                            <tr>
+                                <td class="text-center"><?php echo $row["item_id"]; ?></td>
+                                <td><?php echo $row["item_name"]; ?></td>
+                                <td><?php echo $row["name"]; ?></td>
+                                <td class="text-center"><?php echo $row["report_qty"]; ?></td>
+                                <td><?php echo $row["date_time"]; ?></td>
+                            </tr>
+                        </form>
+                    <?php } } else {?>
+                        <tr>
+                            <td class="text-center" colspan="4">No record found!</td>
+                        </tr>
+                    <?php } ?>
+                </tbody>  
+            </table>
+
             </div>
         </div>
     </div>
 </body>
 </html>
 <script>
-     $(document).ready(function() {
-    // Initialize DataTable for the table element with class "table"
-    $('#sortTable').DataTable({
-      order: [[0, 'asc']]
+    document.addEventListener("DOMContentLoaded", function() {
+        // Initialize DataTable for the table element with id "sortTable"
+        $('#sortTable').DataTable({
+            order: [[0, 'desc']]
+        });
+
+        // Check if DataTable is not already initialized for the table with id "sortTable_log"
+        if (!$.fn.DataTable.isDataTable('#sortTable_log')) {
+            // Initialize DataTable for the table element with id "sortTable_log"
+            $('#sortTable_log').DataTable({
+                order: [[5, 'desc']]
+            });
+        }
     });
-    });
+
+    $('#sortTable_log').dataTable( {
+        searching: false,
+        lengthChange: false
+    } );
 </script>

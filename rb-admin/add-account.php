@@ -63,8 +63,11 @@ include '../conn.php';
     <script src="../../node_modules/overlayScrollbars/js/jquery.overlayScrollbars.min.js"></script>
     <!-- AdminLTE App -->
     <script src="../../node_modules/admin-lte/js/adminlte.js"></script>
-    
-    <script src="https://kit.fontawesome.com/fe96d845ef.js" crossorigin="anonymous"></script>
+
+    <!-- DataTables CSS -->
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.min.css">
+    <!-- DataTables JS -->
+    <script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
 </head>
 <body class="hold-transition sidebar-mini layout-fixed">
     <div class="wrapper" >
@@ -77,12 +80,12 @@ include '../conn.php';
         <div class="content-wrapper bg-black">
             <div class="content p-4">
 
-            <div class="container-fluid text-center">
+            <div class="container-fluid text-center p-4">
                 <h1>Add Account</h1>
             </div>
 
             <section class="h-100 h-custom">
-                <div class="row d-flex justify-content-center align-items-center h-100">
+                <div class="row d-flex justify-content-center align-items-center h-250">
                 <div class="col-lg-8 col-xl-6">
                     <div class="card rounded-3">
                     <img src="../assets/background-pic.jpg"
@@ -144,9 +147,37 @@ include '../conn.php';
                         </div>
 
                         </form>
-
                     </div>
                     </div>
+                        <table class="table table-hover table-bordered table-dark mt-2" id="sortTable">
+                        <thead>
+                            <tr>
+                                <th class="text-center" scope="col">Name</th>
+                                <th class="text-center" scope="col">Username</th>
+                                <th class="text-center" scope="col">Role</th>
+                            </tr>
+                        </thead>
+                            <tbody id = "menu_table">
+                            <?php 
+                                $view_items = mysqli_query($connection, "SELECT * FROM users
+                                                                        LEFT JOIN user_role ON user_role.user_role_id = users.user_role
+                                                                        WHERE users.user_id != 12");
+                                if(mysqli_num_rows($view_items) > 0) {
+                                while ($row = mysqli_fetch_array($view_items)) { ?>
+                                    <form method="post" action="add-account.php" enctype="multipart/form-data">
+                                        <tr>
+                                            <td class="text-center"><?php echo $row["name"]; ?></td>
+                                            <td><?php echo $row["username"]; ?></td>
+                                            <td class="text-center"><?php echo $row["roles"]; ?></td>
+                                        </tr>
+                                    </form>
+                                <?php } } else {?>
+                                    <tr>
+                                        <td class="text-center" colspan="3">No record found!</td>
+                                    </tr>
+                                <?php } ?>
+                            </tbody>  
+                        </table>    
                 </div>
                 </div>
             </section>
@@ -158,5 +189,8 @@ include '../conn.php';
 </html>
 
 <script>
-
+$('#sortTable').dataTable( {
+        searching: false,
+        lengthChange: false
+    } );
 </script>
