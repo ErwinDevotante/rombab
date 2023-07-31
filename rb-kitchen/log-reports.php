@@ -207,7 +207,7 @@ if (isset($_POST['log_item'])) {
                             <tr>
                                 <td class="text-center"><?php echo $row["item_id"]; ?></td>
                                 <td><?php echo $row["item_name"]; ?></td>
-                                <td class="text-center"><?php echo $row["report_qty"]; ?></td>
+                                <td class="text-center"><?php echo $row["report_qty"]; ?><?php echo $row["unit_of_measure"]; ?></td>
                                 <td><?php echo $row["date_time"]; ?></td>
                             </tr>
                         </form>

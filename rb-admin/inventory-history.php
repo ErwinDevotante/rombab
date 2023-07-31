@@ -77,7 +77,7 @@ include '../conn.php';
     color: white; /* Set the text color for "Show entries" text inside the drop-down box */
   }
 
-  #sortTable_info, #sortTable_log_info,
+  #sortTable_info, #sortTable_log_info, #sortTable_report,
   #sortTable_length .dataTables_length label,
   #sortTable_filter input[type="search"] {
     color: white; /* Set the text color for "No. of entries" text and search input */
@@ -142,12 +142,9 @@ include '../conn.php';
                 </tbody>  
             </table>
 
-            <div class="container-fluid text-center p-4">
-                <h1>Log Reports</h1>
-            </div>
-
-            <table class="table table-hover table-bordered table-dark mt-2" id="sortTable_log">
+            <table class="table table-hover table-bordered table-dark mt-5" id="sortTable_log">
             <thead>
+                <tr><th colspan="5">Log Reports</th></tr>
                 <tr>
                     <th class="text-center" scope="col">ID</th>
                     <th class="text-center" scope="col">Item</th>
@@ -168,13 +165,43 @@ include '../conn.php';
                                 <td class="text-center"><?php echo $row["item_id"]; ?></td>
                                 <td><?php echo $row["item_name"]; ?></td>
                                 <td><?php echo $row["name"]; ?></td>
-                                <td class="text-center"><?php echo $row["report_qty"]; ?></td>
+                                <td class="text-center"><?php echo $row["report_qty"]; ?><?php echo $row["unit_of_measure"]; ?></td>
                                 <td><?php echo $row["date_time"]; ?></td>
                             </tr>
                         </form>
                     <?php } } else {?>
                         <tr>
                             <td class="text-center" colspan="4">No record found!</td>
+                        </tr>
+                    <?php } ?>
+                </tbody>  
+            </table>
+
+            <table class="table table-hover table-bordered table-dark mt-5" id="sortTable_report">
+            <thead>
+                <tr><th colspan="2">File Reports</th></tr>
+                <tr>
+                    <th class="text-center" scope="col">Report File</th>
+                    <th class="text-center" scope="col">Report Date</th>
+                </tr>
+            </thead>
+                <tbody id = "menu_table">
+                <?php 
+                    $view_reports = mysqli_query($connection, "SELECT * FROM daily_reports");
+                    if(mysqli_num_rows($view_reports) > 0) {
+                    while ($row = mysqli_fetch_array($view_reports)) { ?>
+                            <tr>
+                                <td><a href="daily_reports/<?php echo $row["report_file"]; ?>" target="_blank">
+                                    <?php echo $row["report_file"]; ?>
+                                </a></td>
+                                <td><?php 
+                                    $formattedDate = date('F j, Y', strtotime($row["report_time"]));
+                                    echo $formattedDate;
+                                ?></td>
+                            </tr>
+                    <?php } } else {?>
+                        <tr>
+                            <td class="text-center" colspan="2">No record found!</td>
                         </tr>
                     <?php } ?>
                 </tbody>  
@@ -202,6 +229,11 @@ include '../conn.php';
     });
 
     $('#sortTable_log').dataTable( {
+        searching: false,
+        lengthChange: false
+    } );
+
+    $('#sortTable_report').dataTable( {
         searching: false,
         lengthChange: false
     } );
