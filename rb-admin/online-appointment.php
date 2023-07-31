@@ -123,14 +123,12 @@ include '../conn.php';
         if ($result_new_appointment && $result_deactivate_table) {
             // Return the assigned table_id to update the appointment table
             echo $available_table_id;
-        } else {
-            // Error occurred during assignment
-            echo "NULL";
-        }
-    } else {
-        // No available table is found, return NULL
-        echo "NULL";
-    }
+        } else { ?>
+            <span class="null-text text-black">NULL</span>
+    <?php    }
+    } else { ?>
+        <span class="null-text text-black">NULL</span>
+    <?php }
 
     ?>
     <div class="content p-4">
@@ -148,7 +146,7 @@ include '../conn.php';
     </div>
     <div class="form-group">
         <label>No of people on the table</label>
-        <input type="number" class="form-control" id="pax" name="pax" placeholder="Enter no of people" required>
+        <input type="number" class="form-control" id="pax" name="pax" min="1" placeholder="Enter no of people" required>
     </div>
     <div class="form-group">
         <label>Note</label>

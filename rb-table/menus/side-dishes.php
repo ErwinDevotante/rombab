@@ -46,12 +46,10 @@
             echo '</script>';
         } else {
             $insert_product = mysqli_query($connection, "INSERT INTO `cart`(cart_table, cart_name, cart_image, cart_quantity) VALUES ('$product_table', '$product_name', '$product_image', '$product_quantity')");
-            echo '<script type="text/javascript">';
-            //echo 'window.location.href = "side-dishes.php";';
-            //unset($_POST);
-            //echo 'alert("Product Added Successfully!");'; echo 'window.location.href = "side-dishes.php";';
-            echo '</script>'; 
-            //$message[] = 'product added to cart succesfully';
+            echo '<script type="text/javascript">'; 
+            echo 'alert("Product Added Successfully!");'; echo 'window.location.href = "samgyupsal.php";';
+            echo '</script>';
+            unset($_POST);
         }
     }
 

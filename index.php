@@ -33,6 +33,10 @@ if(isset($_POST["submit"])){
         echo '<script type="text/javascript">'; 
         echo 'alert("Log-in Sucessfully!");'; echo 'window.location.href = "rb-table/table-index.php";';
         echo '</script>';
+      } else if($roles == 5){ //appointment
+        echo '<script type="text/javascript">'; 
+        echo 'alert("Log-in Sucessfully!");'; echo 'window.location.href = "rb-admin/admin-index.php";';
+        echo '</script>';
       }
     }
   }
@@ -76,6 +80,7 @@ if(isset($_POST["submit"])){
                         <option value="2">Admin</option>
                         <option value="3">Kitchen</option>
                         <option value="4">Table</option>
+                        <option value="5">Appointment Staff</option>
                     </select>
             </div>
 

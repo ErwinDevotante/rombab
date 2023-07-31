@@ -30,6 +30,7 @@ include '../conn.php';
             }
         }
         unset($_POST);
+        header('Location: add-account.php');
     }
 
 ?>
@@ -102,6 +103,7 @@ include '../conn.php';
                                     <option value="2">Admin</option>
                                     <option value="3">Kitchen</option>
                                     <option value="4">Table</option>
+                                    <option value="5">Appointment Staff</option>
                                 </select>
                         </div>
 

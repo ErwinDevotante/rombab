@@ -61,6 +61,29 @@ include '../../conn.php';
             </div>
         </div>
     </div>
-
+    <!-- Button on the right bottom of the screen -->
+    <div class="fixed-bottom p-3">
+        <a href="#" class="text-dark" onclick="confirmLogout()"><i class="ion ion-android-exit"></i></a>
+    </div>
 </body>
 </html>
+
+<script>
+    // JavaScript function to prompt for password and handle logout
+    function confirmLogout() {
+        // Prompt for password input
+        var passwordInput = prompt("Please enter your password:");
+
+        // Replace "123456789" with the actual password to check
+        var correctPassword = "123456789";
+
+        // Check if the entered password is correct
+        if (passwordInput === correctPassword) {
+            // Redirect to the logout page if password is correct
+            window.location.href = "../../../log-out.php";
+        } else {
+            // Show an alert if the password is incorrect
+            alert("Incorrect password. Logout action canceled.");
+        }
+    }
+</script>

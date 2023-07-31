@@ -6,10 +6,10 @@
       <!-- Sidebar user panel (optional) -->
       <div class="user-panel mt-3 pb-3 mb-3 d-flex">
         <div class="image">
-          <img src="http://localhost:3000/assets/rombab-logo.png" class="img-circle elevation-2" alt="User Image">
+          <img src="../assets/rombab-logo.png" class="img-circle elevation-2" alt="User Image">
         </div>
         <div class="info">
-          <a href="http://localhost:3000/rb-kitchen/kitchen-index.php" class="d-block">ROMANTIC BABOY</a>
+          <a href="kitchen-index.php" class="d-block">ROMANTIC BABOY</a>
         </div>
       </div>
 

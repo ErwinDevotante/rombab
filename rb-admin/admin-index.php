@@ -45,9 +45,10 @@ include '../conn.php';
     include "top-bar.php";
     include "side-bar.php"; 
     ?>
-
+  
   <!-- Content Wrapper. Contains page content -->
   <div class="content-wrapper bg-black">
+  <?php if($row['user_role'] == '1' || $row['user_role'] == '2') { ?>
     <div class="content-header">
       <div class="container-fluid">
         <div class="row mb-2">
@@ -107,7 +108,7 @@ include '../conn.php';
         </div>
       </div>
     </section>
-
+    <?php } if($row['user_role'] == '1' || $row['user_role'] == '2' || $row['user_role'] == '5') { ?>
     <div class="content-header">
       <div class="container-fluid">
         <div class="row mb-2">
@@ -135,7 +136,6 @@ include '../conn.php';
              </div>
 			      </a>
           </div>
-
           <div class="col-lg-3 col-6">
 			      <a href="online-appointment.php" class="small-box-footer">
               <div class="small-box bg-red">
@@ -180,6 +180,7 @@ include '../conn.php';
 
         </div>
     </section>
+    <?php } ?>
 
       <?php
       if ($row['user_role'] == '1') { ?>

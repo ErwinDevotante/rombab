@@ -33,6 +33,47 @@ include '../conn.php';
         }
     }
 
+    // Check if the update form is submitted
+    if (isset($_POST["confirm_update"])) {
+        // Get the updated data from the form
+        $item_id = $_POST['update-id'];
+        $item_name = $_POST['update-name'];
+        $description = $_POST['update-description'];
+        $oum = $_POST['update-measure'];
+        $stock = $_POST['update-stocks'];
+        $status = $_POST['update-status'];
+
+        // Perform the UPDATE query to update the inventory record
+        $update_query = "UPDATE inventory SET item_name='$item_name', item_desc='$description', unit_of_measure='$oum', stock='$stock', item_status='$status' WHERE item_id='$item_id'";
+        $result_update = mysqli_query($connection, $update_query);
+
+        if ($result_update) {
+            // Redirect back to the inventory.php page after updating
+            header('Location: inventory.php');
+            exit(); 
+        } else {
+            // Handle the error if the update fails
+            echo "Error updating inventory record: " . mysqli_error($connection);
+        }
+    }
+
+    if (isset($_POST["delete_btn"])) {
+        $item_id_to_delete = $_POST['delete_btn'];
+    
+        // Perform the DELETE query to delete the inventory record
+        $delete_query = "DELETE FROM inventory WHERE item_id='$item_id_to_delete'";
+        $result_delete = mysqli_query($connection, $delete_query);
+    
+        if ($result_delete) {
+            // Redirect back to the inventory.php page after deletion
+            header('Location: inventory.php');
+            exit();
+        } else {
+            // Handle the error if the deletion fails
+            echo "Error deleting inventory record: " . mysqli_error($connection);
+        }
+    }
+
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -64,53 +105,8 @@ include '../conn.php';
     <script src="../../node_modules/overlayScrollbars/js/jquery.overlayScrollbars.min.js"></script>
     <!-- AdminLTE App -->
     <script src="../../node_modules/admin-lte/js/adminlte.js"></script>
-
-    <!-- DataTables CSS -->
-    <link rel="stylesheet" href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.min.css">
-    <!-- DataTables JS -->
-    <script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
 </head>
-<style>
-  /* Custom styles for DataTables */
-  #sortTable_wrapper .dataTables_length,
-  #sortTable_wrapper .dataTables_filter,
-  #sortTable_wrapper .dataTables_paginate
-  #sortTable_wrapper .dataTables_paginate .paginate_button {
-    color: white; /* Set the text color for "Show entries," search, and pagination */
-  }
-  #sortTable_info {
-    color: white; /* Set the text color for "No. of entries" text */
-  }
-   /* Custom styles for DataTables */
-   #sortTable {
-    color: white; /* Set the text color for the entire table */
-  }
-
-  #sortTable thead th {
-    color: white; /* Set the text color for table headers */
-  }
-
-  #sortTable tbody td {
-    color: white; /* Set the text color for table cells */
-  }
-
-  #sortTable_length .dataTables_length select option,
-  #sortTable_length .dataTables_length label,
-  #sortTable_length .dataTables_length span {
-    color: white; /* Set the text color for "Show entries" text inside the drop-down box */
-  }
-
-  #sortTable_info,
-  #sortTable_length .dataTables_length label,
-  #sortTable_filter input[type="search"] {
-    color: white; /* Set the text color for "No. of entries" text and search input */
-  }
-
-  #sortTable_wrapper .dataTables_paginate .paginate_button {
-    color: white; /* Set the text color for pagination buttons */
-    background-color: transparent; /* Optional: Set the background-color of pagination buttons to transparent */
-  }
-</style>
+</head>
 <body class="hold-transition sidebar-mini layout-fixed">
     <div class="wrapper" >
 
@@ -160,7 +156,7 @@ include '../conn.php';
 
                     <div class="form-group col">
                         <label>Stocks</label>
-                        <input type="number" class="form-control" name="item-stock" step="any" placeholder="Enter Number of Stock" required>
+                        <input type="number" class="form-control" name="item-stock" step="any" min="0.1" placeholder="Enter Number of Stock" required>
                     </div>
 
                     <div class="form-group col">
@@ -176,6 +172,16 @@ include '../conn.php';
                     <input class="btn btn-primary" type="submit" name="upload_item" value="ADD ITEM">
                 </div>
             </form>
+
+            <!-- Search -->
+            <div class="d-flex w-100 justify-content-end p-0">
+                <div class="d-flex justify-content-end gap-2">
+                    <div class="input-group mb-3 d-flex">
+                        <button class="btn " type="button" name="query" disabled><i class="ion ion-ios-search-strong"></i></button>
+                        <input type="text" name="search" id="search" class="form-control" placeholder="Search Here...">
+                    </div>
+                </div>
+            </div>
 
             <table class="table table-hover table-bordered table-dark mt-2" id="sortTable">
             <thead>
@@ -197,6 +203,7 @@ include '../conn.php';
                     while ($row = mysqli_fetch_array($view_items)) { ?>
                         <form method="post" action="inventory.php" enctype="multipart/form-data">
                             <tr>
+                                <td style="display: none"><?php echo $row["item_id"]; ?></td>
                                 <td><?php echo $row["item_name"]; ?></td>
                                 <td><?php echo $row["item_desc"]; ?></td>
                                 <td><?php echo $row["unit_of_measure"]; ?></td>
@@ -204,7 +211,7 @@ include '../conn.php';
                                 <td><?php echo $row["status"]; ?></td>
                                 <td  class="w-25">
                                     <div class="row text-center">
-                                        <div class="col"><button type="button" class="btn btn-primary update_btn" id="update_btn">UPDATE</button></div>
+                                        <div class="col"><button type="button" class="btn btn-primary update_btn" name="update_btn" id="update_btn">UPDATE</button></div>
                                         <div class="col"><button type="submit" class="btn btn-warning" name="delete_btn" value="<?php echo $row["item_id"]; ?>">DELETE</button></div> 
                                     </div>
                                 </td>
@@ -212,7 +219,7 @@ include '../conn.php';
                         </form>
                     <?php } } else {?>
                         <tr>
-                            <td class="text-center" colspan="6">No record found!</td>
+                            <td class="text-center" colspan="7">No record found!</td>
                         </tr>
                     <?php } ?>
                 </tbody>  
@@ -220,13 +227,111 @@ include '../conn.php';
         </div>
     </div>
 </div>
+    <div class="modal fade" id="editmodal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Update Item</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+
+                <form action="inventory.php" method="POST" enctype="multipart/form-data">
+                    <div class="modal-body">
+                        <input type="hidden" name="update-id" id="update-id">
+
+                        <div class="form-group">
+                            <label>Item Name</label>
+                            <input type="text" class="form-control" id="update-name" name="update-name" placeholder="Enter Menu Name" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Description</label>
+                            <select name="update-description" class="form-control" required>
+                                <option value="Meats">Meats</option>
+                                <option value="Ingredients">Ingredients</option>
+                                <option value="Beverages">Beverages</option>
+                                <option value="Sauces">Sauces</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label>UOM</label>
+                            <select name="update-measure" class="form-control" required>
+                                <option value="kg">kg</option>
+                                <option value="can">can</option>
+                                <option value="pack">pack</option>
+                                <option value="box">box</option>
+                                <option value="gal">gal</option>
+                                <option value="tub">tub</option>
+                                <option value="case">case</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Stocks</label>
+                            <input type="number" class="form-control" name="update-stocks" id="update-stocks" step="any" min="0.1" placeholder="Enter Number of Stock" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Status</label>
+                            <select name="update-status" class="form-control" required>
+                                <option value="0">activate</option>
+                                <option value="1">deactivate</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" aria-label="Close">CLOSE</button>
+                        <button type="submit" name="confirm_update" class="btn btn-primary">UPDATE</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
 </body>
 </html>
 <script>
-     $(document).ready(function() {
-    // Initialize DataTable for the table element with class "table"
-    $('#sortTable').DataTable({
-      order: [[1, 'desc']]
+
+    $(document).ready(function () {
+    $('.update_btn').on('click', function () {
+        $('#editmodal').modal('show');
+        $tr = $(this).closest('tr');
+        var data = $tr.children("td").map(function () {
+            return $(this).text();
+        }).get();
+        console.log(data);
+        $('#update-id').val(data[0]);
+        $('#update-name').val(data[1]);
+        $('#update-description').val(data[2]);
+        $('#update-measure').val(data[3]);
+        $('#update-stocks').val(data[4]);
+        $('#update-status').val(data[5]);
     });
     });
+
+    $(document).ready(function(){  
+           $('#search').keyup(function(){  
+                search_table($(this).val());  
+           });  
+           function search_table(value){  
+                $('#menu_table tr').each(function(){  
+                     var found = 'false';  
+                     $(this).each(function(){  
+                          if($(this).text().toLowerCase().indexOf(value.toLowerCase()) >= 0)  
+                          {  
+                               found = 'true';  
+                          }  
+                     });  
+                     if(found == 'true')  
+                     {  
+                          $(this).show();  
+                     }  
+                     else  
+                     {  
+                          $(this).hide();  
+                     }  
+                });  
+           }  
+      }); 
 </script>

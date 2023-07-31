@@ -45,11 +45,10 @@
             unset($_POST);
         } else {
             $insert_product = mysqli_query($connection, "INSERT INTO `cart`(cart_table, cart_name, cart_image, cart_quantity) VALUES ('$product_table', '$product_name', '$product_image', '$product_quantity')");
-            //echo '<script type="text/javascript">'; 
-            //unset($_POST);
-            //echo 'alert("Product Added Successfully!");'; echo 'window.location.href = "samgyupsal.php";';
-            //echo '</script>'; 
-            
+            echo '<script type="text/javascript">'; 
+            echo 'alert("Product Added Successfully!");'; echo 'window.location.href = "samgyupsal.php";';
+            echo '</script>';
+            unset($_POST);
         }
     }
     ?>

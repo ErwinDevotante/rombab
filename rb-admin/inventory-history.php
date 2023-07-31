@@ -9,6 +9,14 @@ include '../conn.php';
     date_default_timezone_set('Asia/Manila');
     // Get the current date in the Philippines timezone in the format "Y-m-d"
     $currentDate = date('Y-m-d');
+    $currentTime = date('H:i:s');
+    // Set the default value for the button status
+    $buttonStatus = 'enabled'; //disabled
+    // Check if the current time is 10 PM (22:00) Philippine time
+    if ($currentTime === '22:00:00') {
+        // Enable the button if it's 10 PM
+        $buttonStatus = 'enabled';
+    }
 
 ?>
 <!DOCTYPE html>
@@ -103,8 +111,8 @@ include '../conn.php';
                 <h1>Inventory Reports</h1>
                 <p>Start Time: <?php echo $currentDate ?></p>
                 <p>End Time: <?php echo $currentDate ?></p>
-                <form method="POST" action="pdf.php" target="_blank">
-                    <input type="submit" class="btn btn-danger" name="pdf_creater" value="PRINT DAILY REPORT">
+                <form method="POST" action="generate_daily_inventory_report.php" target="_blank">
+                    <input type="submit" class="btn btn-danger" name="pdf_creater" value="PRINT DAILY REPORT" <?php echo $buttonStatus; ?>>
                 </form>
             </div>
 

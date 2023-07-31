@@ -6,10 +6,10 @@
       <!-- Sidebar user panel (optional) -->
       <div class="user-panel mt-3 pb-3 mb-3 d-flex">
         <div class="image">
-          <img src="http://localhost:3000/assets/rombab-logo.png" class="img-circle elevation-2" alt="User Image">
+          <img src="../assets/rombab-logo.png" class="img-circle elevation-2" alt="User Image">
         </div>
         <div class="info">
-          <a href="http://localhost:3000/rb-admin/admin-index.php" class="d-block">ROMANTIC BABOY</a>
+          <a href="admin-index.php" class="d-block">ROMANTIC BABOY</a>
         </div>
       </div>
 
@@ -26,7 +26,8 @@
               </p>
             </a>
           </li>
-		
+          
+        <?php if ($row['user_role'] == '1' || $row['user_role'] == '2') { ?>
 		    <li class="nav-item has-treeview menu-open m-1">
             <a href="inventory.php" class="nav-link <?php if($a==2){ echo 'active'; }?>">
                <i class="ion ion-ios-filing-outline nav-icon"></i>
@@ -51,8 +52,8 @@
               </p>
             </a>
         </li> 
-		  
 		
+        <?php } if ($row['user_role'] == '1' || $row['user_role'] == '2' || $row['user_role'] == '5') { ?>
         <li class="nav-item has-treeview menu-open m-1">
             <a href="manage-appointment.php" class="nav-link <?php if($a==4){ echo 'active'; }?>">
                <i class="ion ion-clipboard nav-icon"></i>
@@ -84,7 +85,8 @@
                 Appointment History
               </p>
             </a>
-          </li> 
+          </li>
+      <?php } ?>
 
       <?php if ($row['user_role'] == 1) { ?>
 		   <li class="nav-item has-treeview menu-open m-1">
