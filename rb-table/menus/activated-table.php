@@ -61,7 +61,7 @@ include '../../conn.php';
             </div>
         </div>
     </div>
-    <!-- Button on the right bottom of the screen -->
+    <!-- Button on the left bottom of the screen -->
     <div class="fixed-bottom p-3">
         <a href="#" class="text-dark" onclick="confirmLogout()"><i class="ion ion-android-exit"></i></a>
     </div>
