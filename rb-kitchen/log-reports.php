@@ -6,9 +6,43 @@ include '../conn.php';
 	$result = mysqli_query($connection, "SELECT * FROM users where user_id = '$id'");
 	$row = mysqli_fetch_array($result);
 
-    $inventory_tb = "SELECT * FROM inventory
-                    INNER JOIN statuses ON statuses.status_id = inventory.item_status
-                    WHERE item_status = '0'";
+if (isset($_POST['log_item'])) {
+    $item_id = $_POST['item-id'];
+    $item_qty = $_POST['item-qty'];
+
+    date_default_timezone_set('Asia/Manila');
+    // Get the current date and time in the Philippines
+    $currentDateTime = new DateTime();
+    $datetimeValue = $currentDateTime->format('Y-m-d H:i:s'); 
+
+    // Check if the item is available in the inventory
+    $inventory_query = "SELECT * FROM inventory WHERE item_id = '$item_id' AND stock >= $item_qty";
+    $inventory_result = mysqli_query($connection, $inventory_query);
+    if (mysqli_num_rows($inventory_result) > 0) {
+        // Item is available, so proceed to log it
+        $insert_query = "INSERT INTO log_reports (report_item_id, report_qty, report_user_id, date_time) VALUES ('$item_id', '$item_qty', '$id', '$datetimeValue')";
+        $insert_result = mysqli_query($connection, $insert_query);
+
+        if ($insert_result) {
+            // Log entry successfully inserted
+            // Update the inventory stock
+            $update_stock_query = "UPDATE inventory SET stock = stock - '$item_qty' WHERE item_id = '$item_id'";
+            $update_stock_result = mysqli_query($connection, $update_stock_query);
+        
+            if ($update_stock_result) {
+                echo '<script>alert("Item successfully logged!");</script>';
+            } else {
+                echo '<script>alert("Error updating stock. Please try again.");</script>';
+            }
+        } 
+    } else {
+        // Item is not available in sufficient quantity
+        echo '<script>alert("Item is not available in the desired quantity.");</script>';
+    }
+    unset($_POST);
+    header('Location: log-reports.php');
+    exit();
+}
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -111,17 +145,20 @@ include '../conn.php';
                 </tr>
             </thead>
                 <tbody id = "menu_table">
-                <?php 
+                <?php
+                    $inventory_tb = "SELECT * FROM inventory
+                    INNER JOIN statuses ON statuses.status_id = inventory.item_status
+                    WHERE item_status = '0'";
                     $view_items = mysqli_query($connection, $inventory_tb);
                     if(mysqli_num_rows($view_items) > 0) {
                     while ($row = mysqli_fetch_array($view_items)) { ?>
                         <form method="post" action="inventory.php" enctype="multipart/form-data">
                             <tr>
-                                <td><?php echo $row["item_id"]; ?></td>
+                                <td class="text-center"><?php echo $row["item_id"]; ?></td>
                                 <td><?php echo $row["item_name"]; ?></td>
                                 <td><?php echo $row["item_desc"]; ?></td>
                                 <td><?php echo $row["unit_of_measure"]; ?></td>
-                                <td><?php echo $row["stock"]; ?></td>
+                                <td class="text-center"><?php echo $row["stock"]; ?></td>
                             </tr>
                         </form>
                     <?php } } else {?>
@@ -137,15 +174,15 @@ include '../conn.php';
                     <div class="form-row">
                         <div class="form-group col">
                             <label>Item ID</label>
-                            <input type="number" class="form-control" name="item-qty" placeholder="Enter Item ID" required>
+                            <input type="number" class="form-control" name="item-id" placeholder="Enter Item ID" required>
                         </div>
                         <div class="form-group col">
                             <label>Quantity</label>
-                            <input type="number" class="form-control" name="item-qty" step="any" placeholder="Enter Number of Stock" required>
+                            <input type="number" class="form-control" name="item-qty" step="any" placeholder="Enter Number of Stock" min="0.1" required>
                         </div>
                     </div>
                     <div class="form-group">
-                        <input class="btn btn-primary" type="submit" name="upload" value="LOG ITEM">
+                        <input class="btn btn-primary" type="submit" name="log_item" value="LOG ITEM">
                     </div>
                 </form>
             </div>
@@ -168,9 +205,9 @@ include '../conn.php';
                     while ($row = mysqli_fetch_array($view_items)) { ?>
                         <form method="post" action="inventory.php" enctype="multipart/form-data">
                             <tr>
-                                <td><?php echo $row["item_id"]; ?></td>
+                                <td class="text-center"><?php echo $row["item_id"]; ?></td>
                                 <td><?php echo $row["item_name"]; ?></td>
-                                <td><?php echo $row["report_qty"]; ?></td>
+                                <td class="text-center"><?php echo $row["report_qty"]; ?></td>
                                 <td><?php echo $row["date_time"]; ?></td>
                             </tr>
                         </form>
@@ -187,18 +224,23 @@ include '../conn.php';
 </body>
 </html>
 <script>
-     $(document).ready(function() {
-    // Initialize DataTable for the table element with class "table"
-    $('#sortTable').DataTable({
-      order: [[0, 'asc']]
-    });
+    document.addEventListener("DOMContentLoaded", function() {
+        // Initialize DataTable for the table element with id "sortTable"
+        $('#sortTable').DataTable({
+            order: [[0, 'asc']]
+        });
+
+        // Check if DataTable is not already initialized for the table with id "sortTable_log"
+        if (!$.fn.DataTable.isDataTable('#sortTable_log')) {
+            // Initialize DataTable for the table element with id "sortTable_log"
+            $('#sortTable_log').DataTable({
+                order: [[3, 'desc']]
+            });
+        }
     });
 
-    $(document).ready(function() {
-        // Table 1 configuration
-        $('#sortTable_log').DataTable({
-            searching: false,
-            lengthChange: false
-        });
-    });
+    $('#sortTable_log').dataTable( {
+        searching: false,
+        lengthChange: false
+} );
 </script>

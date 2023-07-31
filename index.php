@@ -71,6 +71,7 @@ if(isset($_POST["submit"])){
         <div class="form-group  was-validated">
             <label class="form-label text-white" for="roles">Select Log-in Options</label>
                     <select name="roles" class="form-control" id="roles" required>
+                        <option value="" hidden>--Select Options Here--</option>
                         <option value="1">Super Admin</option>
                         <option value="2">Admin</option>
                         <option value="3">Kitchen</option>

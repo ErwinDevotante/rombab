@@ -1,3 +1,8 @@
+<?php 
+if($_SESSION['user_id']==''){
+	header('location:../index.php');
+	}
+?>
 <nav class="main-header navbar navbar-expand navbar-white navbar-light bg-red">
     <!-- Left navbar links -->
     <ul class="navbar-nav">

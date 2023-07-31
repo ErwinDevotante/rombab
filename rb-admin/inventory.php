@@ -226,7 +226,7 @@ include '../conn.php';
      $(document).ready(function() {
     // Initialize DataTable for the table element with class "table"
     $('#sortTable').DataTable({
-      order: [[3, 'desc']]
+      order: [[1, 'desc']]
     });
     });
 </script>
