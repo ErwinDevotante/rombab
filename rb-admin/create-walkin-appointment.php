@@ -1,6 +1,7 @@
 <?php 
 $a = 6;
 session_start();
+date_default_timezone_set('Asia/Manila');
 include '../conn.php';
     $id = $_SESSION['user_id'];
     $result = mysqli_query($connection, "SELECT * FROM users where user_id = '$id' ");
