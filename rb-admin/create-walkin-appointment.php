@@ -50,7 +50,7 @@ include '../conn.php';
                 echo "<script> alert('Failed to assign table.'); </script>";
             }
         } else {
-            $query_add = "INSERT INTO appointment VALUES('', '$name', NULL , '$pax', '$date', '$time', '$note', '1')";
+            $query_add = "INSERT INTO appointment VALUES('', '$name', '$description', NULL , '$pax', '$date', '$time', '$note', '1')";
             $result_query_add = mysqli_query($connection, $query_add);
             // No activated table is available, you can add further logic to handle this case, e.g., wait and display a message
             echo "<script> alert('No available activated table. Please wait for a table to become available.'); </script>";
