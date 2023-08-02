@@ -171,7 +171,7 @@ include '../conn.php';
                     $result_tb = mysqli_query($connection, "SELECT * FROM appointment
                     LEFT JOIN users ON users.user_id=appointment.table_id
                     WHERE table_id is NULL 
-                    OR appointment_session = '1' AND appointment_desc = 'Online'");
+                    AND appointment_session = '1' AND appointment_desc != 'Walk-In'");
                     if(mysqli_num_rows($result_tb) > 0) {
                     while ($row = mysqli_fetch_array($result_tb)) { ?> 
                         <tr>
