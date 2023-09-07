@@ -213,10 +213,11 @@ include '../conn.php';
  &copy; <?php echo date("Y"); ?>
 </footer>
 </html>
+
 <script>
 function checkForAvailableTable() {
     $.ajax({
-        url: 'create-walkin-appointment.php',
+        url: 'online-appointment.php',
         method: 'GET',
         success: function(data) {
             // Update the appointment table with the result from the AJAX request
@@ -232,9 +233,54 @@ function checkForAvailableTable() {
     });
 }
 
-// Call the checkForAvailableTable function and updateSessionTb function every 5 seconds (adjust the interval as needed)
-setInterval(function() {
-    checkForAvailableTable();
-    updateSessionTb();
-}, 5000); // 5000 milliseconds = 5 seconds
+    // Call the checkForAvailableTable function and updateSessionTb function every 5 seconds (adjust the interval as needed)
+    setInterval(function() {
+        checkForAvailableTable();
+        updateSessionTb();
+    }, 5000); // 5000 milliseconds = 5 seconds
+
+    // Add event listener for Customer's Name input
+    const customerInput = document.getElementById('customer');
+    customerInput.addEventListener('input', function() {
+        const inputValue = customerInput.value;
+        // Keep only letters, spaces, and "-"
+        const sanitizedValue = inputValue.replace(/[^a-zA-Z\s-]/g, '');
+        customerInput.value = sanitizedValue;
+    });
+
+    // Add event listener for No of people input
+    const paxInput = document.getElementById('pax');
+    paxInput.addEventListener('input', function() {
+        const inputValue = paxInput.value;
+        
+        // Remove any non-digit characters (including decimal points)
+        const sanitizedValue = inputValue.replace(/[^0-9]/g, '');
+        
+        // Ensure the value is not empty
+        if (sanitizedValue === '') {
+            paxInput.value = '1'; // Set a default value if the input is empty
+        } else {
+            const pax = parseInt(sanitizedValue, 10);
+            
+            // Ensure the value is within the range of 1 to 10
+            if (pax < 1) {
+                paxInput.value = '1'; // Set the minimum value to 1
+            } else if (pax > 10) {
+                paxInput.value = '10'; // Set the maximum value to 10
+            } else {
+                paxInput.value = pax; // Update the input value with the sanitized integer value
+            }
+        }
+    });
+
+    // Add event listener for Note textarea
+    const noteTextarea = document.getElementById('note');
+    noteTextarea.addEventListener('input', function() {
+        const inputValue = noteTextarea.value;
+
+        // Truncate the input value to 100 characters
+        if (inputValue.length > 100) {
+            noteTextarea.value = inputValue.slice(0, 100);
+        }
+    });
 </script>

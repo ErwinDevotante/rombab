@@ -182,7 +182,7 @@ include '../conn.php';
                         <tr>
                             <td class="text-center"><?php echo $row["appointment_name"]; ?></td>
                             <td class="text-center" style="display: none;" id="table_id"><?php echo $row["table_id"]; ?></td>
-                            <td class="text-center"><?php echo $row["name"]; ?></td>
+                            <td class="text-center">Waiting for available table...</td>
                             <td class="text-center"><?php echo $row["count"]; ?></td>
                             <td class="text-center"><?php echo $row["date"]; ?></td>
                             <td class="text-center"><?php echo $row["time"]; ?></td>
