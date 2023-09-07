@@ -90,22 +90,25 @@
         };
         ?>
         <tr class="table-bottom">
-            <td><a href="activated-table.php" class="option-btn btn btn-primary" style="margin-top: 0;">continue ordering</a></td>
+            <td><a href="activated-table.php" class="option-btn btn btn-primary">continue ordering</a></td>
                 <td></td>
                 <td></td>
+            <?php 
+            $scan_row = "SELECT COUNT(*) as count FROM `cart` WHERE cart_table = '$table'";
+            $scan_result = mysqli_query($connection, $scan_row);
+            $row = mysqli_fetch_assoc($scan_result);
+            $rowCount = $row['count'];
+            if ($rowCount > 0) { ?>
             <td><a href="cart.php?delete_all" onclick="return confirm('are you sure you want to delete all?');" class="delete-btn btn btn-primary"> <i class="ion ion-ios-trash"></i> delete all </a></td>
+            <?php } else { ?>
+                <td></td>
+            <?php } ?>
         </tr>
         </tbody>
         </table>
-
-        
+   
         <?php 
-        $scan_row = "SELECT COUNT(*) as count FROM `cart` WHERE cart_table = '$table'";
-        $scan_result = mysqli_query($connection, $scan_row);
-
         if($scan_result) {
-            $row = mysqli_fetch_assoc($scan_result);
-            $rowCount = $row['count'];
             if ($rowCount > 0) { ?>
                 <div class="checkout-btn text-center">
                     <a href="checkout.php" class="btn btn-primary">proceed to checkout</a>
@@ -113,8 +116,10 @@
         <?php }
         }?>
         
-        
-        
     </div>
+
+
 </body>
 </html>
+
+

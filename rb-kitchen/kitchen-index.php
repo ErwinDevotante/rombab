@@ -94,8 +94,8 @@ include '../conn.php';
 			    <a href="log-reports.php" class="small-box-footer">
             <div class="small-box bg-green">
               <div class="inner">
-                <h4 class="font-weight-bold">Log</h4>
-                <h3>Report</h3><p>Check Log Report</p>
+                <h4 class="font-weight-bold">Inventory</h4>
+                <h3>Reports</h3><p>Check Inventory Report</p>
               </div>
               <div class="icon">
                 <i class="ion ion-ios-paper"></i>
@@ -107,9 +107,15 @@ include '../conn.php';
         </div>
       </div>
     </section>
-
   </div>
 </div>
-
 </body>
+<!-- Footer -->
+<footer class="main-footer bg-black text-center">
+    <div class="float-right d-none d-sm-block">
+        <!-- Additional footer content or links can go here -->
+    </div>
+    Romantic Baboy – SM City Sta. Rosa Branch
+ &copy; <?php echo date("Y"); ?>
+</footer>
 </html>

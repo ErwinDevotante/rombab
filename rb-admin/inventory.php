@@ -290,9 +290,16 @@ include '../conn.php';
         </div>
     </div>
 </body>
+<!-- Footer -->
+<footer class="main-footer bg-black text-center">
+    <div class="float-right d-none d-sm-block">
+        <!-- Additional footer content or links can go here -->
+    </div>
+    Romantic Baboy – SM City Sta. Rosa Branch
+ &copy; <?php echo date("Y"); ?>
+</footer>
 </html>
 <script>
-
     $(document).ready(function () {
     $('.update_btn').on('click', function () {
         $('#editmodal').modal('show');
@@ -333,5 +340,28 @@ include '../conn.php';
                      }  
                 });  
            }  
-      }); 
+      });
+
+
+    // Get references to both input elements
+    const stocksInput = document.getElementById('update-stocks');
+    const itemStockInput = document.getElementsByName('item-stock')[0];
+
+    // Add event listener for Stocks input
+    stocksInput.addEventListener('input', function() {
+        const stocks = parseFloat(stocksInput.value);
+
+        if (isNaN(stocks) || stocks < 0 || stocks === 0) {
+            stocksInput.value = '0.1';
+        }
+    });
+
+    // Add event listener for Item Stock input
+    itemStockInput.addEventListener('input', function() {
+        const itemStock = parseFloat(itemStockInput.value);
+
+        if (isNaN(itemStock) || itemStock < 0 || itemStock === 0) {
+            itemStockInput.value = '0.1';
+        }
+    });
 </script>

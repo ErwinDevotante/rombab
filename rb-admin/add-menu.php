@@ -283,27 +283,35 @@ if (isset($_POST["deactivate_btn"])) {
         </div>
     </div>
 </body>
+<!-- Footer -->
+<footer class="main-footer bg-black text-center">
+    <div class="float-right d-none d-sm-block">
+        <!-- Additional footer content or links can go here -->
+    </div>
+    Romantic Baboy – SM City Sta. Rosa Branch
+ &copy; <?php echo date("Y"); ?>
+</footer>
 </html>
 
 <script>
     $(document).ready(function () {
-    $('.update_btn').on('click', function () {
-        $('#editmodal').modal('show');
-        $tr = $(this).closest('tr');
-        var data = $tr.children("td").map(function () {
-            return $(this).text();
-        }).get();
-        console.log(data);
-        $('#update-id').val(data[0]);
+        $('.update_btn').on('click', function () {
+            $('#editmodal').modal('show');
+            $tr = $(this).closest('tr');
+            var data = $tr.children("td").map(function () {
+                return $(this).text();
+            }).get();
+            console.log(data);
+            $('#update-id').val(data[0]);
 
-        // Handle the image file and preview
-        var imageUrl = $tr.find('img').attr('src');
-        $('#image-preview').attr('src', imageUrl);
-        $('#update-image').attr('data-preview', imageUrl);
-        $('#update-name').val(data[2]);
-        $('#update-category').val(data[3]);
+            // Handle the image file and preview
+            var imageUrl = $tr.find('img').attr('src');
+            $('#image-preview').attr('src', imageUrl);
+            $('#update-image').attr('data-preview', imageUrl);
+            $('#update-name').val(data[2]);
+            $('#update-category').val(data[3]);
+        });
     });
-});
 
     $(document).ready(function(){  
            $('#search').keyup(function(){  
@@ -328,5 +336,24 @@ if (isset($_POST["deactivate_btn"])) {
                      }  
                 });  
            }  
-      }); 
+      });
+
+    // Function to validate input and allow only alphabetic characters and hyphen
+    function validateInput(inputElement) {
+        const inputValue = inputElement.value;
+        const sanitizedValue = inputValue.replace(/[^a-zA-Z-]/g, ''); // Keep only letters and hyphen
+        inputElement.value = sanitizedValue; // Update the input value
+    }
+
+    // Add event listeners to both Menu Name input fields
+    const menuTextInput = document.querySelector('input[name="menu-text"]');
+    const updateNameInput = document.getElementById('update-name');
+
+    menuTextInput.addEventListener('input', function() {
+        validateInput(menuTextInput);
+    });
+
+    updateNameInput.addEventListener('input', function() {
+        validateInput(updateNameInput);
+    });
 </script>

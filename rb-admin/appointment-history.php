@@ -85,6 +85,10 @@ include '../conn.php';
     color: white; /* Set the text color for pagination buttons */
     background-color: transparent; /* Optional: Set the background-color of pagination buttons to transparent */
   }
+  
+  #sortTable_length {
+        display: none;
+    }
 </style>
 <body class="hold-transition sidebar-mini layout-fixed">
     <div class="wrapper" >
@@ -125,10 +129,13 @@ include '../conn.php';
                             <td class="text-center"><?php echo $row["appointment_desc"]; ?></td>
                             <td class="text-center"><?php echo $row["name"]; ?></td>
                             <td class="text-center"><?php echo $row["count"]; ?></td>
-                            <td class="text-center"><?php echo $row["date"]; ?></td>
-                            <td class="text-center"><?php echo $row["time"]; ?></td>
-                            <td class="text-center"><?php echo $row["time-out"]; ?></td>
-                            <td class="w-25"><?php echo $row["note"]; ?></td>
+                            <td class="text-center"><?php $formattedDate = date('F j, Y', strtotime($row["date"])); 
+                                                    echo $formattedDate;?></td>
+                            <td class="text-center"><?php $formattedDateTime = date('g:i A', strtotime($row["time"])); 
+                                                    echo $formattedDateTime;?></td>
+                            <td class="text-center"><?php $formattedDateTimeout = date('g:i A', strtotime($row["time-out"])); 
+                                                    echo $formattedDateTimeout;?></td>
+                            <td><?php echo $row["note"]; ?></td>
                         </tr>
                         <?php 
                     } } else { ?>
@@ -143,13 +150,21 @@ include '../conn.php';
     </div>
     </div>
 </body>
+<!-- Footer -->
+<footer class="main-footer bg-black text-center">
+    <div class="float-right d-none d-sm-block">
+        <!-- Additional footer content or links can go here -->
+    </div>
+    Romantic Baboy – SM City Sta. Rosa Branch
+ &copy; <?php echo date("Y"); ?>
+</footer>
 </html>
 
 <script>
      $(document).ready(function() {
     // Initialize DataTable for the table element with class "table"
     $('#sortTable').DataTable({
-      order: [[3, 'desc']]
+      order: [[4, 'desc']]
     });
     });
 </script>

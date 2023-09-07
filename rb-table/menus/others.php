@@ -83,5 +83,13 @@
     </div>
     <?php } ?>
 
+<!-- Footer -->
+<footer class="main-footer bg-black text-center">
+    <div class="float-right d-none d-sm-block">
+        <!-- Additional footer content or links can go here -->
+    </div>
+    Romantic Baboy – SM City Sta. Rosa Branch
+ &copy; <?php echo date("Y"); ?>
+</footer>
 </body>
 </html>

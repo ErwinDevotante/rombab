@@ -119,6 +119,16 @@ include '../conn.php';
     </div>
     <!-- /.card -->
   </div>
+</body>
+<!-- Footer -->
+<footer class="main-footer bg-black text-center">
+    <div class="float-right d-none d-sm-block">
+        <!-- Additional footer content or links can go here -->
+    </div>
+    Romantic Baboy – SM City Sta. Rosa Branch
+ &copy; <?php echo date("Y"); ?>
+</footer>
+</html>
 
   <script>
         // JavaScript code to update the timers in real-time
@@ -148,6 +158,3 @@ include '../conn.php';
         // Call the function to update the timers in real-time
         updateTimers();
     </script>
-
-</body>
-</html>

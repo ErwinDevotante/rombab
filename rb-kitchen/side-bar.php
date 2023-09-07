@@ -47,7 +47,7 @@
             <a href="log-reports.php" class="nav-link <?php if($a==4){ echo 'active'; }?>">
                <i class="ion ion-ios-paper nav-icon"></i>
               <p>
-                Log Report
+                Inventory Reports
               </p>
             </a>
         </li> 

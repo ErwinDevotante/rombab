@@ -120,6 +120,10 @@ if (isset($_POST['log_item'])) {
     color: white; /* Set the text color for pagination buttons */
     background-color: transparent; /* Optional: Set the background-color of pagination buttons to transparent */
   }
+
+  #sortTable_length {
+        display: none;
+    }
 </style>
 <body class="hold-transition sidebar-mini layout-fixed">
 <div class="wrapper">
@@ -131,7 +135,7 @@ if (isset($_POST['log_item'])) {
     <div class="content-wrapper bg-black">
         <div class="content p-4">
             <div class="container-fluid text-center p-4">
-                <h1>Log Reports</h1>
+                <h1>Inventory Reports</h1>
             </div>
 
             <table class="table table-hover table-bordered table-dark mt-2" id="sortTable">
@@ -174,7 +178,7 @@ if (isset($_POST['log_item'])) {
                     <div class="form-row">
                         <div class="form-group col">
                             <label>Item ID</label>
-                            <input type="number" class="form-control" name="item-id" placeholder="Enter Item ID" required>
+                            <input type="number" class="form-control" name="item-id" placeholder="Enter Item ID"  min="1" required>
                         </div>
                         <div class="form-group col">
                             <label>Quantity</label>
@@ -222,6 +226,14 @@ if (isset($_POST['log_item'])) {
         </div>
     </div>
 </body>
+<!-- Footer -->
+<footer class="main-footer bg-black text-center">
+    <div class="float-right d-none d-sm-block">
+        <!-- Additional footer content or links can go here -->
+    </div>
+    Romantic Baboy – SM City Sta. Rosa Branch
+ &copy; <?php echo date("Y"); ?>
+</footer>
 </html>
 <script>
     document.addEventListener("DOMContentLoaded", function() {
@@ -243,4 +255,34 @@ if (isset($_POST['log_item'])) {
         searching: false,
         lengthChange: false
     } );
+
+    // Get references to both input elements
+    const qtyInput = document.querySelector('input[name="item-qty"]');
+    const itemIdInput = document.querySelector('input[name="item-id"]');
+
+    // Add event listener for Quantity input
+    qtyInput.addEventListener('input', function() {
+        let qty = parseFloat(qtyInput.value);
+        
+        // Check for negative zero (-0.0) and set it to 0.1
+        if (qty === 0) {
+            qtyInput.value = '0.1';
+            qty = 0.1;
+        } else if (qty < 0) {
+            qtyInput.value = '0.1'; // You can change the default value
+            qty = 0.1;
+        }
+    });
+
+    // Add event listener for Item ID input
+    itemIdInput.addEventListener('input', function() {
+        let itemId = parseFloat(itemIdInput.value);
+        
+        // Check for negative zero (-0.0) and set it to an empty string
+        if (itemId === 0) {
+            itemIdInput.value = '';
+        } else if (itemId < 0) {
+            itemIdInput.value = '';
+        }
+    });
 </script>
