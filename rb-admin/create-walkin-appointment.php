@@ -1,6 +1,7 @@
 <?php 
 $a = 6;
 session_start();
+date_default_timezone_set('Asia/Manila');
 include '../conn.php';
     $id = $_SESSION['user_id'];
     $result = mysqli_query($connection, "SELECT * FROM users where user_id = '$id' ");
@@ -54,7 +55,7 @@ include '../conn.php';
                 echo "<script> alert('Failed to assign table.'); </script>";
             }
         } else {
-            $query_add = "INSERT INTO appointment VALUES('', '$name', NULL , '$pax', '$date', '$time', '$note', '1')";
+            $query_add = "INSERT INTO appointment VALUES('', '$name', '$description', NULL , '$pax', '$date', '$time', '$note', '1')";
             $result_query_add = mysqli_query($connection, $query_add);
             // No activated table is available, you can add further logic to handle this case, e.g., wait and display a message
             echo "<script> alert('No available activated table. Please wait for a table to become available.'); </script>";
@@ -175,7 +176,7 @@ include '../conn.php';
                     $result_tb = mysqli_query($connection, "SELECT * FROM appointment
                     LEFT JOIN users ON users.user_id=appointment.table_id
                     WHERE table_id is NULL 
-                    OR appointment_session = '1' AND appointment_desc = 'Walk-In'");
+                    AND appointment_session = '1' AND appointment_desc = 'Walk-In'");
                     if(mysqli_num_rows($result_tb) > 0) {
                     while ($row = mysqli_fetch_array($result_tb)) { ?> 
                         <tr>

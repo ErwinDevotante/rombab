@@ -125,7 +125,7 @@ include '../conn.php';
                 <tr>
                     <th class="text-center" scope="col">Item</th>
                     <th class="text-center" scope="col">Description</th>
-                    <th class="text-center" scope="col">OUM</th>
+                    <th class="text-center" scope="col">UOM</th>
                     <th class="text-center" scope="col">Stocks</th>
                     <th class="text-center" scope="col">Status</th>
                 </tr>
