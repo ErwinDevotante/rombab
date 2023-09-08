@@ -60,50 +60,97 @@ include '../conn.php';
 
     <section class="content">
       <div class="container-fluid">
-        <div class="row">
-          
-        <div class="col-lg-3 col-6">
-			    <a href="see-orders.php" class="small-box-footer">
-            <div class="small-box bg-yellow">
-              <div class="inner">
-                <h3>See</h3> <h4 class="font-weight-bold">Orders</h4>
-                <p>View Pending Orders</p>
-              </div>
-              <div class="icon">
-                <i class="ion ion-android-restaurant"></i>
-              </div>
-             </div>
-			    </a>
-        </div>
+        <div class="row"> 
+          <?php 
+          $query_inventory_item = "SELECT item_name, stock FROM inventory WHERE stock < 20"; // Modify this query to select the required columns.
+          // Execute the query.
+          $result_inventory_item = mysqli_query($connection, $query_inventory_item);
 
-        <div class="col-lg-3 col-6">
-			    <a href="order-history.php" class="small-box-footer">
-            <div class="small-box bg-red">
-              <div class="inner">
-                <h4 class="font-weight-bold">Order</h4>
-                <h3>History</h3><p>Check Order History</p>
+          // Fetch the item data (item_name and stock) from the query result.
+          $itemData = array();
+          while ($row_item = mysqli_fetch_assoc($result_inventory_item)) {
+              $itemData[] = $row_item;
+          }
+          ?>
+          <div class="col-lg-6">
+            <a href="log-reports.php" class="small-box-footer">
+              <div class="small-box bg-red">
+                <div class="inner">
+                  <h4 class="font-weight-bold">Inventory Items</h4><p> (Low level stocks less than 20)</p>
+                    <table class="table">
+                      <?php
+                        // Loop through the item data and display item_name and stock in table rows.
+                      if(mysqli_num_rows($result_inventory_item) > 0) {
+                        foreach ($itemData as $item) {
+                          echo "<tr><td>{$item['item_name']}</td>";
+                          echo "<td>Stock: {$item['stock']}</td></tr>";
+                        }
+                      } else {
+                        echo "<tr><td class='text-center' colspan='2'>All stocks are in good levels.</td></tr>";
+                      }
+                      ?>
+                    </table>
+                  </div>
+                    <div class="icon">
+                    <i class="ion ion-ios-filing"></i>
+                  </div>
               </div>
-              <div class="icon">
-                <i class="ion ion-document-text"></i>
-              </div>
-            </div>
-			    </a>
-        </div>
+            </a>
+          </div>
 
-        <div class="col-lg-3 col-6">
-			    <a href="log-reports.php" class="small-box-footer">
-            <div class="small-box bg-green">
-              <div class="inner">
-                <h4 class="font-weight-bold">Inventory</h4>
-                <h3>Reports</h3><p>Check Inventory Report</p>
+          <?php
+          date_default_timezone_set('Asia/Manila');
+          $todayDate = date('Y-m-d');
+          $query_inventory_reports = "SELECT inventory.item_name, users.name, log_reports.report_qty, log_reports.date_time
+                                      FROM log_reports
+                                      LEFT JOIN inventory ON inventory.item_id = log_reports.report_item_id
+                                      LEFT JOIN users ON users.user_id = log_reports.report_user_id
+                                      WHERE DATE(log_reports.date_time) = '$todayDate' AND users.user_id = '$id'";
+          // Execute the query.
+          $result_inventory_reports = mysqli_query($connection, $query_inventory_reports);
+          ?>
+          <div class="col-lg-6">
+            <a href="log-reports.php" class="small-box-footer">
+              <div class="small-box bg-red">
+                <div class="inner">
+                  <h4 class="font-weight-bold">Inventory Reports</h4>
+                  <p>Reports for <?php echo $todayDate;?>.</p>
+                  <table class="table">
+                    <thead>
+                      <tr>
+                        <th>Item</th>
+                        <th>User</th>
+                        <th>Qty</th>
+                        <th>Time</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <?php
+                      if(mysqli_num_rows($result_inventory_reports) > 0) {
+                        while ($row_reports = mysqli_fetch_assoc($result_inventory_reports)) {
+                          echo "<tr>";
+                          echo "<td>{$row_reports['item_name']}</td>";
+                          echo "<td>{$row_reports['name']}</td>";
+                          echo "<td>{$row_reports['report_qty']}</td>";
+                          // Format date_time in 12-hour time format
+                          $formattedTime = date('h:i A', strtotime($row_reports['date_time']));
+                          echo "<td>{$formattedTime}</td>";
+                          echo "</tr>";
+                        }
+                      }
+                      else {
+                        echo "<tr><td class='text-center' colspan='4'>No reports for today.</td></tr>";
+                      }
+                      ?>
+                    </tbody>
+                  </table>
+                </div>
+                <div class="icon">
+                  <i class="ion ion-document-text"></i>
+                </div>
               </div>
-              <div class="icon">
-                <i class="ion ion-ios-paper"></i>
-              </div>
-            </div>
-			    </a>
-        </div>
-    
+            </a>
+          </div>
         </div>
       </div>
     </section>

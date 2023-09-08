@@ -156,7 +156,7 @@ include '../conn.php';
 
             <table class="table table-hover table-bordered table-dark mt-5" id="sortTable_log">
             <thead>
-                <tr><th colspan="5">Log Reports</th></tr>
+                <tr><th colspan="5">Inventory Reports</th></tr>
                 <tr>
                     <th class="text-center" scope="col">ID</th>
                     <th class="text-center" scope="col">Item</th>

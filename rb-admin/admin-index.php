@@ -63,51 +63,140 @@ include '../conn.php';
       <div class="container-fluid">
         <div class="row">
           
-        <div class="col-lg-3 col-6">
-			    <a href="inventory.php" class="small-box-footer">
+        <?php 
+        $query_inventory_item = "SELECT item_name, stock FROM inventory WHERE stock < 20"; // Modify this query to select the required columns.
+        // Execute the query.
+        $result_inventory_item = mysqli_query($connection, $query_inventory_item);
+
+        // Fetch the item data (item_name and stock) from the query result.
+        $itemData = array();
+        while ($row_item = mysqli_fetch_assoc($result_inventory_item)) {
+            $itemData[] = $row_item;
+        }
+        ?>
+        <div class="col-lg-6">
+          <a href="inventory.php" class="small-box-footer">
             <div class="small-box bg-red">
               <div class="inner">
-                <h3>Inventory</h3> <h4 class="font-weight-bold">Items</h4>
-                <p>Managing Inventory</p>
-              </div>
-              <div class="icon">
-                <i class="ion ion-ios-filing"></i>
-              </div>
-             </div>
-			    </a>
+                <h4 class="font-weight-bold">Inventory Items</h4><p> (Low level stocks less than 20)</p>
+                  <table class="table">
+                    <?php
+                      // Loop through the item data and display item_name and stock in table rows.
+                    if(mysqli_num_rows($result_inventory_item) > 0) {
+                      foreach ($itemData as $item) {
+                        echo "<tr><td>{$item['item_name']}</td>";
+                        echo "<td>Stock: {$item['stock']}</td></tr>";
+                      }
+                    } else {
+                      echo "<tr><td class='text-center' colspan='2'>All stocks are in good levels.</td></tr>";
+                    }
+                    ?>
+                  </table>
+                </div>
+                  <div class="icon">
+                  <i class="ion ion-ios-filing"></i>
+                </div>
+            </div>
+          </a>
         </div>
 
-        <div class="col-lg-3 col-6">
-			    <a href="inventory-history.php" class="small-box-footer">
+        <?php
+        date_default_timezone_set('Asia/Manila');
+        $todayDate = date('Y-m-d');
+        $query_inventory_reports = "SELECT inventory.item_name, users.name, log_reports.report_qty, log_reports.date_time
+                                    FROM log_reports
+                                    LEFT JOIN inventory ON inventory.item_id = log_reports.report_item_id
+                                    LEFT JOIN users ON users.user_id = log_reports.report_user_id
+                                    WHERE DATE(log_reports.date_time) = '$todayDate'";
+        // Execute the query.
+        $result_inventory_reports = mysqli_query($connection, $query_inventory_reports);
+        ?>
+        <div class="col-lg-6">
+          <a href="inventory-history.php" class="small-box-footer">
             <div class="small-box bg-red">
               <div class="inner">
-                <h4 class="font-weight-bold">Inventory</h4>
-                <h3>Reports</h3><p>Check Reports</p>
+                <h4 class="font-weight-bold">Inventory Reports</h4>
+                <p>Reports for <?php echo $todayDate;?>.</p>
+                <table class="table">
+                  <thead>
+                    <tr>
+                      <th>Item</th>
+                      <th>User</th>
+                      <th>Qty</th>
+                      <th>Time</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <?php
+                    if(mysqli_num_rows($result_inventory_reports) > 0) {
+                      while ($row_reports = mysqli_fetch_assoc($result_inventory_reports)) {
+                        echo "<tr>";
+                        echo "<td>{$row_reports['item_name']}</td>";
+                        echo "<td>{$row_reports['name']}</td>";
+                        echo "<td>{$row_reports['report_qty']}</td>";
+                        // Format date_time in 12-hour time format
+                        $formattedTime = date('h:i A', strtotime($row_reports['date_time']));
+                        echo "<td>{$formattedTime}</td>";
+                        echo "</tr>";
+                      }
+                    }
+                    else {
+                      echo "<tr><td class='text-center' colspan='4'>No reports for today.</td></tr>";
+                    }
+                    ?>
+                  </tbody>
+                </table>
               </div>
               <div class="icon">
                 <i class="ion ion-document-text"></i>
               </div>
             </div>
-			    </a>
+          </a>
         </div>
 
-        <div class="col-lg-3 col-6">
-			    <a href="add-menu.php" class="small-box-footer">
+        <?php
+        // Query to retrieve the menu data.
+        $query_menu = "SELECT menu_name, menu_availability FROM menus";
+        $result_menu = mysqli_query($connection, $query_menu);
+
+        // Initialize counters for menus, activated menus, and deactivated menus.
+        $menuCount = 0;
+        $activatedCount = 0;
+        $deactivatedCount = 0;
+
+        while ($row_menu = mysqli_fetch_assoc($result_menu)) {
+            $menuCount++; // Increment the menu count for each menu.
+            
+            // Check the menu_availability field and update the counts accordingly.
+            if ($row_menu['menu_availability'] == 0) {
+                $activatedCount++;
+            } else {
+                $deactivatedCount++;
+            }
+        }
+        ?>
+        <div class="col-lg-6">
+          <a href="add-menu.php" class="small-box-footer">
             <div class="small-box bg-red">
-              <div class="inner">
-                <h4 class="font-weight-bold">Add</h4>
-                <h3>Menu</h3><p>Add Restaurant Menu</p>
-              </div>
-              <div class="icon">
-                <i class="ion ion-android-restaurant"></i>
-              </div>
+                <div class="inner">
+                  <h4 class="font-weight-bold">Menu Counts</h4>
+                    <p>Restaurant menu counts for today.</p>
+                      <table class="table">
+                          <tr><td>Total Menus: <?php echo $menuCount; ?></td></tr>
+                          <tr><td>Activated Menus: <?php echo $activatedCount; ?></td></tr>
+                          <tr><td>Deactivated Menus: <?php echo $deactivatedCount; ?></td></tr>
+                      </table>
+                </div>
+                <div class="icon">
+                    <i class="ion ion-android-restaurant"></i>
+                </div>
             </div>
-			    </a>
-        </div>
+      </div>
     
         </div>
       </div>
     </section>
+
     <?php } if($row['user_role'] == '1' || $row['user_role'] == '2' || $row['user_role'] == '5') { ?>
     <div class="content-header">
       <div class="container-fluid">
@@ -122,62 +211,123 @@ include '../conn.php';
     <section class="content">
       <div class="container-fluid">
         <div class="row">
-       
-          <div class="col-lg-3 col-6">
+
+        <?php 
+        // Query to retrieve the menu data.
+        $query_table = "SELECT * FROM users WHERE user_role = '4'";
+        $result_table = mysqli_query($connection, $query_table);
+
+        // Initialize counters.
+        $tableCount = 0;
+        $activatedCount = 0;
+        $deactivatedCount = 0;
+        $not_availableCount = 0;
+        $occupiedCount = 0;
+        $tableNamesNotAvailable = ''; // Initialize the table names string.
+        $tableNamesActivate = '';
+        $tableNamesDeactivate = '';
+        $tableNamesOccupied = '';
+
+
+        while ($row_table = mysqli_fetch_assoc($result_table)) {
+            $tableCount++; // Increment the menu count for each menu.
+            
+            // Check the session_tb field and update the counts accordingly.
+            if ($row_table['session_tb'] == 0) {
+                $not_availableCount++;
+                if ($not_availableCount > 1) {
+                    $tableNamesNotAvailable .= ", "; // Add a comma if there are multiple not available tables.
+                }
+                $tableNamesNotAvailable .= $row_table['name']; // Add the table name.
+            } else if ($row_table['session_tb'] == 1) {
+                $activatedCount++;
+                if ($activatedCount > 1) {
+                  $tableNamesActivate .= ", ";
+                }
+                $tableNamesActivate .= $row_table['name'];
+            } else if ($row_table['session_tb'] == 2) {
+                $deactivatedCount++;
+                if ($deactivatedCount > 1) {
+                  $tableNamesDeactivate .= ", ";
+                }
+                $tableNamesDeactivate .= $row_table['name'];
+            } else if ($row_table['session_tb'] == 3) {
+                $occupiedCount++;
+                if ($occupiedCount > 1) {
+                  $tableNamesOccupied .= ", ";
+                }
+                $tableNamesOccupied .= $row_table['name'];
+            } 
+        }
+
+        
+        ?>
+
 			      <a href="manage-appointment.php" class="small-box-footer">
               <div class="small-box bg-red">
                 <div class="inner">
-                  <h3>Manage</h3><h5 class="font-weight-bold">Appointment</h5>
-                  <p>Managing tables</p>
+                 <h5 class="font-weight-bold">Table Availability</h5>
+                  <p>Check table availability</p>
+                  <p>Total no. of tables: <?php echo $tableCount; ?></p>
+                      <table class="table">
+                        <thead>
+                          <tr>
+                            <th scope="col">Status</th>
+                            <th scope="col">No.</th>
+                            <th scope="col">Table Name</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <tr>
+                            <td>Activate</td>
+                            <td><?php echo $activatedCount; ?></td>
+                              <?php 
+                              if($activatedCount === 0) { ?>
+                              <td>There is/are no activated table.</td>
+                              <?php } else { ?>
+                                <td><?php echo $tableNamesActivate; ?></td>
+                              <?php } ?>
+                          </tr>
+                          <tr>
+                            <td>Deactivate</td>
+                            <td><?php echo $deactivatedCount; ?></td>
+                              <?php 
+                              if($deactivatedCount === 0) { ?>
+                              <td>There is/are no deactivated table.</td>
+                              <?php } else { ?>
+                                <td><?php echo $tableNamesDeactivate; ?></td>
+                              <?php } ?>
+                          </tr>
+                          <tr>
+                            <td>Not Available</td>
+                            <td><?php echo $not_availableCount; ?></td>
+                              <?php 
+                              if($not_availableCount === 0) { ?>
+                              <td>There is/are available table.</td>
+                              <?php } else { ?>
+                                <td><?php echo $tableNamesNotAvailable; ?></td>
+                              <?php } ?>
+                          </tr>
+                          <tr>
+                            <td>Occupied</td>
+                            <td><?php echo $occupiedCount; ?></td>
+                              <?php 
+                                if($occupiedCount === 0) { ?>
+                                <td>There is/are occupied table.</td>
+                                <?php } else { ?>
+                                  <td><?php echo $tableNamesOccupied; ?></td>
+                                <?php } ?>
+                          </tr>
+                        </tbody>
+                      </table>
                 </div>
                 <div class="icon">
                   <i class="ion ion-clipboard"></i>
                 </div>
              </div>
 			      </a>
-          </div>
-          <div class="col-lg-3 col-6">
-			      <a href="online-appointment.php" class="small-box-footer">
-              <div class="small-box bg-red">
-                <div class="inner">
-                  <h3>Online</h3><h5 class="font-weight-bold">Appointment</h5>
-                  <p>Create for online appointment</p>
-                </div>
-                <div class="icon">
-                  <i class="ion ion-mouse"></i>
-                </div>
-             </div>
-			      </a>
-          </div>
-
-          <div class="col-lg-3 col-6">
-			      <a href="create-walkin-appointment.php" class="small-box-footer">
-              <div class="small-box bg-red">
-                <div class="inner">
-                  <h3>Walk-in</h3><h5 class="font-weight-bold">Appointment</h5>
-                  <p>Create for walk-in appointment</p>
-                </div>
-                <div class="icon">
-                  <i class="ion ion-android-walk"></i>
-                </div>
-             </div>
-			      </a>
-          </div>
-
-          <div class="col-lg-3 col-6">
-			      <a href="appointment-history.php" class="small-box-footer">
-              <div class="small-box bg-red">
-                <div class="inner">
-                <h5 class="font-weight-bold">Appointment</h5><h3>History</h3>
-                  <p>View Appoinment History</p>
-                </div>
-                <div class="icon">
-                  <i class="ion ion-ios-box"></i>
-                </div>
-              </div>
-			      </a>
-          </div>
-
+          
+          
         </div>
     </section>
     <?php } ?>
@@ -198,7 +348,7 @@ include '../conn.php';
         <div class="container-fluid">
         <div class="row">
 
-          <div class="col-lg-3 col-6">
+          <div class="col-lg-6">
 			      <a href="add-account.php" class="small-box-footer">
             <div class="small-box bg-red">
               <div class="inner">

@@ -15,12 +15,14 @@ include '../conn.php';
         $status = $_POST['item-status'];
     
         // Check for redundant data before inserting
-        $check_query = "SELECT * FROM inventory WHERE item_name = '$item_name' AND item_desc = '$description'";
+        $check_query = "SELECT * FROM inventory WHERE LOWER(item_name) = LOWER('$item_name')";
         $result = mysqli_query($connection, $check_query);
     
         if (mysqli_num_rows($result) > 0) {
             // Redundant data found, show an error message
-            echo 'alert(Menu item with the same name and category already exists.)';
+            echo '<script type="text/javascript">'; 
+            echo 'alert("Menu item with the same name already exists.");'; echo 'window.location.href = "inventory.php";';
+            echo '</script>';
         } else {
             // No redundant data, proceed with insertion
             $insert_query = "INSERT INTO inventory (item_name, item_desc, unit_of_measure, stock, item_status) 

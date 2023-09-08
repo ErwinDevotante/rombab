@@ -14,12 +14,14 @@ if (isset($_POST["upload"])) {
     $category = $_POST['menu-category'];
 
     // Check for redundant data before inserting
-    $check_query = "SELECT * FROM menus WHERE menu_name = '$menu_text' AND menu_category = '$category'";
+    $check_query = "SELECT * FROM menus WHERE LOWER(menu_name) = LOWER('$menu_text')";
     $result = mysqli_query($connection, $check_query);
 
     if (mysqli_num_rows($result) > 0) {
         // Redundant data found, show an error message
-        echo 'alert(Menu item with the same name and category already exists.)';
+        echo '<script type="text/javascript">'; 
+        echo 'alert("Menu item with the same name already exists.");'; echo 'window.location.href = "add-menu.php";';
+        echo '</script>';
     } else {
         // No redundant data, proceed with insertion
         $target = "menu-images/" . basename($_FILES['menu-image']['name']);
@@ -27,9 +29,13 @@ if (isset($_POST["upload"])) {
                         VALUES ('$image', '$menu_text', '$category')";
 
         if (move_uploaded_file($_FILES['menu-image']['tmp_name'], $target) && mysqli_query($connection, $insert_query)) {
-            echo 'alert(Image uploaded successfully)';
+            echo '<script type="text/javascript">'; 
+            echo 'alert("Image uploaded successfully.");'; echo 'window.location.href = "add-menu.php";';
+            echo '</script>';
         } else {
-            echo 'alert(There was a problem uploading image or inserting data.)';
+            echo '<script type="text/javascript">'; 
+            echo 'alert("There was a problem uploading image or inserting data.");'; echo 'window.location.href = "add-menu.php";';
+            echo '</script>';
         }
 
         // Redirect back to the add-menu.php page after inserting
@@ -205,14 +211,14 @@ if (isset($_POST["deactivate_btn"])) {
                     <form method="post" action="add-menu.php" enctype="multipart/form-data">
                         <tr id="<?php echo $row["menu_id"]; ?>">
                             <td style="display: none"><?php echo $row["menu_id"]; ?></td> <!--hidden-->
-                            <td class="text-center w-25"><img src ='menu-images/<?php echo $row["menu_image"]; ?>' class="img-fluid img-thumbnail custom-image"></td>
-                            <td class="text-center"><?php echo $row["menu_name"]; ?>
+                            <td class="text-center w-25"><img src ='menu-images/<?php echo $row["menu_image"]; ?>' class="img-fluid img-thumbnail custom-image">
                                 <?php if($row["menu_availability"] == 1) { ?>
                                     <div class="text-red font-weight-bold">[DEACTIVATED]</div>
                                 <?php } else if($row["menu_availability"] == 0) { ?>
                                     <div class="text-green font-weight-bold">[ACTIVATED]</div>
                                 <?php } ?>
-                            </td>
+                             </td>
+                            <td class="text-center"><?php echo $row["menu_name"]; ?></td>
                             <td class="text-center"><?php echo $row["menu_category"]; ?></td>
                             <td class="text-center w-25">
                                 <div class="p-2"><button type="button" class="btn btn-primary update_btn" id="update_btn">UPDATE</button></div>
