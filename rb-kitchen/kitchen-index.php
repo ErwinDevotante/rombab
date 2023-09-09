@@ -151,6 +151,48 @@ include '../conn.php';
               </div>
             </a>
           </div>
+
+          <?php 
+          // Query to retrieve the count of today's served orders for the specific user.
+          $query_served_orders_count = "SELECT COUNT(*) AS served_order_count FROM `orders`
+                                        LEFT JOIN `users` ON orders.user_table = users.user_id
+                                        WHERE DATE(orders.time_date) = '$todayDate' 
+                                        AND users.user_id = '$id'";
+
+          // Execute the query.
+          $result_served_orders_count = mysqli_query($connection, $query_served_orders_count);
+          ?>
+          <div class="col-lg-6">
+            <a href="order-history.php" class="small-box-footer">
+              <div class="small-box bg-red">
+                <div class="inner">
+                  <h4 class="font-weight-bold text-center">Served Orders</h4>
+                  <p class="fs-6 text-center">Total of served order for <?php echo $todayDate;?>.</p>
+                  <?php
+                    // Check if the query was successful.
+                    if ($result_served_orders_count) {
+                      // Fetch the result as an associative array.
+                      $row = mysqli_fetch_assoc($result_served_orders_count);
+
+                      // Get the served order count.
+                      $servedOrderCount = $row['served_order_count'];
+
+                      // Display the served order count inside the small-box.
+                      echo "<h1 class='text-center font-weight-bold'>$servedOrderCount</h1>";
+                    } else {
+                        // Handle the case where the query fails.
+                        echo "<p>Error retrieving served orders count.</p>";
+                    }
+                  ?>
+                  </table>
+                </div>
+                <div class="icon">
+                  <i class="ion ion-clipboard"></i>
+                </div>
+              </div>
+            </a>
+          </div>
+
         </div>
       </div>
     </section>
