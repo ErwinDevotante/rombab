@@ -194,7 +194,7 @@ if (isset($_POST["deactivate_btn"])) {
                 </div>
             </div>
 
-            <table class="table table-hover table-bordered table-dark mt-2">
+            <table class="table table-responsive table-hover table-bordered table-dark mt-2">
             <thead>
                 <tr>
                     <th class="text-center" scope="col">Image</th>

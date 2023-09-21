@@ -93,9 +93,9 @@ include '../conn.php';
                         class="w-100" style="border-top-left-radius: .3rem; border-top-right-radius: .3rem; height: 250px;"
                         alt="Photo">
                     <div class="card-body p-4 p-md-5">
-
+                    <div style="overflow-x:auto;">
                         <form class="px-md-2" class="needs-validation" method="POST">
-
+                        
                         <div class="form-group was-validated">
                         <label class="form-label text-black" for="roles">Select Account Options</label>
                                 <select name="roles" class="form-control" id="roles" required>
@@ -151,6 +151,8 @@ include '../conn.php';
                         </form>
                     </div>
                     </div>
+                    </div>
+                    <div style="overflow-x:auto;">
                         <table class="table table-hover table-bordered table-dark mt-2" id="sortTable">
                         <thead>
                             <tr>
@@ -179,7 +181,8 @@ include '../conn.php';
                                     </tr>
                                 <?php } ?>
                             </tbody>  
-                        </table>    
+                        </table> 
+                    </div>   
                 </div>
                 </div>
             </section>

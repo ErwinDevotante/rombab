@@ -159,7 +159,7 @@ include '../conn.php';
     </div>
     <button type="submit" name="submit" class="btn btn-primary">Submit</button>
 
-    
+    <div style="overflow-x:auto;">
         <table class="table table-hover table-bordered table-dark mt-5">
             <thead>
                 <tr>
@@ -198,6 +198,8 @@ include '../conn.php';
                     ?>
                 </tbody>  
         </table>
+    </div>
+    
     </form>
     </section>
     </div>

@@ -98,30 +98,32 @@ include '../conn.php';
             <div class="container-fluid text-center p-4">
                 <h1>Orders History</h1>
             </div>
-            <table class="table table-hover table-bordered table-dark mt-5" id="sortTable">
-            <thead>
-                <tr>
-                    <th class="text-center" scope="col">Table No.</th>
-                    <th class="text-center" scope="col">Products</th>
-                    <th class="text-center" scope="col">Date and Time</th>
-                </tr>
-            </thead>
-                <tbody>
-                <?php 
-                    $result_tb = mysqli_query($connection, "SELECT * FROM `orders`
-                    LEFT JOIN `users` ON orders.user_table = users.user_id
-                    WHERE status = 1");
-                    while ($row = mysqli_fetch_array($result_tb)) { ?> 
-                        <tr>
-                            <td class="text-center w-25"><?php echo $row["name"]; ?></td>
-                            <td class="w-50"><?php echo $row["total_products"]; ?></td>
-                            <td class="text-center w-25"><?php echo $row["time_date"]; ?></td>
-                        </tr>
-                        <?php 
-                    } 
-                    ?>
-                </tbody>  
-        </table>
+            <div style="overflow-x:auto;">
+              <table class="table table-hover table-bordered table-dark mt-5" id="sortTable">
+              <thead>
+                  <tr>
+                      <th class="text-center" scope="col">Table No.</th>
+                      <th class="text-center" scope="col">Products</th>
+                      <th class="text-center" scope="col">Date and Time</th>
+                  </tr>
+              </thead>
+                  <tbody>
+                  <?php 
+                      $result_tb = mysqli_query($connection, "SELECT * FROM `orders`
+                      LEFT JOIN `users` ON orders.user_table = users.user_id
+                      WHERE status = 1");
+                      while ($row = mysqli_fetch_array($result_tb)) { ?> 
+                          <tr>
+                              <td class="text-center w-25"><?php echo $row["name"]; ?></td>
+                              <td class="w-50"><?php echo $row["total_products"]; ?></td>
+                              <td class="text-center w-25"><?php echo $row["time_date"]; ?></td>
+                          </tr>
+                          <?php 
+                      } 
+                      ?>
+                  </tbody>  
+              </table>
+            </div>
         </div>
     </div>
 </body>

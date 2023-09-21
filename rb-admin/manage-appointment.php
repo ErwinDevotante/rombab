@@ -56,6 +56,7 @@ include '../conn.php';
     <section class="home-section">
 
     <form action="" method="post">
+    <div style="overflow-x:auto;">
         <table class="table table-hover table-bordered table-dark mt-5">
             <thead>
                 <tr>
@@ -133,6 +134,7 @@ include '../conn.php';
                     ?>
                 </tbody>
         </table>
+    </div>
     </form>
     </section>
     </div>

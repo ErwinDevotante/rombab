@@ -103,48 +103,50 @@ include '../conn.php';
             <div class="container-fluid text-center p-4">
                 <h1>Appointment History</h1>
             </div>
-            <table class="table table-hover table-dark mt-5 text-white" id="sortTable">
-            <thead>
-                <tr>
-                    <th class="text-center" scope="col">Name</th>
-                    <th class="text-center" scope="col">Description</th>
-                    <th class="text-center" scope="col">Table No</th>
-                    <th class="text-center" scope="col"># of People</th>
-                    <th class="text-center" scope="col">Date</th>
-                    <th class="text-center" scope="col">Time-in</th>
-                    <th class="text-center" scope="col">Time-out</th>
-                    <th class="text-center" scope="col">Note</th>
-                </tr>
-            </thead>
-                <tbody>
-                <?php 
-                    $result_tb = mysqli_query($connection, "SELECT * FROM appointment_history
-                    INNER JOIN users ON users.user_id=appointment_history.table_history_id
-                    INNER JOIN appointment ON appointment.appointment_id=appointment_history.appointment_user_id
-                    WHERE appointment.appointment_session = '2'");
-                    if(mysqli_num_rows($result_tb) > 0) {
-                    while ($row = mysqli_fetch_array($result_tb)) { ?> 
-                        <tr>
-                            <td class="text-center"><?php echo $row["appointment_name"]; ?></td>
-                            <td class="text-center"><?php echo $row["appointment_desc"]; ?></td>
-                            <td class="text-center"><?php echo $row["name"]; ?></td>
-                            <td class="text-center"><?php echo $row["count"]; ?></td>
-                            <td class="text-center"><?php $formattedDate = date('F j, Y', strtotime($row["date"])); 
-                                                    echo $formattedDate;?></td>
-                            <td class="text-center"><?php $formattedDateTime = date('g:i A', strtotime($row["time"])); 
-                                                    echo $formattedDateTime;?></td>
-                            <td class="text-center"><?php $formattedDateTimeout = date('g:i A', strtotime($row["time-out"])); 
-                                                    echo $formattedDateTimeout;?></td>
-                            <td><?php echo $row["note"]; ?></td>
-                        </tr>
-                        <?php 
-                    } } else { ?>
-                        <tr>
-                            <td class="text-center" colspan="8">No record found!</td>
-                        </tr>
-                    <?php } ?>
-                </tbody>  
-        </table>
+            <div style="overflow-x:auto;">
+              <table class="table table-hover table-dark mt-5 text-white" id="sortTable">
+              <thead>
+                  <tr>
+                      <th class="text-center" scope="col">Name</th>
+                      <th class="text-center" scope="col">Description</th>
+                      <th class="text-center" scope="col">Table No</th>
+                      <th class="text-center" scope="col"># of People</th>
+                      <th class="text-center" scope="col">Date</th>
+                      <th class="text-center" scope="col">Time-in</th>
+                      <th class="text-center" scope="col">Time-out</th>
+                      <th class="text-center" scope="col">Note</th>
+                  </tr>
+              </thead>
+                  <tbody>
+                  <?php 
+                      $result_tb = mysqli_query($connection, "SELECT * FROM appointment_history
+                      INNER JOIN users ON users.user_id=appointment_history.table_history_id
+                      INNER JOIN appointment ON appointment.appointment_id=appointment_history.appointment_user_id
+                      WHERE appointment.appointment_session = '2'");
+                      if(mysqli_num_rows($result_tb) > 0) {
+                      while ($row = mysqli_fetch_array($result_tb)) { ?> 
+                          <tr>
+                              <td class="text-center"><?php echo $row["appointment_name"]; ?></td>
+                              <td class="text-center"><?php echo $row["appointment_desc"]; ?></td>
+                              <td class="text-center"><?php echo $row["name"]; ?></td>
+                              <td class="text-center"><?php echo $row["count"]; ?></td>
+                              <td class="text-center"><?php $formattedDate = date('F j, Y', strtotime($row["date"])); 
+                                                      echo $formattedDate;?></td>
+                              <td class="text-center"><?php $formattedDateTime = date('g:i A', strtotime($row["time"])); 
+                                                      echo $formattedDateTime;?></td>
+                              <td class="text-center"><?php $formattedDateTimeout = date('g:i A', strtotime($row["time-out"])); 
+                                                      echo $formattedDateTimeout;?></td>
+                              <td><?php echo $row["note"]; ?></td>
+                          </tr>
+                          <?php 
+                      } } else { ?>
+                          <tr>
+                              <td class="text-center" colspan="8">No record found!</td>
+                          </tr>
+                      <?php } ?>
+                  </tbody>  
+              </table>
+            </div>
         
         </div>
     </div>

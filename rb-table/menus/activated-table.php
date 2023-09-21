@@ -65,25 +65,49 @@ include '../../conn.php';
     <div class="fixed-bottom p-3">
         <a href="#" class="text-dark" onclick="confirmLogout()"><i class="ion ion-android-exit"></i></a>
     </div>
+
+    <!-- Password input dialog (hidden by default) -->
+    <div id="passwordDialog" class="modal fade" tabindex="-1" role="dialog">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Logout</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <input type="password" id="passwordInput" class="form-control" placeholder="Password">
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary" onclick="checkPassword()">SUBMIT</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // JavaScript function to handle logout
+        function confirmLogout() {
+            // Show the password input dialog
+            $('#passwordDialog').modal('show');
+        }
+
+        // JavaScript function to check the password
+        function checkPassword() {
+            // Get the entered password
+            var enteredPassword = document.getElementById('passwordInput').value;
+
+            // Check if the entered password is correct
+            if (enteredPassword === "123456789") {
+                // Redirect to the logout page if the password is correct
+                window.location.href = "../../../log-out.php";
+            } else {
+                // Show an alert if the password is incorrect
+                alert("Incorrect password. Logout action canceled.");
+            }
+
+            // Hide the password input dialog
+            $('#passwordDialog').modal('hide');
+        }
+    </script>
 </body>
 </html>
-
-<script>
-    // JavaScript function to prompt for password and handle logout
-    function confirmLogout() {
-        // Prompt for password input
-        var passwordInput = prompt("Please enter your password:");
-
-        // Replace "123456789" with the actual password to check
-        var correctPassword = "123456789";
-
-        // Check if the entered password is correct
-        if (passwordInput === correctPassword) {
-            // Redirect to the logout page if password is correct
-            window.location.href = "../../../log-out.php";
-        } else {
-            // Show an alert if the password is incorrect
-            alert("Incorrect password. Logout action canceled.");
-        }
-    }
-</script>

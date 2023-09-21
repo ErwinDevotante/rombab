@@ -23,6 +23,10 @@ html, body {
     background-color: #8b0000;
 }
 
+.bg-redbg {
+    background-color: #8b0000;
+}
+
 .btn-primary {
     background-color: #8b0000 ;
     border: 1px solid red;

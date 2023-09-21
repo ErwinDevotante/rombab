@@ -76,7 +76,7 @@ include '../conn.php';
         ?>
         <div class="col-lg-6">
           <a href="inventory.php" class="small-box-footer">
-            <div class="small-box bg-red">
+            <div class="small-box bg-redbg text-white">
               <div class="inner">
                 <h4 class="font-weight-bold">Inventory Items</h4><p> (Low level stocks less than 20)</p>
                   <table class="table">
@@ -84,8 +84,13 @@ include '../conn.php';
                       // Loop through the item data and display item_name and stock in table rows.
                     if(mysqli_num_rows($result_inventory_item) > 0) {
                       foreach ($itemData as $item) {
+                        if ($item['stock'] <= 10) {
+                          echo "<tr><td><span class='badge badge-pill badge-warning text-uppercase'>[WARNING] {$item['item_name']}</span></td>";
+                          echo "<td> <span class='badge badge-pill badge-warning text-uppercase'>Stock: {$item['stock']}</span></td></tr>";
+                        } else {
                         echo "<tr><td>{$item['item_name']}</td>";
                         echo "<td>Stock: {$item['stock']}</td></tr>";
+                        }
                       }
                     } else {
                       echo "<tr><td class='text-center' colspan='2'>All stocks are in good levels.</td></tr>";
@@ -93,7 +98,7 @@ include '../conn.php';
                     ?>
                   </table>
                 </div>
-                  <div class="icon">
+                  <div class="icon text-white">
                   <i class="ion ion-ios-filing"></i>
                 </div>
             </div>
@@ -113,7 +118,7 @@ include '../conn.php';
         ?>
         <div class="col-lg-6">
           <a href="inventory-history.php" class="small-box-footer">
-            <div class="small-box bg-red">
+            <div class="small-box bg-redbg text-white">
               <div class="inner">
                 <h4 class="font-weight-bold">Inventory Reports</h4>
                 <p>Reports for <?php echo $todayDate;?>.</p>
@@ -147,7 +152,7 @@ include '../conn.php';
                   </tbody>
                 </table>
               </div>
-              <div class="icon">
+              <div class="icon text-white">
                 <i class="ion ion-document-text"></i>
               </div>
             </div>
@@ -177,7 +182,7 @@ include '../conn.php';
         ?>
         <div class="col-lg-6">
           <a href="add-menu.php" class="small-box-footer">
-            <div class="small-box bg-red">
+            <div class="small-box bg-redbg text-white">
                 <div class="inner">
                   <h4 class="font-weight-bold">Menu Counts</h4>
                     <p>Restaurant menu counts for today.</p>
@@ -187,7 +192,7 @@ include '../conn.php';
                           <tr><td>Deactivated Menus: <?php echo $deactivatedCount; ?></td></tr>
                       </table>
                 </div>
-                <div class="icon">
+                <div class="icon text-white">
                     <i class="ion ion-android-restaurant"></i>
                 </div>
             </div>
@@ -264,7 +269,7 @@ include '../conn.php';
         ?>
 
 			      <a href="manage-appointment.php" class="small-box-footer">
-              <div class="small-box bg-red">
+              <div class="small-box bg-redbg text-white">
                 <div class="inner">
                  <h5 class="font-weight-bold">Table Availability</h5>
                   <p>Check table availability</p>
@@ -321,7 +326,7 @@ include '../conn.php';
                         </tbody>
                       </table>
                 </div>
-                <div class="icon">
+                <div class="icon text-white">
                   <i class="ion ion-clipboard"></i>
                 </div>
              </div>
@@ -350,12 +355,12 @@ include '../conn.php';
 
           <div class="col-lg-6">
 			      <a href="add-account.php" class="small-box-footer">
-            <div class="small-box bg-red">
+            <div class="small-box bg-redbg text-white">
               <div class="inner">
                 <h3>Table</h3>
                 <p>Add Account</p>
               </div>
-              <div class="icon">
+              <div class="icon text-white">
                 <i class="ion ion-person-add"></i>
               </div>
             </div>

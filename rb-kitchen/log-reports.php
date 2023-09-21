@@ -138,41 +138,44 @@ if (isset($_POST['log_item'])) {
                 <h1>Inventory Reports</h1>
             </div>
 
-            <table class="table table-hover table-bordered table-dark mt-2" id="sortTable">
-            <thead>
-                <tr>
-                    <th class="text-center" scope="col">ID</th>
-                    <th class="text-center" scope="col">Item</th>
-                    <th class="text-center" scope="col">Description</th>
-                    <th class="text-center" scope="col">UOM</th>
-                    <th class="text-center" scope="col">Stocks</th>
-                </tr>
-            </thead>
-                <tbody id = "menu_table">
-                <?php
-                    $inventory_tb = "SELECT * FROM inventory
-                    INNER JOIN statuses ON statuses.status_id = inventory.item_status
-                    WHERE item_status = '0'";
-                    $view_items = mysqli_query($connection, $inventory_tb);
-                    if(mysqli_num_rows($view_items) > 0) {
-                    while ($row = mysqli_fetch_array($view_items)) { ?>
-                        <form method="post" action="inventory.php" enctype="multipart/form-data">
+            <div style="overflow-x:auto;">
+                <table class="table table-hover table-bordered table-dark mt-2" id="sortTable">
+                <thead>
+                    <tr>
+                        <th class="text-center" scope="col">ID</th>
+                        <th class="text-center" scope="col">Item</th>
+                        <th class="text-center" scope="col">Description</th>
+                        <th class="text-center" scope="col">UOM</th>
+                        <th class="text-center" scope="col">Stocks</th>
+                    </tr>
+                </thead>
+                    <tbody id = "menu_table">
+                    <?php
+                        $inventory_tb = "SELECT * FROM inventory
+                        INNER JOIN statuses ON statuses.status_id = inventory.item_status
+                        WHERE item_status = '0'";
+                        $view_items = mysqli_query($connection, $inventory_tb);
+                        if(mysqli_num_rows($view_items) > 0) {
+                        while ($row = mysqli_fetch_array($view_items)) { ?>
+                            <form method="post" action="inventory.php" enctype="multipart/form-data">
+                                <tr>
+                                    <td class="text-center"><?php echo $row["item_id"]; ?></td>
+                                    <td><?php echo $row["item_name"]; ?></td>
+                                    <td><?php echo $row["item_desc"]; ?></td>
+                                    <td><?php echo $row["unit_of_measure"]; ?></td>
+                                    <td class="text-center"><?php echo $row["stock"]; ?></td>
+                                </tr>
+                            </form>
+                        <?php } } else {?>
                             <tr>
-                                <td class="text-center"><?php echo $row["item_id"]; ?></td>
-                                <td><?php echo $row["item_name"]; ?></td>
-                                <td><?php echo $row["item_desc"]; ?></td>
-                                <td><?php echo $row["unit_of_measure"]; ?></td>
-                                <td class="text-center"><?php echo $row["stock"]; ?></td>
+                                <td class="text-center" colspan="5">No record found!</td>
                             </tr>
-                        </form>
-                    <?php } } else {?>
-                        <tr>
-                            <td class="text-center" colspan="5">No record found!</td>
-                        </tr>
-                    <?php } ?>
-                </tbody>  
-            </table>
+                        <?php } ?>
+                    </tbody>  
+                </table>
+            </div>
 
+            <div style="overflow-x:auto;">
             <div class="p-4">
                 <form method="post" action="log-reports.php" enctype="multipart/form-data">
                     <div class="form-row">
@@ -191,37 +194,39 @@ if (isset($_POST['log_item'])) {
                 </form>
             </div>
 
-            <table class="table table-hover table-bordered table-dark mt-2" id="sortTable_log">
-            <thead>
-                <tr>
-                    <th class="text-center" scope="col">ID</th>
-                    <th class="text-center" scope="col">Item</th>
-                    <th class="text-center" scope="col">Quantity</th>
-                    <th class="text-center" scope="col">Date and Time</th>
-                </tr>
-            </thead>
-                <tbody id = "menu_table">
-                <?php 
-                    $view_items = mysqli_query($connection, "SELECT * FROM log_reports
-                                                            LEFT JOIN inventory ON inventory.item_id = log_reports.report_item_id
-                                                            WHERE report_user_id = $id");
-                    if(mysqli_num_rows($view_items) > 0) {
-                    while ($row = mysqli_fetch_array($view_items)) { ?>
-                        <form method="post" action="inventory.php" enctype="multipart/form-data">
+            
+                <table class="table table-hover table-bordered table-dark mt-2" id="sortTable_log">
+                <thead>
+                    <tr>
+                        <th class="text-center" scope="col">ID</th>
+                        <th class="text-center" scope="col">Item</th>
+                        <th class="text-center" scope="col">Quantity</th>
+                        <th class="text-center" scope="col">Date and Time</th>
+                    </tr>
+                </thead>
+                    <tbody id = "menu_table">
+                    <?php 
+                        $view_items = mysqli_query($connection, "SELECT * FROM log_reports
+                                                                LEFT JOIN inventory ON inventory.item_id = log_reports.report_item_id
+                                                                WHERE report_user_id = $id");
+                        if(mysqli_num_rows($view_items) > 0) {
+                        while ($row = mysqli_fetch_array($view_items)) { ?>
+                            <form method="post" action="inventory.php" enctype="multipart/form-data">
+                                <tr>
+                                    <td class="text-center"><?php echo $row["item_id"]; ?></td>
+                                    <td><?php echo $row["item_name"]; ?></td>
+                                    <td class="text-center"><?php echo $row["report_qty"]; ?><?php echo $row["unit_of_measure"]; ?></td>
+                                    <td><?php echo $row["date_time"]; ?></td>
+                                </tr>
+                            </form>
+                        <?php } } else {?>
                             <tr>
-                                <td class="text-center"><?php echo $row["item_id"]; ?></td>
-                                <td><?php echo $row["item_name"]; ?></td>
-                                <td class="text-center"><?php echo $row["report_qty"]; ?><?php echo $row["unit_of_measure"]; ?></td>
-                                <td><?php echo $row["date_time"]; ?></td>
+                                <td class="text-center" colspan="4">No record found!</td>
                             </tr>
-                        </form>
-                    <?php } } else {?>
-                        <tr>
-                            <td class="text-center" colspan="4">No record found!</td>
-                        </tr>
-                    <?php } ?>
-                </tbody>  
-            </table>
+                        <?php } ?>
+                    </tbody>  
+                </table>
+            </div>
             
         </div>
     </div>

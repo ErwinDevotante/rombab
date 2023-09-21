@@ -184,48 +184,50 @@ include '../conn.php';
                     </div>
                 </div>
             </div>
-
-            <table class="table table-hover table-bordered table-dark mt-2" id="sortTable">
-            <thead>
-                <tr>
-                    <th class="text-center" scope="col">Item</th>
-                    <th class="text-center" scope="col">Description</th>
-                    <th class="text-center" scope="col">UOM</th>
-                    <th class="text-center" scope="col">Stocks</th>
-                    <th class="text-center" scope="col">Status</th>
-                    <th class="text-center" scope="col">Action</th>
-                </tr>
-            </thead>
-                <tbody id = "menu_table">
-                <?php 
-                    $view_items = mysqli_query($connection, "SELECT * FROM inventory
-                                                INNER JOIN statuses ON statuses.status_id = inventory.item_status
-                                                ORDER BY item_id DESC");
-                    if(mysqli_num_rows($view_items) > 0) {
-                    while ($row = mysqli_fetch_array($view_items)) { ?>
-                        <form method="post" action="inventory.php" enctype="multipart/form-data">
+            
+            <div style="overflow-x:auto;">
+                <table class="table table-hover table-bordered table-dark mt-2" id="sortTable">
+                <thead>
+                    <tr>
+                        <th class="text-center" scope="col">Item</th>
+                        <th class="text-center" scope="col">Description</th>
+                        <th class="text-center" scope="col">UOM</th>
+                        <th class="text-center" scope="col">Stocks</th>
+                        <th class="text-center" scope="col">Status</th>
+                        <th class="text-center" scope="col">Action</th>
+                    </tr>
+                </thead>
+                    <tbody id = "menu_table">
+                    <?php 
+                        $view_items = mysqli_query($connection, "SELECT * FROM inventory
+                                                    INNER JOIN statuses ON statuses.status_id = inventory.item_status
+                                                    ORDER BY item_id DESC");
+                        if(mysqli_num_rows($view_items) > 0) {
+                        while ($row = mysqli_fetch_array($view_items)) { ?>
+                            <form method="post" action="inventory.php" enctype="multipart/form-data">
+                                <tr>
+                                    <td style="display: none"><?php echo $row["item_id"]; ?></td>
+                                    <td><?php echo $row["item_name"]; ?></td>
+                                    <td><?php echo $row["item_desc"]; ?></td>
+                                    <td><?php echo $row["unit_of_measure"]; ?></td>
+                                    <td><?php echo $row["stock"]; ?></td>
+                                    <td><?php echo $row["status"]; ?></td>
+                                    <td  class="w-25">
+                                        <div class="row text-center">
+                                            <div class="col"><button type="button" class="btn btn-primary update_btn" name="update_btn" id="update_btn">UPDATE</button></div>
+                                            <div class="col"><button type="submit" class="btn btn-warning" name="delete_btn" value="<?php echo $row["item_id"]; ?>">DELETE</button></div> 
+                                        </div>
+                                    </td>
+                                </tr>
+                            </form>
+                        <?php } } else {?>
                             <tr>
-                                <td style="display: none"><?php echo $row["item_id"]; ?></td>
-                                <td><?php echo $row["item_name"]; ?></td>
-                                <td><?php echo $row["item_desc"]; ?></td>
-                                <td><?php echo $row["unit_of_measure"]; ?></td>
-                                <td><?php echo $row["stock"]; ?></td>
-                                <td><?php echo $row["status"]; ?></td>
-                                <td  class="w-25">
-                                    <div class="row text-center">
-                                        <div class="col"><button type="button" class="btn btn-primary update_btn" name="update_btn" id="update_btn">UPDATE</button></div>
-                                        <div class="col"><button type="submit" class="btn btn-warning" name="delete_btn" value="<?php echo $row["item_id"]; ?>">DELETE</button></div> 
-                                    </div>
-                                </td>
+                                <td class="text-center" colspan="7">No record found!</td>
                             </tr>
-                        </form>
-                    <?php } } else {?>
-                        <tr>
-                            <td class="text-center" colspan="7">No record found!</td>
-                        </tr>
-                    <?php } ?>
-                </tbody>  
-            </table>
+                        <?php } ?>
+                    </tbody>  
+                </table>
+            </div>
         </div>
     </div>
 </div>
