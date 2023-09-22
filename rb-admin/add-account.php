@@ -46,24 +46,24 @@ include '../conn.php';
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap" rel="stylesheet">
     <!--Icon-->
-    <link rel="icon" type="image/x-icon" href="../../assets/rombab-logo.png">
-    <!-- Ionicons -->
-    <link rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
+    <link rel="icon" type="image/x-icon" href="../assets/rombab-logo.png">
     <!-- Bootstrap -->
-    <link rel="stylesheet" href="../../node_modules/bootstrap/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="../node_modules/bootstrap/dist/css/bootstrap.min.css">
     <!-- Theme Style -->
-    <link rel="stylesheet" href="../../style.css">
-    <link rel="stylesheet" href="../../node_modules/admin-lte/css/adminlte.min.css">
+    <link rel="stylesheet" href="../style.css">
+    <link rel="stylesheet" href="../node_modules/admin-lte/css/adminlte.min.css">
     <!-- overlayScrollbars -->
-    <link rel="stylesheet" href="../../node_modules/overlayScrollbars/css/OverlayScrollbars.min.css">
+    <link rel="stylesheet" href="../node_modules/overlayScrollbars/css/OverlayScrollbars.min.css">
+    <!-- Ionicons -->
+    <link rel="stylesheet" href="../node_modules/ionicons/css/ionicons.min.css">
     <!-- JQuery -->
-    <script src="../../node_modules/jquery/dist/jquery.min.js"></script>
+    <script src="../node_modules/jquery/dist/jquery.min.js"></script>
     <!-- Bootstrap -->
-    <script src="../../node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="../node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <!-- overlayScrollbars -->
-    <script src="../../node_modules/overlayScrollbars/js/jquery.overlayScrollbars.min.js"></script>
+    <script src="../node_modules/overlayScrollbars/js/jquery.overlayScrollbars.min.js"></script>
     <!-- AdminLTE App -->
-    <script src="../../node_modules/admin-lte/js/adminlte.js"></script>
+    <script src="../node_modules/admin-lte/js/adminlte.js"></script>
 
     <!-- DataTables CSS -->
     <link rel="stylesheet" href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.min.css">

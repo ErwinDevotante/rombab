@@ -57,11 +57,13 @@ if(isset($_POST["submit"])){
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap" rel="stylesheet">
-    <link rel="icon" type="image/x-icon" href="../assets/rombab-logo.png">
-    <link rel="stylesheet" href="../node_modules/bootstrap/dist/css/bootstrap.min.css">
-    <link rel="stylesheet" href="../style.css">
-    <script src="../node_modules/jquery/dist/jquery.min.js"></script>
-    <script src="../node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <link rel="icon" type="image/x-icon" href="assets/rombab-logo.png">
+    <link rel="stylesheet" href="node_modules/bootstrap/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="node_modules/ionicons/css/ionicons.min.css">
+    <link rel="stylesheet" href="node_modules/ionicons/css/ionicons.min.css">
+    <script src="node_modules/jquery/dist/jquery.min.js"></script>
+    <script src="node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
 </head>
 <body class="d-flex align-items-center justify-content-center bg-grill">
     <div class="login">
