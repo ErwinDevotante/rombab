@@ -1,10 +1,11 @@
 <?php 
 $a = 1;
-session_start();
+//session_start();
 include '../conn.php';
-  $id = $_SESSION['user_id'];
-	$result = mysqli_query($connection, "SELECT * FROM users where user_id = '$id'");
-	$row = mysqli_fetch_array($result);
+include 'admin-auth.php';
+  //$id = $_SESSION['user_id'];
+	//$result = mysqli_query($connection, "SELECT * FROM users where user_id = '$id'");
+	//$row = mysqli_fetch_array($result);
 
 ?>
 <!DOCTYPE html>

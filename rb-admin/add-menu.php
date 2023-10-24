@@ -12,6 +12,7 @@ if (isset($_POST["upload"])) {
     $image = $_FILES['menu-image']['name'];
     $menu_text = $_POST['menu-text'];
     $category = $_POST['menu-category'];
+    $price = $_POST['menu-price'];
 
     // Check for redundant data before inserting
     $check_query = "SELECT * FROM menus WHERE LOWER(menu_name) = LOWER('$menu_text')";
@@ -25,8 +26,8 @@ if (isset($_POST["upload"])) {
     } else {
         // No redundant data, proceed with insertion
         $target = "menu-images/" . basename($_FILES['menu-image']['name']);
-        $insert_query = "INSERT INTO menus (menu_image, menu_name, menu_category) 
-                        VALUES ('$image', '$menu_text', '$category')";
+        $insert_query = "INSERT INTO menus (menu_image, menu_name, menu_price, menu_category) 
+                        VALUES ('$image', '$menu_text', '$price', '$category')";
 
         if (move_uploaded_file($_FILES['menu-image']['tmp_name'], $target) && mysqli_query($connection, $insert_query)) {
             echo '<script type="text/javascript">'; 
@@ -48,6 +49,7 @@ if (isset($_POST["confirm_update"])) {
     $menu_id = $_POST['update-id'];
     $menu_text = $_POST['update-name'];
     $category = $_POST['update-category'];
+    $price = $_POST['update-price'];
     
     // Check if a new image file is uploaded
     if ($_FILES['update-image']['name'] !== '') {
@@ -56,7 +58,7 @@ if (isset($_POST["confirm_update"])) {
         $image = $_FILES['update-image']['name'];
 
         if (move_uploaded_file($_FILES['update-image']['tmp_name'], $target)) {
-            $update_query = "UPDATE `menus` SET menu_image = '$image', menu_name = '$menu_text', menu_category = '$category' WHERE menu_id = '$menu_id'";
+            $update_query = "UPDATE `menus` SET menu_image = '$image', menu_name = '$menu_text', menu_price = '$price', menu_category = '$category' WHERE menu_id = '$menu_id'";
         } else {
             // Handle the case when image upload fails
             $msg = "There was a problem updating the image.";
@@ -64,7 +66,7 @@ if (isset($_POST["confirm_update"])) {
         }
     } else {
         // No new image selected, update only the other fields
-        $update_query = "UPDATE `menus` SET menu_name = '$menu_text', menu_category = '$category' WHERE menu_id = '$menu_id'";
+        $update_query = "UPDATE `menus` SET menu_name = '$menu_text', menu_price = '$price', menu_category = '$category' WHERE menu_id = '$menu_id'";
     }
 
     // Execute the update query
@@ -178,6 +180,15 @@ if (isset($_POST["deactivate_btn"])) {
                             <option value="New Offers">New Offers</option>
                         </select>
                     </div>
+                    <div class="form-group col">
+                        <label>Price</label>
+                            <div class="input-group mb-2">
+                                <div class="input-group-prepend">
+                                <div class="input-group-text">₱</div>
+                                </div>
+                                <input type="number" class="form-control" name="menu-price" step="any" min="0" placeholder="Enter Price" required>
+                                </div>
+                            </div>
                 </div>
                 <div class="form-group">
                     <input class="btn btn-primary" type="submit" name="upload" value="Add Menu">
@@ -199,6 +210,7 @@ if (isset($_POST["deactivate_btn"])) {
                 <tr>
                     <th class="text-center" scope="col">Image</th>
                     <th class="text-center" scope="col">Name</th>
+                    <th class="text-center" scope="col">Price (₱)</th>
                     <th class="text-center" scope="col">Category</th>
                     <th class="text-center" scope="col">Action</th>
                 </tr>
@@ -219,6 +231,7 @@ if (isset($_POST["deactivate_btn"])) {
                                 <?php } ?>
                              </td>
                             <td class="text-center"><?php echo $row["menu_name"]; ?></td>
+                            <td class="text-center"><?php echo $row["menu_price"]; ?></td>
                             <td class="text-center"><?php echo $row["menu_category"]; ?></td>
                             <td class="text-center w-25">
                                 <div class="p-2"><button type="button" class="btn btn-primary update_btn" id="update_btn">UPDATE</button></div>
@@ -270,6 +283,16 @@ if (isset($_POST["deactivate_btn"])) {
                         </div>
 
                         <div class="form-group">
+                            <label>Menu Price</label>
+                            <div class="input-group mb-2">
+                            <div class="input-group-prepend">
+                                <div class="input-group-text">₱</div>
+                                </div>
+                            <input type="text" class="form-control" id="update-price" name="update-price" placeholder="Enter Menu Price" required>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
                             <label>Menu Category</label>
                             <select name="update-category" class="form-control" id="update-category" required>
                                 <option hidden value="">-----Select Here-----</option>
@@ -315,7 +338,8 @@ if (isset($_POST["deactivate_btn"])) {
             $('#image-preview').attr('src', imageUrl);
             $('#update-image').attr('data-preview', imageUrl);
             $('#update-name').val(data[2]);
-            $('#update-category').val(data[3]);
+            $('#update-price').val(data[3]);
+            $('#update-category').val(data[4]);
         });
     });
 
@@ -347,7 +371,7 @@ if (isset($_POST["deactivate_btn"])) {
     // Function to validate input and allow only alphabetic characters and hyphen
     function validateInput(inputElement) {
         const inputValue = inputElement.value;
-        const sanitizedValue = inputValue.replace(/[^a-zA-Z-]/g, ''); // Keep only letters and hyphen
+        const sanitizedValue = inputValue.replace(/[^a-zA-Z\s-]/g, ''); // Keep only letters and hyphen
         inputElement.value = sanitizedValue; // Update the input value
     }
 
@@ -361,5 +385,27 @@ if (isset($_POST["deactivate_btn"])) {
 
     updateNameInput.addEventListener('input', function() {
         validateInput(updateNameInput);
+    });
+
+    // Get references to both input elements
+    const stocksInput = document.getElementById('update-price');
+    const itemStockInput = document.getElementsByName('menu-price')[0];
+
+    // Add event listener for Stocks input
+    stocksInput.addEventListener('input', function() {
+        const stocks = parseFloat(stocksInput.value);
+
+        if (isNaN(stocks) || stocks < 0 || stocks === 0) {
+            stocksInput.value = '0';
+        }
+    });
+
+    // Add event listener for Item Stock input
+    itemStockInput.addEventListener('input', function() {
+        const itemStock = parseFloat(itemStockInput.value);
+
+        if (isNaN(itemStock) || itemStock < 0 || itemStock === 0) {
+            itemStockInput.value = '0';
+        }
     });
 </script>

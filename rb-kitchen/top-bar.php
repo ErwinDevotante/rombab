@@ -10,7 +10,11 @@ if($_SESSION['user_id']==''){
         <a class="nav-link" data-widget="pushmenu"><i class="ion ion-navicon-round text-white"></i></a>
       </li>
       <li class="nav-item d-none d-sm-inline-block">
+      <?php if ($row['user_role'] == 3) { ?>
           <a class="nav-link text-white">Welcome <?php echo $row['name'] ?>!</a>
+       <?php } else {
+        header('location:../index.php');
+       } ?>
       </li>
     </ul>
 

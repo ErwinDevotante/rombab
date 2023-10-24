@@ -28,15 +28,6 @@
 	<?php 
     include '../../conn.php';
     include 'navbar.php';
-
-    if(isset($_POST['update_update_btn'])){
-        $update_value = $_POST['update_quantity'];
-        $update_id = $_POST['update_quantity_id'];
-        $update_quantity_query = mysqli_query($connection, "UPDATE `cart` SET cart_quantity = '$update_value' WHERE cart_id = '$update_id'");
-        if($update_quantity_query){
-           header('location:cart.php');
-        };
-     };
      
      if(isset($_GET['remove'])){
         $remove_id = $_GET['remove'];
@@ -59,10 +50,11 @@
     <div class="container py-5 text-white">
     <table class="table table-hover table-bordered table-dark mt-5">
         <thead>
-        <th>image</th>
-        <th>name</th>
-        <th>quantity</th>
-        <th>action</th>
+        <th>Image</th>
+        <th>Name</th>
+        <th>Price</th>
+        <th>Quantity</th>
+        <th>Action</th>
         </thead>
         <tbody>
         <?php 
@@ -74,21 +66,22 @@
         <tr>
             <td><img src="../../rb-admin/menu-images/<?php echo $fetch_cart['cart_image']; ?>" height="100" alt=""></td>
             <td><?php echo $fetch_cart['cart_name']; ?></td>
+            <td><?php echo $fetch_cart['cart_menuprice']; ?></td>
             <td>
                 <form action="" method="post">
                     <input type="hidden" name="update_quantity_id"  value="<?php echo $fetch_cart['cart_id']; ?>" >
-                    <input type="number" name="update_quantity" min="1" max="10" class="text-center" value="<?php echo $fetch_cart['cart_quantity']; ?>" >
-                    <input type="submit" value="update" name="update_update_btn" class="btn btn-primary">
-                </form>   
+                    <input type="number" name="update_quantity" min="1" max="5" class="text-center" value="<?php echo $fetch_cart['cart_quantity']; ?>" onchange="updateDatabase(this)">
+                </form> 
             </td>
-            <td><a href="cart.php?remove=<?php echo $fetch_cart['cart_id']; ?>" onclick="return confirm('remove item from cart?')" class="delete-btn btn btn-primary"> <i class="ion ion-ios-trash"></i> remove</a></td>
+            <td><a href="cart.php?remove=<?php echo $fetch_cart['cart_id']; ?>" onclick="return confirm('remove item from cart?')" class="delete-btn btn btn-primary"> <i class="ion ion-ios-trash"></i> Remove</a></td>
         </tr>
         <?php
             };
         };
         ?>
         <tr class="table-bottom">
-            <td><a href="activated-table.php" class="option-btn btn btn-primary">continue ordering</a></td>
+            <td><a href="activated-table.php" class="option-btn btn btn-primary">Continue Ordering</a></td>
+                <td></td>
                 <td></td>
                 <td></td>
             <?php 
@@ -97,7 +90,7 @@
             $row = mysqli_fetch_assoc($scan_result);
             $rowCount = $row['count'];
             if ($rowCount > 0) { ?>
-            <td><a href="cart.php?delete_all" onclick="return confirm('are you sure you want to delete all?');" class="delete-btn btn btn-primary"> <i class="ion ion-ios-trash"></i> delete all </a></td>
+            <td><a href="cart.php?delete_all" onclick="return confirm('Are you sure you want to delete all?');" class="delete-btn btn btn-primary"> <i class="ion ion-ios-trash"></i> Delete All</a></td>
             <?php } else { ?>
                 <td></td>
             <?php } ?>
@@ -109,15 +102,56 @@
         if($scan_result) {
             if ($rowCount > 0) { ?>
                 <div class="checkout-btn text-center">
-                    <a href="checkout.php" class="btn btn-primary">proceed to checkout</a>
+                    <a href="checkout.php" class="btn btn-primary">Proceed to Checkout</a>
                 </div>
         <?php }
         }?>
         
     </div>
+    <script>
+        function updateDatabase(inputField) {
+            const updateValue = inputField.value;
+            const updateId = inputField.parentElement.querySelector('[name="update_quantity_id"]').value;
 
+            // Ensure the value is within the range of 1 to 5
+            const updatedValue = Math.max(1, Math.min(5, updateValue));
 
+            // Update the database using AJAX
+            const xhr = new XMLHttpRequest();
+            xhr.open('POST', 'cart-update.php', true); // Use 'cart.php' as the target
+            xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+            xhr.send(`update_id=${updateId}&update_value=${updatedValue}`);
+            // You can add success/failure handling for the AJAX request here
+        }
+    </script>
 </body>
 </html>
+
+<script>
+    // Add event listener for No of people input
+    const qtyInput = document.getElementById('update_quantity');
+    qtyInput.addEventListener('input', function() {
+        const inputValue = qtyInput.value;
+        
+        // Remove any non-digit characters (including decimal points)
+        const sanitizedValue = inputValue.replace(/[^0-9]/g, '');
+        
+        // Ensure the value is not empty
+        if (sanitizedValue === '') {
+            qtyInput.value = '1'; // Set a default value if the input is empty
+        } else {
+            const qty = parseInt(sanitizedValue, 10);
+            
+            // Ensure the value is within the range of 1 to 10
+            if (qty < 1) {
+                qtyInput.value = '1'; // Set the minimum value to 1
+            } else if (qty > 5) {
+                qtyInput.value = '5'; // Set the maximum value to 10
+            } else {
+                qtyInput.value = qty; // Update the input value with the sanitized integer value
+            }
+        }
+    });
+</script>
 
 

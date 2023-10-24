@@ -59,9 +59,9 @@
     <div class="container py-5">
         <div class="card-columns-container">
             <?php 
-                    $result_tb = mysqli_query($connection, "SELECT * FROM `menus`
-                                            WHERE menu_category = 'New Offers' and menu_availability = '0'");
-                        if(mysqli_num_rows($result_tb) > 0){
+                $result_tb = mysqli_query($connection, "SELECT * FROM `menus`
+                        WHERE menu_category = 'New Offers' and menu_availability = '0'");
+                    if(mysqli_num_rows($result_tb) > 0){
                         while ($row = mysqli_fetch_array($result_tb)) { ?> 
                             <form action="" method="post">
                                 <div class="card p-2 mb-2 card-red text-center">
@@ -73,13 +73,9 @@
                                 </div>
                             </form>
                         <?php }
-                        } else {?> 
+                    } ?>
         </div>
     </div>
-    <div class="text-white text-center">
-        <h3>No available new offers...</h3>
-    </div>
-    <?php } ?>
     
 <!-- Footer -->
 <footer class="main-footer bg-black text-center">

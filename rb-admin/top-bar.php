@@ -15,7 +15,9 @@ if($_SESSION['user_id'] == ''){
                 <a class="nav-link text-white">Welcome Super Admin <?php echo $row['name'] ?>!</a>
             <?php } else if ($row['user_role'] == 2 || $row['user_role'] == 5) { ?>
                 <a class="nav-link text-white">Welcome Admin <?php echo $row['name'] ?>!</a>
-            <?php } ?>
+            <?php } else {
+                header('location:../index.php');
+            } ?>
         </li>
     </ul>
 

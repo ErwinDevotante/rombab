@@ -7,42 +7,47 @@ if(!empty($_SESSION["user_id"])){
 if(isset($_POST["submit"])){
   $username = $_POST["username"];
   $password = $_POST["password"];
-  $roles = $_POST["roles"];
-  $result = mysqli_query($connection, "SELECT * FROM users WHERE username = '$username' and user_role = '$roles'");
+  $result = mysqli_query($connection, "SELECT * FROM users WHERE username = '$username'");
   $row = mysqli_fetch_assoc($result);
   if(mysqli_num_rows($result) > 0){
-    if($password == $row['password']){
+    if($password == $row['password'] && $row['user_id'] !== null){
       $_SESSION["login"] = true;
       $_SESSION["user_id"] = $row["user_id"];
-      if($roles == 1){ //super_admin
-        echo '<script type="text/javascript">'; 
-        echo 'alert("Log-in Sucessfully!");'; echo 'window.location.href = "rb-admin/admin-index.php";';
-        echo '</script>';
-      }
-      else if($roles == 2){ //admin
-        echo '<script type="text/javascript">'; 
-        echo 'alert("Log-in Sucessfully!");'; echo 'window.location.href = "rb-admin/admin-index.php";';
-        echo '</script>';
-      }
-      else if($roles == 3){ //kitchen
-        echo '<script type="text/javascript">'; 
-        echo 'alert("Log-in Sucessfully!");'; echo 'window.location.href = "rb-kitchen/kitchen-index.php";';
-        echo '</script>';
-      }
-      else if($roles == 4){ //table
-        echo '<script type="text/javascript">'; 
-        echo 'alert("Log-in Sucessfully!");'; echo 'window.location.href = "rb-table/table-index.php";';
-        echo '</script>';
-      } else if($roles == 5){ //appointment
-        echo '<script type="text/javascript">'; 
-        echo 'alert("Log-in Sucessfully!");'; echo 'window.location.href = "rb-admin/admin-index.php";';
-        echo '</script>';
-      }
+      $_SESSION['success'] = true;
+      //if($roles == 1){ //super_admin
+        //$_SESSION['success'] = true;
+        //echo 'window.location.href = "rb-admin/admin-index.php";';
+        //header("Location: rb-admin/admin-index.php");
+
+        //echo '<script type="text/javascript">'; 
+        //echo $_SESSION['success'] = true; echo 'window.location.href = "rb-admin/admin-index.php";';
+        //echo '</script>';
+      //}
+      //else if($roles == 2){ //admin
+        //echo '<script type="text/javascript">'; 
+        //echo 'alert("Log-in Sucessfully!");'; echo 'window.location.href = "rb-admin/admin-index.php";';
+        //echo '</script>';
+      //}
+      //else if($roles == 3){ //kitchen
+        //echo '<script type="text/javascript">'; 
+        //echo 'alert("Log-in Sucessfully!");'; echo 'window.location.href = "rb-kitchen/kitchen-index.php";';
+        //echo '</script>';
+      //}
+      //else if($roles == 4){ //table
+        //echo '<script type="text/javascript">'; 
+        //echo 'alert("Log-in Sucessfully!");'; echo 'window.location.href = "rb-table/table-index.php";';
+        //echo '</script>';
+      //} else if($roles == 5){ //appointment
+        //echo '<script type="text/javascript">'; 
+        //echo 'alert("Log-in Sucessfully!");'; echo 'window.location.href = "rb-admin/admin-index.php";';
+        //echo '</script>';
+      //}
+    } else {
+      $_SESSION['unsuccess'] = true;
     }
   }
   else{
-    echo
-    "<script> alert('Not Registered Account!'); </script>";
+    $_SESSION['unsuccess'] = true;
   }
 }
 ?>
@@ -74,31 +79,107 @@ if(isset($_POST["submit"])){
         </div>
         
         <form class="needs-validation" method="POST">
-        <div class="form-group  was-validated">
+          <!-- <div class="form-group  was-validated">
             <label class="form-label text-white" for="roles">Select Log-in Options</label>
-                    <select name="roles" class="form-control" id="roles" required>
-                        <option value="" hidden>--Select Options Here--</option>
-                        <option value="1">Super Admin</option>
-                        <option value="2">Admin</option>
-                        <option value="3">Kitchen</option>
-                        <option value="4">Table</option>
-                        <option value="5">Appointment Staff</option>
-                    </select>
-            </div>
+              <select name="roles" class="form-control" id="roles" required>
+                <option value="" hidden>--Select Options Here--</option>
+                <option value="1">Super Admin</option>
+                <option value="2">Admin</option>
+                <option value="3">Kitchen</option>
+                <option value="4">Table</option>
+                <option value="5">Appointment Staff</option>
+              </select>
+          </div> -->
+  
+          <div class="form-group was-validated">
+            <label class="form-label text-white" for="username">Username</label>
+            <input class="form-control" type="text" id="username" name="username" placeholder="Enter username" pattern=".{4,}" required>
+              <div class="invalid-feedback">
+                <h6>Username consist of at least 4 characters long.</h6>
+              </div> 
+          </div>
+          
 
-            <div class="form-group was-validated">
-                <label class="form-label text-white" for="username">Email address</label>
-                <input class="form-control" type="text" id="username" name="username" required>
-              
-            </div>
-
-            <div class="form-group was-validated">
-                <label class="form-label text-white" for="password">Password</label>
-                <input class="form-control" type="password" id="password" name="password" required>
-            </div>
+          <div class="form-group was-validated">
+            <label class="form-label text-white" for="password">Password</label>
+            <input class="form-control" type="password" id="password" name="password" placeholder="Enter password" pattern=".{8,}" required>
+              <div class="invalid-feedback">
+                <h6>Password consist of at least 8 characters long.</h6>
+              </div>
+          </div>
         
-            <input class="btn btn-primary w-100" name="submit" type="submit" value="SIGN IN">
+          <input class="btn btn-primary w-100" name="submit" type="submit" value="SIGN IN">
         </form>
     </div>
+
+    <!-- Success alert modal -->
+    <div id="successModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="successModalLabel"
+    aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
+      <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+              <h5 class="modal-title" id="successModalLabel">Success</h5>
+          </div>
+          <div class="modal-body">
+            <p>Log-in successfully!</p>
+          </div>
+          <div class="modal-footer">
+            <?php $roles = $row["user_role"];
+              if ($roles == '1') { //superadmin?>
+              <a href="rb-admin/admin-index.php" class="btn btn-primary">Proceed</a>
+            <?php } elseif ($roles == '2') { //admin?>
+              <a href="rb-admin/admin-index.php" class="btn btn-primary">Proceed</a>
+            <?php } elseif ($roles == '3') { //kitchen?>
+              <a href="rb-kitchen/kitchen-index.php" class="btn btn-primary">Proceed</a>
+            <?php } elseif ($roles == '4') {?>
+              <a href="rb-table/table-index.php" class="btn btn-primary">Proceed</a>
+            <?php } elseif ($roles == '5') {?>
+              <a href="rb-admin/admin-index.php" class="btn btn-primary">Proceed</a>
+            <?php } ?>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- End of success alert modal -->
+    <!-- Not registered alert modal -->
+    <div id="unsuccessModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="unsuccessModalLabel"
+    aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
+      <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+              <h5 class="modal-title" id="unsuccessModalLabel">Unsucess</h5>
+          </div>
+          <div class="modal-body">
+            <p>Not Registered Account!</p>
+          </div>
+          <div class="modal-footer">
+            <a href="index.php" class="btn btn-primary">Close</a>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- End of success Not registered -->
 </body>
 </html>
+
+<?php if (isset($_SESSION['success'])) { ?>
+<script>
+  $(document).ready(function() {
+  $("#successModal").modal("show");
+})
+</script>
+<?php
+  unset($_SESSION['success']);
+  exit();
+  } else if (isset($_SESSION['unsuccess'])) {
+  ?>
+<script>
+  $(document).ready(function() {
+  $("#unsuccessModal").modal("show");
+})
+</script>
+<?php
+  unset($_SESSION['unsuccess']);
+  exit();
+  }
+?>

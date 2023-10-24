@@ -51,7 +51,7 @@ include '../../conn.php';
                     <div class="col-md-12 ">
                     <a href="others.php" class="btn btn-primary w-100 h-75 mb-5"><h1 class="mt-3">OTHERS</h1></a>
                     </div>
-               
+              
                     <div class="col-md-12 ">
                     <a href="new-offers.php" class="btn btn-primary w-100 h-75 mb-5"><h1 class="mt-3">NEW OFFERS</h1></a>
                     </div>
@@ -59,9 +59,16 @@ include '../../conn.php';
             </div>
         </div>
     </div>
-    <!-- Button on the left bottom of the screen -->
-    <div class="fixed-bottom p-3">
-        <a href="#" class="text-dark" onclick="confirmLogout()"><i class="ion ion-android-exit"></i></a>
+
+    <div class="container fixed-bottom p-3">
+        <div class="row mt-5 justify-content-between">
+            <div class="col-auto">
+            <a href="#" class="text-dark" onclick="confirmLogout()"><i class="ion-android-exit"></i></a>
+            </div>
+            <div class="col-auto">
+                <button class="btn btn-primary">Check Bill <i class="ion-arrow-right-c"></i></button>
+            </div>
+        </div>
     </div>
 
     <!-- Password input dialog (hidden by default) -->
@@ -106,6 +113,11 @@ include '../../conn.php';
             // Hide the password input dialog
             $('#passwordDialog').modal('hide');
         }
+
+        // Add an event listener to the link
+        document.getElementById('disabled_click').addEventListener('click', function(event) {
+            event.preventDefault(); // Prevent the link from being followed
+        });
     </script>
 </body>
 </html>

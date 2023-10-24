@@ -117,11 +117,11 @@ include '../conn.php';
                         <div class="d-flex flex-row align-items-center mb-4">
                             <div class="form-group was-validated flex-fill mb-0">
                             <label class="form-label text-black">Username</label>
-                            <input type="text" id="username" name="username" class="form-control" pattern=".{4,}" required>
-                            <div class="invalid-feedback">
-                                Username must be at least 4 characters long.
-                                </div>
+                            <input type="text" id="username" name="username" class="form-control" pattern=".{4,}" required> 
                             </div>
+                                <div class="invalid-feedback text-small">
+                                    Username must be at least 4 characters long.
+                                </div>
                         </div>
 
                         <div class="d-flex flex-row align-items-center mb-4">
@@ -129,7 +129,7 @@ include '../conn.php';
                             <label class="form-label text-black">Password</label>
                             <input type="password" id="password" name="password" class="form-control" pattern=".{8,}" required>
                                 <div class="invalid-feedback">
-                                Password must be at least 8 characters long.
+                                    Password must be at least 8 characters long.
                                 </div>
                             </div>
                         </div>
