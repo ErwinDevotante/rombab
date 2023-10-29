@@ -31,22 +31,19 @@
     if (isset($_POST['add_to_cart'])) {
         $product_name = $_POST['product_name'];
         $product_image = $_POST['product_image'];
+        $product_price = $_POST['product_price'];
         $product_quantity = 1;
-        $product_table= $row["user_id"];
+        $product_table= $table;
     
         $select_cart = mysqli_query($connection, "SELECT * FROM `cart` WHERE cart_name = '$product_name' AND cart_table = '$table'");
     
         if(mysqli_num_rows($select_cart) > 0) {
-            echo '<script type="text/javascript">'; 
-            echo 'alert("Product Already Added!");'; echo 'window.location.href = "new-offers.php";';
-            echo '</script>';
+            $_SESSION['exist'] = true;
             unset($_POST);
         } else {
-            $insert_product = mysqli_query($connection, "INSERT INTO `cart`(cart_table, cart_name, cart_image, cart_quantity) VALUES ('$product_table', '$product_name', '$product_image', '$product_quantity')");
-            //echo '<script type="text/javascript">'; 
-            //unset($_POST);
-            //echo 'alert("Product Added Successfully!");'; echo 'window.location.href = "samgyupsal.php";';
-            //echo '</script>'; 
+            $insert_product = mysqli_query($connection, "INSERT INTO `cart`(cart_table, cart_name, cart_image, cart_quantity, cart_menuprice) VALUES ('$product_table', '$product_name', '$product_image', '$product_quantity', '$product_price')");
+            $_SESSION['added'] = true;
+            unset($_POST); 
             
         }
     }
@@ -66,9 +63,10 @@
                             <form action="" method="post">
                                 <div class="card p-2 mb-2 card-red text-center">
                                     <div class="img"><img class="img-fluid rounded-top custom-image" alt="Responsive Image" src ='../../rb-admin/menu-images/<?php echo $row["menu_image"]; ?>'></div>
-                                    <div class="productname bg-white text-black rounded-bottom"><h5 class="text-truncate text-uppercase"><?php echo $row["menu_name"]; ?></h5></div>
+                                    <div class="productname bg-white text-black rounded-bottom"><h5 class="text-truncate text-uppercase"><?php echo $row["menu_name"]; ?> - ₱<?php echo $row["menu_price"]; ?></h5></div>
                                     <input type="hidden" name="product_image" value="<?php echo $row["menu_image"]; ?>">
                                     <input type="hidden" name="product_name" value="<?php echo $row["menu_name"]; ?>">
+                                    <input type="hidden" name="product_price" value="<?php echo $row["menu_price"]; ?>">
                                     <input type="submit" class="btn btn-md btn-outline-danger text-white w-100 mt-1" value="ADD TO ORDER" name="add_to_cart">
                                 </div>
                             </form>
@@ -76,6 +74,43 @@
                     } ?>
         </div>
     </div>
+    
+    <!-- Added alert modal -->
+    <div id="addedModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="addedModalLabel"
+    aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
+      <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+              <h5 class="modal-title" id="addedModalLabel">Added</h5>
+          </div>
+          <div class="modal-body">
+            <p>Product Added Successfully!</p>
+          </div>
+          <div class="modal-footer">
+              <a href="new-offers.php" class="btn btn-primary">Close</a>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- End of added alert modal -->
+    <!-- Exist alert modal -->
+    <div id="existModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="existModalLabel"
+    aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
+      <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+              <h5 class="modal-title" id="existModalLabel">Existed</h5>
+          </div>
+          <div class="modal-body">
+            <p>Product Already Added!</p>
+          </div>
+          <div class="modal-footer">
+            <a href="new-offers.php" class="btn btn-primary">Close</a>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- End of success exist -->
     
 <!-- Footer -->
 <footer class="main-footer bg-black text-center">
@@ -87,3 +122,25 @@
 </footer>
 </body>
 </html>
+
+<?php if (isset($_SESSION['added'])) { ?>
+<script>
+  $(document).ready(function() {
+  $("#addedModal").modal("show");
+})
+</script>
+<?php
+  unset($_SESSION['added']);
+  exit();
+  } else if (isset($_SESSION['exist'])) {
+  ?>
+<script>
+  $(document).ready(function() {
+  $("#existModal").modal("show");
+})
+</script>
+<?php
+  unset($_SESSION['exist']);
+  exit();
+  }
+?>

@@ -29,7 +29,7 @@ include '../../conn.php';
 
     <!-- Image and text -->
 	<?php include 'navbar.php';?>
-
+    
 	<div class="container">
         <div class="row">
             <div class="col-md-6 d-flex align-items-center">
@@ -66,7 +66,7 @@ include '../../conn.php';
             <a href="#" class="text-dark" onclick="confirmLogout()"><i class="ion-android-exit"></i></a>
             </div>
             <div class="col-auto">
-                <button class="btn btn-primary">Check Bill <i class="ion-arrow-right-c"></i></button>
+                <a href="check-bill.php" class="btn btn-primary">Check Bill <i class="ion-arrow-right-c"></i></a>
             </div>
         </div>
     </div>

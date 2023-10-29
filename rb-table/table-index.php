@@ -39,10 +39,10 @@ include 'table-auth.php';
             <p class="lead text-white text-center">Welcome, <?php echo $row['name']; ?>!</p>
             <div class="lead text-center">
                 <?php 
-                if ($row['session_tb'] == "3"){
+                if ($row['session_tb'] == '3'){
                     echo '<a href="menus/activated-table.php" class="btn btn-lg btn-primary fw-bold border-white">Tap to start</a>';
                 }
-                else if($row['session_tb'] == "2") {
+                else if($row['session_tb'] == '2') {
                     echo '<a href="deactivated-table.php" class="btn btn-lg btn-primary fw-bold border-white">Tap to start</a>';
                 }
                 ?>

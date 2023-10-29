@@ -39,11 +39,26 @@ include '../../conn.php';
            date_default_timezone_set('Asia/Manila');
            $total_products = implode(', ',$product_name);
            $currentDateTime = date('Y-m-d H:i:s');
+           $user_table_id = $customer["appointment_id"];
+
+           if ($select_rows) {
+            while ($count = mysqli_fetch_assoc($select_rows)) {
+                $cart_table = $count['cart_table'];
+                $cart_name = $count['cart_name'];
+                $cart_quantity = $count['cart_quantity'];
+                $cart_menuprice = $count['cart_menuprice'];
+                $summary_session = '0';
+        
+                $summary_query = mysqli_query($connection, "INSERT INTO `summary_orders` (summary_table_no, summary_products, summary_qty, summary_price, summary_status) VALUES ('$cart_table', '$cart_name', '$cart_quantity', '$cart_menuprice', '$summary_session')");
+            }
+            } else {
+                echo "Error in SELECT query: " . mysqli_error($connection) . "<br>";
+            }
            
-           $detail_query = mysqli_query($connection, "INSERT INTO `orders`(user_table, total_products, time_date) VALUES('$table','$total_products','$currentDateTime')") or die('query failed');
+           $detail_query = mysqli_query($connection, "INSERT INTO `orders`(user_table_id, user_table, total_products, time_date) VALUES('$user_table_id','$table','$total_products','$currentDateTime')") or die('query failed');
            $deleting_cart = mysqli_query($connection, "DELETE FROM `cart` WHERE cart_table = '$table'") or die('query failed');
         
-           if($cart_query && $detail_query && $deleting_cart){
+           if($cart_query && $detail_query && $deleting_cart && $summary_query){
             $_SESSION['success'] = true;
          }
          unset($_POST);
@@ -77,13 +92,14 @@ include '../../conn.php';
                             <h4>Order Summary</h4>
                         </div>
                         <div class="card-body">
-                            <h5 class="text-center"><?= $row['name']; ?></h5>
+                            <h5 class="text-center"><?=$row['name']; ?></h5>
                             <hr>
                             <table class="table table-bordered text-white">
                                 <thead>
                                     <tr>
                                         <th>Item</th>
                                         <th>Quantity</th>
+                                        <th>Price</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -95,6 +111,11 @@ include '../../conn.php';
                                     <tr>
                                         <td><?= $fetch_cart['cart_name']; ?></td>
                                         <td><?= $fetch_cart['cart_quantity']; ?></td>
+                                        <?php if ($fetch_cart['cart_menuprice'] == '0') {?>
+                                            <td>-</td>
+                                        <?php } else { ?>
+                                            <td>₱ <?= $fetch_cart['cart_menuprice'] * $fetch_cart['cart_quantity']; ?></td>
+                                        <?php } ?> 
                                     </tr>
                                     <?php } 
                                     } else{

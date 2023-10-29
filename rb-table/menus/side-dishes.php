@@ -33,20 +33,16 @@
         $product_name = $_POST['product_name'];
         $product_image = $_POST['product_image'];
         $product_quantity = 1;
-        $product_table= $row["user_id"];
+        $product_table= $table;
     
         $select_cart = mysqli_query($connection, "SELECT * FROM `cart` WHERE cart_name = '$product_name' AND cart_table = '$table'");
     
         if(mysqli_num_rows($select_cart) > 0) {
-            echo '<script type="text/javascript">'; 
-            //unset($_POST);
-            echo 'alert("Product Already Added!");'; echo 'window.location.href = "side-dishes.php";';
-            echo '</script>';
+            $_SESSION['exist'] = true;
+            unset($_POST);
         } else {
             $insert_product = mysqli_query($connection, "INSERT INTO `cart`(cart_table, cart_name, cart_image, cart_quantity) VALUES ('$product_table', '$product_name', '$product_image', '$product_quantity')");
-            echo '<script type="text/javascript">'; 
-            echo 'alert("Product Added Successfully!");'; echo 'window.location.href = "side-dishes.php";';
-            echo '</script>';
+            $_SESSION['added'] = true;
             unset($_POST);
         }
     }
@@ -59,9 +55,9 @@
 
     <div class="container py-5">
         <div class="card-columns-container">
-                <?php 
-                    $result_tb = mysqli_query($connection, "SELECT * FROM `menus`
-                                            WHERE menu_category = 'Side Dishes' and menu_availability = '0'");
+            <?php 
+                $result_tb = mysqli_query($connection, "SELECT * FROM `menus`
+                             WHERE menu_category = 'Side Dishes' and menu_availability = '0'");
                         if(mysqli_num_rows($result_tb) > 0){
                         while ($row = mysqli_fetch_array($result_tb)) { ?> 
                         <form action="" method="post">
@@ -75,9 +71,47 @@
                         </form>
                         <?php }
                         }  
-                ?>
+            ?>
         </div>
     </div>
+
+    <!-- Added alert modal -->
+    <div id="addedModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="addedModalLabel"
+    aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
+      <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+              <h5 class="modal-title" id="addedModalLabel">Added</h5>
+          </div>
+          <div class="modal-body">
+            <p>Product Added Successfully!</p>
+          </div>
+          <div class="modal-footer">
+              <a href="side-dishes.php" class="btn btn-primary">Close</a>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- End of added alert modal -->
+    <!-- Exist alert modal -->
+    <div id="existModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="existModalLabel"
+    aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
+      <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+              <h5 class="modal-title" id="existModalLabel">Existed</h5>
+          </div>
+          <div class="modal-body">
+            <p>Product Already Added!</p>
+          </div>
+          <div class="modal-footer">
+            <a href="side-dishes.php" class="btn btn-primary">Close</a>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- End of success exist -->
+    
 <!-- Footer -->
 <footer class="main-footer bg-black text-center">
     <div class="float-right d-none d-sm-block">
@@ -88,3 +122,25 @@
 </footer>
 </body>
 </html>
+
+<?php if (isset($_SESSION['added'])) { ?>
+<script>
+  $(document).ready(function() {
+  $("#addedModal").modal("show");
+})
+</script>
+<?php
+  unset($_SESSION['added']);
+  exit();
+  } else if (isset($_SESSION['exist'])) {
+  ?>
+<script>
+  $(document).ready(function() {
+  $("#existModal").modal("show");
+})
+</script>
+<?php
+  unset($_SESSION['exist']);
+  exit();
+  }
+?>

@@ -27,4 +27,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     echo json_encode(['success' => false, 'message' => 'Invalid request method']);
 }
 
+if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['orderID'])) {
+    $orderID = $_POST['orderID'];
+
+    // Update the read_notif_session in the orders table
+    $updateQuery = "UPDATE orders SET read_notif_session = '1' WHERE order_id = '$orderID' AND status = '1'";
+    if (mysqli_query($connection, $updateQuery)) {
+        // Return a success response
+        echo 'Success';
+    } else {
+        // Handle the error if the update fails
+        echo 'Error';
+    }
+} else {
+    // Handle invalid or missing POST data
+    echo 'Invalid Request';
+}
 ?>

@@ -26,18 +26,21 @@
 
     <!-- Image and text -->
 	<?php 
+    
     include '../../conn.php';
     include 'navbar.php';
      
-     if(isset($_GET['remove'])){
+    if(isset($_GET['remove'])){
         $remove_id = $_GET['remove'];
         mysqli_query($connection, "DELETE FROM `cart` WHERE cart_id = '$remove_id'");
-        header('location:cart.php');
+        echo '<script type="text/javascript">window.location = "cart.php";</script>';
      };
-     
      if(isset($_GET['delete_all'])){
-        mysqli_query($connection, "DELETE FROM `cart` WHERE cart_table = '$table'");
-        header('location:cart.php');
+        $del_all = mysqli_query($connection, "DELETE FROM `cart` WHERE cart_table = '$table'");
+        if ($del_all) {
+            echo '<script type="text/javascript">window.location = "cart.php";</script>';
+        }
+        
      }
     
      unset($_POST);
@@ -66,14 +69,16 @@
         <tr>
             <td><img src="../../rb-admin/menu-images/<?php echo $fetch_cart['cart_image']; ?>" height="100" alt=""></td>
             <td><?php echo $fetch_cart['cart_name']; ?></td>
-            <td><?php echo $fetch_cart['cart_menuprice']; ?></td>
+            <td id="total_price_<?php echo $fetch_cart['cart_id']; ?>">
+                <?php echo $fetch_cart['cart_menuprice'] * $fetch_cart['cart_quantity']; ?>
+            </td>
             <td>
                 <form action="" method="post">
                     <input type="hidden" name="update_quantity_id"  value="<?php echo $fetch_cart['cart_id']; ?>" >
                     <input type="number" name="update_quantity" min="1" max="5" class="text-center" value="<?php echo $fetch_cart['cart_quantity']; ?>" onchange="updateDatabase(this)">
                 </form> 
             </td>
-            <td><a href="cart.php?remove=<?php echo $fetch_cart['cart_id']; ?>" onclick="return confirm('remove item from cart?')" class="delete-btn btn btn-primary"> <i class="ion ion-ios-trash"></i> Remove</a></td>
+            <td><a href="cart.php?remove=<?php echo $fetch_cart['cart_id']; ?>" class="delete-btn btn btn-primary"> <i class="ion ion-ios-trash"></i> Remove</a></td>
         </tr>
         <?php
             };

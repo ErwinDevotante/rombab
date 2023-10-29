@@ -33,21 +33,17 @@
         $product_image = $_POST['product_image'];
         $product_price = $_POST['product_price'];
         $product_quantity = 1;
-        $product_table= $row["user_id"];
+        $product_table= $table;
     
         $select_cart = mysqli_query($connection, "SELECT * FROM `cart` WHERE cart_name = '$product_name' AND cart_table = '$table'");
     
         if(mysqli_num_rows($select_cart) > 0) {
-            echo '<script type="text/javascript">'; 
-            echo 'alert("Product Already Added!");'; echo 'window.location.href = "others.php";';
-            echo '</script>';
+            $_SESSION['exist'] = true;
             unset($_POST);
         } else {
             $insert_product = mysqli_query($connection, "INSERT INTO `cart`(cart_table, cart_name, cart_image, cart_quantity, cart_menuprice) VALUES ('$product_table', '$product_name', '$product_image', '$product_quantity', '$product_price')");
-            //echo '<script type="text/javascript">'; 
-            //unset($_POST);
-            //echo 'alert("Product Added Successfully!");'; echo 'window.location.href = "samgyupsal.php";';
-            //echo '</script>'; 
+            $_SESSION['added'] = true;
+            unset($_POST); 
             
         }
     }
@@ -79,6 +75,43 @@
         </div>
     </div>
   
+    <!-- Added alert modal -->
+    <div id="addedModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="addedModalLabel"
+    aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
+      <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+              <h5 class="modal-title" id="addedModalLabel">Added</h5>
+          </div>
+          <div class="modal-body">
+            <p>Product Added Successfully!</p>
+          </div>
+          <div class="modal-footer">
+              <a href="others.php" class="btn btn-primary">Close</a>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- End of added alert modal -->
+    <!-- Exist alert modal -->
+    <div id="existModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="existModalLabel"
+    aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
+      <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+              <h5 class="modal-title" id="existModalLabel">Existed</h5>
+          </div>
+          <div class="modal-body">
+            <p>Product Already Added!</p>
+          </div>
+          <div class="modal-footer">
+            <a href="others.php" class="btn btn-primary">Close</a>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- End of success exist -->
+    
 <!-- Footer -->
 <footer class="main-footer bg-black text-center">
     <div class="float-right d-none d-sm-block">
@@ -89,3 +122,25 @@
 </footer>
 </body>
 </html>
+
+<?php if (isset($_SESSION['added'])) { ?>
+<script>
+  $(document).ready(function() {
+  $("#addedModal").modal("show");
+})
+</script>
+<?php
+  unset($_SESSION['added']);
+  exit();
+  } else if (isset($_SESSION['exist'])) {
+  ?>
+<script>
+  $(document).ready(function() {
+  $("#existModal").modal("show");
+})
+</script>
+<?php
+  unset($_SESSION['exist']);
+  exit();
+  }
+?>
