@@ -34,6 +34,7 @@
         $product_price = $_POST['product_price'];
         $product_quantity = 1;
         $product_table= $table;
+        $user_cart_id = $customer["appointment_id"];
     
         $select_cart = mysqli_query($connection, "SELECT * FROM `cart` WHERE cart_name = '$product_name' AND cart_table = '$table'");
     
@@ -41,7 +42,7 @@
             $_SESSION['exist'] = true;
             unset($_POST);
         } else {
-            $insert_product = mysqli_query($connection, "INSERT INTO `cart`(cart_table, cart_name, cart_image, cart_quantity, cart_menuprice) VALUES ('$product_table', '$product_name', '$product_image', '$product_quantity', '$product_price')");
+            $insert_product = mysqli_query($connection, "INSERT INTO `cart`(user_cart_id, cart_table, cart_name, cart_image, cart_quantity, cart_menuprice) VALUES ('$user_cart_id', '$product_table', '$product_name', '$product_image', '$product_quantity', '$product_price')");
             $_SESSION['added'] = true;
             unset($_POST); 
             

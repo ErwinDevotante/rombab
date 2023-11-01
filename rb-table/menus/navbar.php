@@ -95,7 +95,7 @@
                                         echo "<p class='m-0'>" . trim($skill) . "</p>";
                                         echo "<hr class='bg-dark m-1'>";
                                         } ?>
-                                    <p class="m-0 text-secondary font-weight-light">Elapsed time: <?=$notif_row['serve_time'];?> seconds</p>
+                                    <p class="m-0 text-secondary font-weight-light font-italic">Order taken at <em><?php echo $formatted_time; ?></em></p>
                                     <p class="m-0 text-secondary font-weight-light font-italic">Elapsed time: <?=$notif_row['serve_time'];?> seconds</p>
                                 </div>
                             </div>
@@ -138,7 +138,9 @@
                         </div>
                         <?php }
                     } 
-                }?>     
+                } else { ?>
+                     <div class="text-center"><em>No notifications.</em></div>
+                <?php }?>     
             </div>
       </div>
       <div class="modal-footer">

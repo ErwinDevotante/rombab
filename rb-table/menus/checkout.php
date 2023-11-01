@@ -48,8 +48,9 @@ include '../../conn.php';
                 $cart_quantity = $count['cart_quantity'];
                 $cart_menuprice = $count['cart_menuprice'];
                 $summary_session = '0';
+                $user_summary_id = $customer["appointment_id"];
         
-                $summary_query = mysqli_query($connection, "INSERT INTO `summary_orders` (summary_table_no, summary_products, summary_qty, summary_price, summary_status) VALUES ('$cart_table', '$cart_name', '$cart_quantity', '$cart_menuprice', '$summary_session')");
+                $summary_query = mysqli_query($connection, "INSERT INTO `summary_orders` (user_summary_id, summary_table_no, summary_products, summary_qty, summary_price, summary_status) VALUES ('$user_summary_id', '$cart_table', '$cart_name', '$cart_quantity', '$cart_menuprice', '$summary_session')");
             }
             } else {
                 echo "Error in SELECT query: " . mysqli_error($connection) . "<br>";
