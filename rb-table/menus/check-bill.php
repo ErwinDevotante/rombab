@@ -63,8 +63,9 @@
                                     </tr>
                                     <?php
                                     $select_cart = mysqli_query($connection, "SELECT summary_products, summary_qty, summary_price FROM `summary_orders` WHERE summary_table_no = '$table' AND summary_status = '0' ORDER BY summary_products ASC");
-                                    $totalBill = 0;
+                                    $othersBill = 0;
                                     $productQuantity = array(); // An associative array to store product quantities
+                                    $totalothers = 0;
 
                                     if (mysqli_num_rows($select_cart) > 0) {
                                         while ($fetch_cart = mysqli_fetch_assoc($select_cart)) {
@@ -92,30 +93,39 @@
                                             echo '<td class="text-center">' . $quantity . '</td>';
                                             echo '<td>' . $product . '</td>';
                                             if ($totalPrice != 0){
-                                                echo '<td>₱ ' . number_format($totalPrice * $quantity, 2) . '</td>';
+                                                $totalothers = $totalPrice * $quantity;
+                                                echo '<td>₱ ' . number_format($totalothers, 2) . '</td>';
                                             } else {
                                                 echo '<td>-</td>';
                                             }
                                             echo '</tr>';
 
                                             // Add the product's total price to the overall bill
-                                            $totalBill += $totalPrice;
+                                            $othersBill += $totalothers;
                                         }
                                     } else {
                                         echo "<div class='display-order text-center'><span>You don't have any orders yet.</span></div>";
                                     }
-
+                                    
+                                    $totalBill = $othersBill + $promo_bill;
                                     // Display the total bill
                                     echo '<tr>';
                                     echo '<td class="text-center"><h5><strong>TOTAL</strong></h5></td>';
                                     echo '<td></td>';
-                                    echo '<td><h5><strong>₱ ' . number_format($totalBill + $promo_bill, 2) . '</strong></h5></td>';
+                                    echo '<td><h5><strong>₱ ' . number_format($totalBill, 2) . '</strong></h5></td>';
                                     echo '</tr>';
                                     ?>
                                 </tbody>
                                 
                             </table>
-                            
+                            <!-- <form action="check-bill.php" method="post" enctype="multipart/form-data">
+                                <h6><em>*Note: Present a senior/PWD card to the crew. This will compute the total bill if your companion is eligible for a discount.</em></h6>
+                                <label>No. of senior</label>
+                                <input type="number" name="senior_no" min="0" max="<?php echo $customer['count'];?>" class="text-center" value="0" oninput="validateInput(this)">
+                                <label>No. of PWD</label>
+                                <input type="number" name="pwd_no" min="0" max="<?php echo $customer['count'];?>" class="text-center" value="0" oninput="validateInput(this)">
+                                <a href="#" class="btn btn-primary">Compute</a>
+                            </form> -->
                         </div>
                         
                     </div>
@@ -155,30 +165,56 @@
             $('#passwordDialog').modal('show');
         }
 
-        // JavaScript function to check the password
         function checkPassword() {
-            // Get the entered password
-            var enteredPassword = document.getElementById('passwordInput').value;
+        // Get the entered password
+        var enteredPassword = document.getElementById('passwordInput').value;
 
-            // Check if the entered password is correct
-            if (enteredPassword === "123456789") {
-                // Redirect to the logout page if the password is correct
-                window.location.href = "../../../log-out.php";
-            } else {
-                // Show an alert if the password is incorrect
-                alert("Incorrect password. Logout action canceled.");
-            }
-
-            // Hide the password input dialog
-            $('#passwordDialog').modal('hide');
+        // Check if the entered password is correct
+        if (enteredPassword === "<?php echo $row['password'];?>") {
+            // Send an AJAX request to insert data into billing_history
+                var totalBill = <?php echo $totalBill; ?>;
+                var tableNo = <?php echo $row['user_id']; ?>;
+                var userId = <?php echo $customer['appointment_id']; ?>;
+            $.ajax({
+                type: "POST",
+                url: "cart-update.php", // Create this PHP file to handle the database operation
+                data: {
+                    totalBill: totalBill,
+                    userId: userId,
+                    tableNo: tableNo
+                },
+                success: function(response) {
+                    window.location.href = "../../../log-out.php";
+                }
+            });
+        } else {
+            // Show an alert if the password is incorrect
+            alert("Incorrect password. Logout action canceled.");
         }
 
+        // Hide the password input dialog
+        $('#passwordDialog').modal('hide');
+    }
         // Add an event listener to the link
         document.getElementById('disabled_click').addEventListener('click', function(event) {
             event.preventDefault(); // Prevent the link from being followed
         });
+
+        function validateInput(inputElement) {
+            // Get the entered value and the maximum allowed value
+            const enteredValue = parseInt(inputElement.value);
+            const maxValue = parseInt(inputElement.getAttribute('max'));
+
+            if (isNaN(enteredValue) || enteredValue < 0) {
+                // Display an error message and reset the input to the maximum value
+                alert('Please enter a non-negative number.');
+                inputElement.value = maxValue;
+            } else if (enteredValue > maxValue) {
+                // Display an error message and reset the input to the maximum value
+                alert('Value cannot exceed ' + maxValue);
+                inputElement.value = maxValue;
+            }
+        }
     </script>
-
-
 </body>
 </html>

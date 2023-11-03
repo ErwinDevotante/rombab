@@ -1,6 +1,6 @@
 <?php 
 include '../conn.php';
-
+date_default_timezone_set('Asia/Manila');
 // for activation
 $id = $_GET['id'];
 $session = $_GET['session'];
@@ -28,7 +28,7 @@ $time = date('H:i:s');
 //reset
 if ($id_reset !==null && $reset !==null && $table_reset !== null) {
 
-    $query_reset= "UPDATE `appointment` SET table_id = '12', appointment_session = $reset WHERE appointment_id = $id_reset";
+    $query_reset= "UPDATE `appointment` SET appointment_session = $reset WHERE appointment_id = $id_reset";
     $result_reset = mysqli_query($connection, $query_reset);
 
     $query_history = "INSERT INTO `appointment_history` VALUES('', '$id_reset', '$time', '$table_reset')";

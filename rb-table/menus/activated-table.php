@@ -102,7 +102,7 @@ include '../../conn.php';
             var enteredPassword = document.getElementById('passwordInput').value;
 
             // Check if the entered password is correct
-            if (enteredPassword === "123456789") {
+            if (enteredPassword === "<?php echo $row['password'];?>") {
                 // Redirect to the logout page if the password is correct
                 window.location.href = "../../../log-out.php";
             } else {

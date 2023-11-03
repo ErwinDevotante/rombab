@@ -188,9 +188,11 @@ include 'admin-auth.php';
                   <h4 class="font-weight-bold">Menu Counts</h4>
                     <p>Restaurant menu counts for today.</p>
                       <table class="table">
-                          <tr><td>Total Menus: <?php echo $menuCount; ?></td></tr>
-                          <tr><td>Activated Menus: <?php echo $activatedCount; ?></td></tr>
-                          <tr><td>Deactivated Menus: <?php echo $deactivatedCount; ?></td></tr>
+                        <tbody>
+                          <tr><td>TOTAL MENUS </td><td><?php echo $menuCount; ?></td></tr>
+                          <tr><td>Activated Menus </td><td><?php echo $activatedCount; ?></td></tr>
+                          <tr><td>Deactivated Menus </td><td><?php echo $deactivatedCount; ?></td></tr>
+                        </tbody>
                       </table>
                 </div>
                 <div class="icon text-white">
@@ -291,7 +293,7 @@ include 'admin-auth.php';
                               if($activatedCount === 0) { ?>
                               <td>There is/are no activated table.</td>
                               <?php } else { ?>
-                                <td><?php echo $tableNamesActivate; ?></td>
+                                <td><span class='badge badge-pill badge-info text-black text-uppercase'><?php echo $tableNamesActivate; ?></span></td>
                               <?php } ?>
                           </tr>
                           <tr>
@@ -301,7 +303,7 @@ include 'admin-auth.php';
                               if($deactivatedCount === 0) { ?>
                               <td>There is/are no deactivated table.</td>
                               <?php } else { ?>
-                                <td><?php echo $tableNamesDeactivate; ?></td>
+                                <td><span class='badge badge-pill badge-warning text-uppercase'><?php echo $tableNamesDeactivate; ?></span></td>
                               <?php } ?>
                           </tr>
                           <tr>
@@ -340,14 +342,14 @@ include 'admin-auth.php';
 
       <?php
       if ($row['user_role'] == '1') { ?>
-        <div class="content-header">
-          <div class="container-fluid">
-            <div class="row mb-2">
-              <div class="col-sm-6">
-                <h1 class="m-0 text-white">Add Account</h1>
-              </div>
+      <div class="content-header">
+        <div class="container-fluid">
+          <div class="row mb-2">
+            <div class="col-sm-6">
+              <h1 class="m-0 text-white">Add Account</h1>
             </div>
           </div>
+        </div>
       </div>
   
       <section class="content">
@@ -363,6 +365,38 @@ include 'admin-auth.php';
               </div>
               <div class="icon text-white">
                 <i class="ion ion-person-add"></i>
+              </div>
+            </div>
+			      </a>
+          </div>
+
+        </div>
+        </div>
+      </section>
+
+      <div class="content-header">
+        <div class="container-fluid">
+          <div class="row mb-2">
+            <div class="col-sm-6">
+              <h1 class="m-0 text-white">Promos</h1>
+            </div>
+          </div>
+        </div>
+      </div>
+  
+      <section class="content">
+        <div class="container-fluid">
+        <div class="row">
+
+          <div class="col-lg-6">
+			      <a href="#" class="small-box-footer">
+            <div class="small-box bg-redbg text-white">
+              <div class="inner">
+                <h3>Edit</h3>
+                <p>Promo</p>
+              </div>
+              <div class="icon text-white">
+                <i class="ion ion-ios-pricetags"></i>
               </div>
             </div>
 			      </a>
