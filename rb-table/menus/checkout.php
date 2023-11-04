@@ -98,9 +98,9 @@ include '../../conn.php';
                             <table class="table table-bordered text-white">
                                 <thead>
                                     <tr>
-                                        <th>Item</th>
-                                        <th>Quantity</th>
-                                        <th>Price</th>
+                                        <th class="text-center">Item</th>
+                                        <th class="text-center">Quantity</th>
+                                        <th class="text-center">Price</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -110,12 +110,12 @@ include '../../conn.php';
                                         while($fetch_cart = mysqli_fetch_assoc($select_cart)){ 
                                     ?>
                                     <tr>
-                                        <td><?= $fetch_cart['cart_name']; ?></td>
-                                        <td><?= $fetch_cart['cart_quantity']; ?></td>
+                                        <td class="text-center"><?= $fetch_cart['cart_name']; ?></td>
+                                        <td class="text-center"><?= $fetch_cart['cart_quantity']; ?></td>
                                         <?php if ($fetch_cart['cart_menuprice'] == '0') {?>
-                                            <td>-</td>
+                                            <td class="text-center">-</td>
                                         <?php } else { ?>
-                                            <td>₱ <?= $fetch_cart['cart_menuprice'] * $fetch_cart['cart_quantity']; ?></td>
+                                            <td class="text-center">₱ <?= number_format($fetch_cart['cart_menuprice'] * $fetch_cart['cart_quantity'], 2); ?></td>
                                         <?php } ?> 
                                     </tr>
                                     <?php } 
@@ -138,6 +138,13 @@ include '../../conn.php';
             </div>
             
         </div>
+        <footer class="main-footer bg-black text-center fixed-bottom">
+        <div class="float-right d-none d-sm-block">
+            <!-- Additional footer content or links can go here -->
+        </div>
+        Romantic Baboy – SM City Sta. Rosa Branch
+        &copy; <?php echo date("Y"); ?>
+        </footer>
 </body>
 </html>
 <?php

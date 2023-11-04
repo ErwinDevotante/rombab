@@ -30,6 +30,7 @@
     include 'navbar.php';
     ?>
 
+    <div>
     <div class="container-fluid text-center p-1 text-white">
         <h1>Bill Summary</h1>
         <h6><em>*Note: This is not an official receipt; it only displays the total bill.</em></h6>
@@ -129,17 +130,26 @@
                         </div>
                         
                     </div>
-                    <form action="" method="post">
+                    <?php if (mysqli_num_rows($select_cart) > 0) { ?>
                         <div class="done-btn text-center">
-                        <h6><em>*Note: Please look for the crew to settle the bill.</em></h6>
-                        <a href="#" onclick="confirmLogout()" class="btn btn-primary">Bill-out <i class="ion-arrow-right-c"></i></a>
+                        <h6 class="text-white"><em>*Note: Please look for the crew to settle the bill and log-out the table.</em></h6>
+                         <a href="#" onclick="showSurveyModal()" class="btn btn-primary">Bill-out <i class="ion-arrow-right-c"></i></a>
+                        <!--<button id="surveyButton" class="btn btn-primary" onclick="showSurveyModal()">Bill-out <i class="ion-arrow-right-c"></i></button> -->
                         </div>
-                    </form>
+                    <?php } ?>
                 </div>
             </div>
-            
         </div>
+    </div>
 
+    
+    <footer class="main-footer bg-black text-center fixed-bottom">
+    <div class="float-right d-none d-sm-block">
+        <!-- Additional footer content or links can go here -->
+    </div>
+    Romantic Baboy – SM City Sta. Rosa Branch
+    &copy; <?php echo date("Y"); ?>
+    </footer>
     <!-- Password input dialog (hidden by default) -->
     <div id="passwordDialog" class="modal fade" tabindex="-1" role="dialog">
         <div class="modal-dialog" role="document">
@@ -158,7 +168,75 @@
         </div>
     </div>
 
+    <!-- Survey Modal (hidden by default) -->
+    <div id="surveyModal" class="modal fade" tabindex="-1" role="dialog">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Rate Your Experience</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body text-center">
+                    <p>Please rate your dining experience:</p>
+                    <div>
+                        <?php for ($i = 1; $i <= 10; $i++) { ?>
+                            <button type="button" class="btn btn-primary" onclick="submitSurvey(<?php echo $i; ?>)"><?php echo $i; ?></button>
+                        <?php } ?>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <script>
+        // Function to show the survey modal
+        function showSurveyModal() {
+            // Check if a survey record exists in the database
+            var check_tableNo = <?php echo $row['user_id']; ?>;
+            var check_userId = <?php echo $customer['appointment_id']; ?>;
+
+            $.ajax({
+                type: "POST",
+                url: "cart-update.php", // Use the correct URL for checking the survey
+                data: {
+                    tableNo: check_tableNo,
+                    userId: check_userId
+                },
+                success: function(response) {
+                    if (response === 'existing') {
+                        // If a survey record exists, proceed to logout
+                        confirmLogout();
+                    } else {
+                        // If a survey record doesn't exist, show the survey modal
+                        $('#surveyModal').modal('show');
+                    }
+                }
+            });
+        }
+
+        // Function to submit the user's rating to the database
+        function submitSurvey(rating) {
+            var submit_tableNo = <?php echo $row['user_id']; ?>;
+            var submit_userId = <?php echo $customer['appointment_id']; ?>;
+
+            $.ajax({
+                type: "POST",
+                url: "cart-update.php", // Create this PHP file to insert the rating into the database
+                data: {
+                    submit_tableNo: submit_tableNo,
+                    submit_userId: submit_userId,
+                    rating: rating
+                },
+                success: function(response) {
+                    // Close the survey modal
+                    $('#surveyModal').modal('hide');
+                    //window.location = "check-bill.php";
+                    // Proceed to logout
+                    confirmLogout();
+                }
+            });
+        }
+
         // JavaScript function to handle logout
         function confirmLogout() {
             // Show the password input dialog

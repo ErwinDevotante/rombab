@@ -38,6 +38,10 @@ include 'admin-auth.php';
     <script src="../node_modules/overlayScrollbars/js/jquery.overlayScrollbars.min.js"></script>
     <!-- AdminLTE App -->
     <script src="../node_modules/admin-lte/js/adminlte.js"></script>
+    <!-- Chart.js -->
+    <script src="../node_modules/chart.js"></script>
+</head>
+    
 </head>
 <body class="hold-transition sidebar-mini layout-fixed">
 <div class="wrapper">
@@ -50,6 +54,7 @@ include 'admin-auth.php';
   <!-- Content Wrapper. Contains page content -->
   <div class="content-wrapper bg-black">
   <?php if($row['user_role'] == '1' || $row['user_role'] == '2') { ?>
+
     <div class="content-header">
       <div class="container-fluid">
         <div class="row mb-2">
@@ -277,7 +282,8 @@ include 'admin-auth.php';
                  <h5 class="font-weight-bold">Table Availability</h5>
                   <p>Check table availability</p>
                   <p>Total no. of tables: <?php echo $tableCount; ?></p>
-                      <table class="table">
+                    <div style="overflow-x:auto;">
+                      <table class="table ">
                         <thead>
                           <tr>
                             <th scope="col">Status</th>
@@ -293,7 +299,7 @@ include 'admin-auth.php';
                               if($activatedCount === 0) { ?>
                               <td>There is/are no activated table.</td>
                               <?php } else { ?>
-                                <td><span class='badge badge-pill badge-info text-black text-uppercase'><?php echo $tableNamesActivate; ?></span></td>
+                                <td><span class='badge badge-pill badge-success text-black text-uppercase'><?php echo $tableNamesActivate; ?></span></td>
                               <?php } ?>
                           </tr>
                           <tr>
@@ -303,7 +309,7 @@ include 'admin-auth.php';
                               if($deactivatedCount === 0) { ?>
                               <td>There is/are no deactivated table.</td>
                               <?php } else { ?>
-                                <td><span class='badge badge-pill badge-warning text-uppercase'><?php echo $tableNamesDeactivate; ?></span></td>
+                                <td><span class='badge badge-pill badge-danger text-black text-uppercase'><?php echo $tableNamesDeactivate; ?></span></td>
                               <?php } ?>
                           </tr>
                           <tr>
@@ -313,7 +319,7 @@ include 'admin-auth.php';
                               if($not_availableCount === 0) { ?>
                               <td>There is/are available table.</td>
                               <?php } else { ?>
-                                <td><?php echo $tableNamesNotAvailable; ?></td>
+                                <td><span class='badge badge-pill badge-warning text-black text-uppercase'><?php echo $tableNamesNotAvailable; ?></span></td>
                               <?php } ?>
                           </tr>
                           <tr>
@@ -323,11 +329,12 @@ include 'admin-auth.php';
                                 if($occupiedCount === 0) { ?>
                                 <td>There is/are occupied table.</td>
                                 <?php } else { ?>
-                                  <td><?php echo $tableNamesOccupied; ?></td>
+                                  <td><span class='badge badge-pill badge-info text-black text-uppercase'><?php echo $tableNamesOccupied; ?></span></td>
                                 <?php } ?>
                           </tr>
                         </tbody>
                       </table>
+                    </div>
                 </div>
                 <div class="icon text-white">
                   <i class="ion ion-clipboard"></i>
@@ -340,17 +347,108 @@ include 'admin-auth.php';
     </section>
     <?php } ?>
 
-      <?php
-      if ($row['user_role'] == '1') { ?>
-      <div class="content-header">
-        <div class="container-fluid">
-          <div class="row mb-2">
-            <div class="col-sm-6">
-              <h1 class="m-0 text-white">Add Account</h1>
-            </div>
+    <div class="content-header">
+      <div class="container-fluid">
+        <div class="row mb-2">
+          <div class="col-sm-6">
+            <h1 class="m-0 text-white">Survey Results</h1>
           </div>
         </div>
       </div>
+    </div>
+
+    <?php 
+     $survey = "SELECT survey_answer FROM survey";
+     $survey_result = $connection->query($survey);
+ 
+     $surveyData = [];
+     while ($survey_row = $survey_result->fetch_assoc()) {
+         $surveyData[] = $survey_row['survey_answer'];
+     }
+
+     ?>
+
+    <section class="content">
+      <div class="container-fluid">
+        <div class="row">
+        <a href="#" class="small-box-footer">
+              <div class="small-box bg-redbg text-white">
+                <div class="inner">
+                <canvas id="surveyChart"></canvas>
+                <script>
+                    var ctx = document.getElementById('surveyChart').getContext('2d');
+                    var surveyData = <?php echo json_encode($surveyData); ?>;
+                    
+                    var chart = new Chart(ctx, {
+                    type: 'line',
+                    data: {
+                        labels: Array.from({ length: surveyData.length }, (_, i) => i + 1),
+                        datasets: [{
+                            label: 'Responses when using a tabletop kiosk',
+                            data: surveyData,
+                            borderColor: 'white',
+                            borderWidth: 1,
+                            fill: false
+                        }]
+                    },
+                    options: {
+                        scales: {
+                            x: {
+                                position: 'bottom',
+                                beginAtZero: true,
+                                title: {
+                                    display: true,
+                                    text: 'The number of customers who answered the survey rating',
+                                    color: 'white'
+                                },
+                                ticks: {
+                                    color: 'white',
+                                }
+                            },
+                            y: {
+                                beginAtZero: true,
+                                max: 10,
+                                title: {
+                                    display: true,
+                                    text: 'Rating Level',
+                                    color: 'white'
+                                },
+                                ticks: {
+                                    color: 'white',
+                                    
+                                }
+                            }
+                        },
+                        plugins: {
+                            title: {
+                                display: true,
+                                text: 'Survey Line Graph',
+                                color: 'white'
+                            },
+                        },
+                        elements: {
+                            title: {
+                                color: 'white'
+                            },
+                            subtitle: {
+                                color: 'white'
+                            },
+                        }
+                      }
+                   });
+              </script>
+                </div>
+                <div class="icon text-white">
+                  <i class="ion ion-arrow-graph-up-right"></i>
+                </div>
+             </div>
+			      </a>
+        </div>
+      </div>
+    </section>
+
+      <?php
+      if ($row['user_role'] == '1') { ?>
   
       <section class="content">
         <div class="container-fluid">
@@ -370,36 +468,80 @@ include 'admin-auth.php';
 			      </a>
           </div>
 
-        </div>
-        </div>
-      </section>
+          <?php
+          $promo = mysqli_query($connection, "SELECT * FROM promo_prices");
+          $promo_row= mysqli_fetch_array($promo);
 
-      <div class="content-header">
-        <div class="container-fluid">
-          <div class="row mb-2">
-            <div class="col-sm-6">
-              <h1 class="m-0 text-white">Promos</h1>
-            </div>
-          </div>
-        </div>
-      </div>
-  
-      <section class="content">
-        <div class="container-fluid">
-        <div class="row">
-
+          if (isset($_POST['updatePromo'])) {
+            // Get the new promo_price and promoId from the form submission
+            $newPrice = $_POST["newPrice"];
+            $promoId = $_POST["promoId"];
+        
+            if (!$connection) {
+                die("Connection failed: " . mysqli_connect_error());
+            }
+        
+            $updateQuery = "UPDATE promo_prices SET promo_price = ? WHERE promo_id = ?";
+            $stmt = mysqli_prepare($connection, $updateQuery);
+        
+            if ($stmt) {
+                mysqli_stmt_bind_param($stmt, "di", $newPrice, $promoId);
+                if (mysqli_stmt_execute($stmt)) {
+                    // Update successful
+                    echo '<script type="text/javascript">window.location = "admin-index.php";</script>';;
+                    //exit();
+                } else {
+                    // Update failed
+                    echo "Update failed: " . mysqli_error($connection);
+                }
+                mysqli_stmt_close($stmt);
+            } else {
+                // Query preparation failed
+                echo "Query preparation failed: " . mysqli_error($connection);
+            }
+        
+            mysqli_close($connection);
+        } 
+          
+          ?>
           <div class="col-lg-6">
-			      <a href="#" class="small-box-footer">
-            <div class="small-box bg-redbg text-white">
-              <div class="inner">
-                <h3>Edit</h3>
-                <p>Promo</p>
+            <a href="#" class="small-box-footer" onclick="promoUpdate()">
+                <div class="small-box bg-redbg text-white">
+                    <div class="inner">
+                        <h3>Update Promo</h3>
+                        <p><?php echo $promo_row['promos'];?> ₱<?php echo number_format($promo_row['promo_price'], 2);?></p>
+                    </div>
+                    <div class="icon text-white">
+                        <i class="ion ion-ios-pricetags"></i>
+                    </div>
+                </div>
+            </a>
+          </div>
+
+          <!-- Create the modal -->
+          <div class="modal fade" id="updatePromoModal" tabindex="-1" role="dialog" aria-labelledby="updatePromoModalLabel" aria-hidden="true">
+              <div class="modal-dialog" role="document">
+                  <div class="modal-content">
+                      <div class="modal-header">
+                          <h5 class="modal-title text-black" id="updatePromoModalLabel">Update Promo Price</h5>
+                      </div>
+                      <div class="modal-body">
+                          <!-- Form to update the promo_price -->
+                          <form method="post" action=""> <!-- Assuming you have an "update_promo.php" script to handle the update -->
+                              <div class="form-group text-black">
+                                  <label for="newPrice">New Promo Price</label>
+                                  <input type="number" step="0.01" class="form-control" id="newPrice" name="newPrice" value="<?php echo number_format($promo_row['promo_price'], 2); ?>">
+                              </div>
+                          
+                      </div>
+                      <div class="modal-footer">
+                        <input type="hidden" name="promoId" value="<?php echo $promo_row['promo_id']; ?>"> <!-- Assuming you have a unique identifier for the promo -->
+                        <button type="submit" name="updatePromo" class="btn btn-primary">Update</button>
+                        </form>
+                        <button class="btn btn-secondary" onclick="closeModal()">Close</button>
+                      </div>
+                  </div>
               </div>
-              <div class="icon text-white">
-                <i class="ion ion-ios-pricetags"></i>
-              </div>
-            </div>
-			      </a>
           </div>
 
         </div>
@@ -419,3 +561,14 @@ include 'admin-auth.php';
  &copy; <?php echo date("Y"); ?>
 </footer>
 </html>
+
+<script>
+  function promoUpdate() {
+    // Show the dialog
+    $('#updatePromoModal').modal('show');
+    }
+
+  function closeModal(){
+    $('#updatePromoModal').modal('hide');
+  }
+</script>

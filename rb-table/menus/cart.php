@@ -113,6 +113,13 @@
         }?>
         
     </div>
+    <footer class="main-footer bg-black text-center fixed-bottom">
+        <div class="float-right d-none d-sm-block">
+            <!-- Additional footer content or links can go here -->
+        </div>
+        Romantic Baboy – SM City Sta. Rosa Branch
+        &copy; <?php echo date("Y"); ?>
+    </footer>
     <script>
         function updateDatabase(inputField) {
             const updateValue = inputField.value;

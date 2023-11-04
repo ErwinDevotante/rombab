@@ -74,7 +74,7 @@ include '../conn.php';
                                                             users.user_id, users.name, users.session_tb, users.user_role 
                                                             FROM appointment RIGHT JOIN users 
                                                             ON users.user_id=appointment.table_id
-                                                            WHERE users.user_role = '4' 
+                                                            WHERE users.user_role = '4'
                                                             ORDER BY users.user_id ASC");
                     if(mysqli_num_rows($result_tb) > 0){
                     while ($row = mysqli_fetch_array($result_tb)) { ?> 
