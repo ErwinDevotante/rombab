@@ -394,15 +394,16 @@ include 'admin-auth.php';
                     options: {
                         scales: {
                             x: {
-                                position: 'bottom',
-                                beginAtZero: true,
+                                //position: 'bottom',
+                                //beginAtZero: true,
                                 title: {
                                     display: true,
-                                    text: 'The number of customers who answered the survey rating',
+                                    text: 'Customers who answered the survey rating',
                                     color: 'white'
                                 },
                                 ticks: {
-                                    color: 'white',
+                                    display: false,
+                                    color: 'white'
                                 }
                             },
                             y: {

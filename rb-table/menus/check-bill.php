@@ -142,6 +142,25 @@
         </div>
     </div>
 
+    <?php
+        //$check_tableNo = $row['user_id'];
+        //$check_userId = $customer['appointment_id'];
+        //$check_query = mysqli_query($connection, "SELECT * FROM survey WHERE survey_table_no = $check_tableNo AND survey_user_id = $check_userId");
+        //if (mysqli_num_rows($check_query) > 0) {
+         // If there are results in the query, call confirmLogout()
+            //echo '<div class="done-btn text-center">';
+            //echo '<h6 class="text-white"><em>*Note: Please look for the crew to settle the bill and log-out the table.</em></h6>';
+            //echo '<a href="#" onclick="confirmLogout()" class="btn btn-primary">Bill-out <i class="ion-arrow-right-c"></i></a>';
+            //echo '</div>';
+        //} else {
+        // If there are no results, call submitsurvey()
+            //echo '<div class="done-btn text-center">';
+            //echo '<h6 class="text-white"><em>*Note: Please look for the crew to settle the bill and log-out the table.</em></h6>';
+            //echo '<a href="#" onclick="submitSurvey()" class="btn btn-primary">Bill-out <i class="ion-arrow-right-c"></i></a>';
+            //echo '</div>';
+            //}
+        ?>
+
     
     <footer class="main-footer bg-black text-center fixed-bottom">
     <div class="float-right d-none d-sm-block">
