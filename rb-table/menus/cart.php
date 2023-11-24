@@ -75,7 +75,7 @@
             <td>
                 <form action="" method="post">
                     <input type="hidden" name="update_quantity_id"  value="<?php echo $fetch_cart['cart_id']; ?>" >
-                    <input type="number" name="update_quantity" min="1" max="5" class="text-center" value="<?php echo $fetch_cart['cart_quantity']; ?>" onchange="updateDatabase(this)">
+                    <input type="number" name="update_quantity" id="update_quantity" min="1" max="5" class="text-center" value="<?php echo $fetch_cart['cart_quantity']; ?>" onchange="updateDatabase(this)">
                 </form> 
             </td>
             <td><a href="cart.php?remove=<?php echo $fetch_cart['cart_id']; ?>" class="delete-btn btn btn-primary"> <i class="ion ion-ios-trash"></i> Remove</a></td>

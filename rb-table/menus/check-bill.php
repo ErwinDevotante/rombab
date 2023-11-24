@@ -119,14 +119,81 @@
                                 </tbody>
                                 
                             </table>
-                            <!-- <form action="check-bill.php" method="post" enctype="multipart/form-data">
-                                <h6><em>*Note: Present a senior/PWD card to the crew. This will compute the total bill if your companion is eligible for a discount.</em></h6>
-                                <label>No. of senior</label>
-                                <input type="number" name="senior_no" min="0" max="<?php echo $customer['count'];?>" class="text-center" value="0" oninput="validateInput(this)">
-                                <label>No. of PWD</label>
-                                <input type="number" name="pwd_no" min="0" max="<?php echo $customer['count'];?>" class="text-center" value="0" oninput="validateInput(this)">
-                                <a href="#" class="btn btn-primary">Compute</a>
-                            </form> -->
+                            
+                            <?php
+                            $to_pay = $totalBill;
+                            $seniorCount = isset($_POST['senior_no']) ? $_POST['senior_no'] : 0;
+                            $pwdCount = isset($_POST['pwd_no']) ? $_POST['pwd_no'] : 0;
+                            $bdayCount = isset($_POST['bday_no']) ? $_POST['bday_no'] : 0;
+                            $afterDiscount = ($row_promo['promo_price'] * 0.20);
+                            $bdayPromoDiscount = 0;
+                            $totalDiscount = 0;
+
+                            if(isset($_POST['to_pay'])) {
+                                $totalDiscount = ($seniorCount + $pwdCount) * $afterDiscount;
+                                
+                                $to_pay = $totalBill - $totalDiscount;
+                            
+                                // Calculate discounts for birthday celebrants
+                                
+                                $bdayPromoDiscount = 0;
+                            
+                                if ($bdayCount >= 1 && $bdayCount <= 4 && $customer['count'] > $bdayCount) {
+                                    $bdayPromoDiscount = ($row_promo['promo_price']); // Divide by 5 paying companions
+                                    $bdayPromoDiscount *= $bdayCount; // Apply discount for the number of companions with birthdays
+                                }
+
+                                $to_pay = $totalBill - ($totalDiscount + $bdayPromoDiscount);
+            
+                            }
+                            
+                            ?>
+                            <h6><em>*Note: Present a senior/PWD card or birthday proof to the crew. This will compute the total bill if your companion is eligible for a discount. The birthday promo is applicable with four (4) paying companions.</em></h6>
+                            <form action="" method="post" enctype="multipart/form-data">
+                            <div class="container">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                            <label>No. of senior</label>
+                                            <input type="number" name="senior_no" min="0" max="<?php echo $customer['count'];?>" class="form-control" value="<?php echo $seniorCount?>" oninput="validateInput(this)">
+                                            <label>No. of PWD</label>
+                                            <input type="number" name="pwd_no" min="0" max="<?php echo $customer['count'];?>" class="form-control" value="<?php echo $pwdCount?>" oninput="validateInput(this)">
+                                            <?php if($customer['count'] >= 5) {?>
+                                            <label>No. of birthday celebrant</label>
+                                            <input type="number" name="bday_no" min="0" max="<?php echo $customer['count'];?>" class="form-control" value="<?php echo $bdayCount?>" oninput="validateInput(this)">
+                                            <?php } ?>
+                                            <button type="submit" name="to_pay" class="btn btn-primary mt-2 mb-3">Compute Total Bill</button>
+                                        </div>
+                                        <div class="col-md-6 mt-auto d-flex flex-column">
+                                            <div class="ml-auto">
+                                                <table class="table text-white">
+                                                <tr>
+                                                    <td><p class="mb-0"><small>Total</small></td>
+                                                    <td><p class="mb-0 text-left"><small>₱<?php echo number_format($totalBill, 2)?></small></p></td>
+                                                </tr>
+                                                <tr>
+                                                    <td><p class="mb-0"><small>Senior Disc. (x<?php echo $seniorCount;?>)</small></td>
+                                                    <td><p class="mb-0 text-right"><small>₱<?php echo number_format($seniorCount * $afterDiscount, 2)?></small></p></td>
+                                                </tr>
+                                                <tr>
+                                                    <td><p class="mb-0"><small>PWD Disc. (x<?php echo $pwdCount;?>)</small></td>
+                                                    <td><p class="mb-0 text-right"><small>₱<?php echo number_format($pwdCount * $afterDiscount, 2)?></small></p></td>
+                                                </tr>
+                                                <tr>
+                                                    <td><p class="mb-0"><small>Bday Promo (x<?php echo $bdayCount;?>)</small></td>
+                                                    <td><p class="mb-0 text-right">₱<small><?php echo number_format($bdayPromoDiscount, 2)?></small></p></td>
+                                                </tr>
+                                                <tr>
+                                                    <td><p class="mb-0"><small>Total Discount</small></td>
+                                                    <td><p class="mb-0 text-right">₱<small><?php echo number_format($totalDiscount + $bdayPromoDiscount, 2)?></small></p></td>
+                                                </tr>
+                                                </table>
+                                                <h5 name="to_pay"><strong>TO PAY ➜ ₱<?php echo number_format($to_pay, 2 );?></strong></h5>
+                                                
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
                         </div>
                         
                     </div>
@@ -162,7 +229,7 @@
         ?>
 
     
-    <footer class="main-footer bg-black text-center fixed-bottom">
+    <footer class="main-footer bg-black text-center">
     <div class="float-right d-none d-sm-block">
         <!-- Additional footer content or links can go here -->
     </div>
@@ -269,14 +336,14 @@
         // Check if the entered password is correct
         if (enteredPassword === "<?php echo $row['password'];?>") {
             // Send an AJAX request to insert data into billing_history
-                var totalBill = <?php echo $totalBill; ?>;
+                var to_pay = <?php echo $to_pay; ?>;
                 var tableNo = <?php echo $row['user_id']; ?>;
                 var userId = <?php echo $customer['appointment_id']; ?>;
             $.ajax({
                 type: "POST",
                 url: "cart-update.php", // Create this PHP file to handle the database operation
                 data: {
-                    totalBill: totalBill,
+                    to_pay: to_pay,
                     userId: userId,
                     tableNo: tableNo
                 },

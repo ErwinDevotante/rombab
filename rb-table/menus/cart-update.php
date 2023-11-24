@@ -1,5 +1,10 @@
 <?php 
 include '../../conn.php';
+include '../table-auth.php';
+    if($_SESSION['user_id']==''){
+        header('location:../../index.php');
+        exit();
+    } 
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && (isset($_POST['update_id']) && isset($_POST['update_value']))) {
         $update_id = $_POST['update_id'];
@@ -39,9 +44,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['orderID'])) {
     echo 'Invalid Request';
 }
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && (isset($_POST['totalBill']) && isset($_POST['userId']) && isset($_POST['tableNo']))) {
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && (isset($_POST['to_pay']) && isset($_POST['userId']) && isset($_POST['tableNo']))) {
     // Get the totalBill, userId, and tableNo from the POST request
-    $bill = $_POST['totalBill'];
+    $bill = $_POST['to_pay'];
     $user = $_POST['userId'];
     $table = $_POST['tableNo'];
 
@@ -51,6 +56,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && (isset($_POST['totalBill']) && isse
         if (mysqli_query($connection, $insertBillingQuery)) {
             // Now, perform the SQL query to update summary_orders
             $updateSummaryOrders = "UPDATE summary_orders SET summary_status = '1' WHERE user_summary_id = '$user' AND summary_table_no = '$table'";
+            //$activateTable = "UPDATE users SET session_tb = '1' WHERE user_id = '$table'";
 
             if (mysqli_query($connection, $updateSummaryOrders)) {
                 // Update was successful
