@@ -34,10 +34,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['orderID'])) {
     $updateQuery = "UPDATE orders SET read_notif_session = '1' WHERE order_id = '$orderID' AND status = '1'";
     if (mysqli_query($connection, $updateQuery)) {
         // Return a success response
-        echo 'Success';
+        echo json_encode(['success' => true]);
     } else {
         // Handle the error if the update fails
-        echo 'Error';
+        echo json_encode(['error' => true]);
     }
 } else {
     // Handle invalid or missing POST data

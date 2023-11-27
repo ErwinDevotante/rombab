@@ -33,7 +33,7 @@
     <div>
     <div class="container-fluid text-center p-1 text-white">
         <h1>Bill Summary</h1>
-        <h6><em>*Note: This is not an official receipt; it only displays the total bill.</em></h6>
+        <h6><em><strong>*Note: This is not an official receipt; it only displays the total bill.</strong></em></h6>
     </div>
 
     <div class="container mt-4">
@@ -67,9 +67,15 @@
                                     $othersBill = 0;
                                     $productQuantity = array(); // An associative array to store product quantities
                                     $totalothers = 0;
+                                    $totalBill = 0;
+                                    $totalPrice = 0;
+                                    $product =  0;
+                                    $quantity = 0;
+                                    $price = 0;
 
                                     if (mysqli_num_rows($select_cart) > 0) {
                                         while ($fetch_cart = mysqli_fetch_assoc($select_cart)) {
+                                            
                                             $product = $fetch_cart['summary_products'];
                                             $quantity = $fetch_cart['summary_qty'];
                                             $price = $fetch_cart['summary_price'];
@@ -78,7 +84,7 @@
                                             if (isset($productQuantity[$product])) {
                                                 // If it does, add the quantity and total price to the existing entry
                                                 $productQuantity[$product]['quantity'] += $quantity;
-                                                $productQuantity[$product]['totalPrice'] += $price;
+                                                //$productQuantity[$product]['totalPrice'] += $price;
                                             } else {
                                                 // If it doesn't, create a new entry in the array
                                                 $productQuantity[$product] = array('quantity' => $quantity, 'totalPrice' => $price);
@@ -89,20 +95,21 @@
                                         foreach ($productQuantity as $product => $data) {
                                             $quantity = $data['quantity'];
                                             $totalPrice = $data['totalPrice'];
+                                            $totalothers = 0;
 
                                             echo '<tr>';
                                             echo '<td class="text-center">' . $quantity . '</td>';
-                                            echo '<td>' . $product . '</td>';
-                                            if ($totalPrice != 0){
+                                            echo '<td>' .$product . '</td>';
+                                            if ($totalPrice != '0'){
                                                 $totalothers = $totalPrice * $quantity;
-                                                echo '<td>₱ ' . number_format($totalothers, 2) . '</td>';
+                                                echo '<td>₱ ' . number_format($totalothers, 2). '</td>';
                                             } else {
                                                 echo '<td>-</td>';
                                             }
                                             echo '</tr>';
 
                                             // Add the product's total price to the overall bill
-                                            $othersBill += $totalothers;
+                                            $othersBill = $othersBill + $totalothers;
                                         }
                                     } else {
                                         echo "<div class='display-order text-center'><span>You don't have any orders yet.</span></div>";

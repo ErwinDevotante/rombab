@@ -85,7 +85,7 @@
             <p>Product Added Successfully!</p>
           </div>
           <div class="modal-footer">
-              <a href="samgyupsal.php" class="btn btn-primary">Close</a>
+            <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Close</button>
           </div>
         </div>
       </div>
@@ -103,7 +103,7 @@
             <p>Product Already Added!</p>
           </div>
           <div class="modal-footer">
-            <a href="samgyupsal.php" class="btn btn-primary">Close</a>
+            <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Close</button>
           </div>
         </div>
       </div>

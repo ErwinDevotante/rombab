@@ -16,9 +16,9 @@
 	$customer = mysqli_fetch_array($customer_result);
 
     $user_id = $customer["appointment_id"];
-    $select_notif = mysqli_query($connection, "SELECT * FROM orders WHERE user_table_id = '$user_id' AND read_notif_session = '0' 
-        AND user_table = '$table' AND status = '1'");
-    $notif_count = mysqli_num_rows($select_notif);
+    //$select_notif = mysqli_query($connection, "SELECT * FROM orders WHERE user_table_id = '$user_id' AND read_notif_session = '0' 
+        //AND user_table = '$table' AND status = '1'");
+    //$notif_count = mysqli_num_rows($select_notif);
 
 ?>
 <style>
@@ -46,13 +46,13 @@
                 <li class="nav-item">
                     <a class="nav-link active text-white" id="openModalButton">
                         <i class="ion ion-android-notifications large-icon"></i>
-                        <span id="cartCount" class="position-absolute translate-middle badge rounded-pill bg-red"><?php echo $notif_count; ?></span>
+                        <span class="position-absolute translate-middle badge rounded-pill bg-red" id="notif_num">0</span>
                     </a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link active text-white" href="cart.php">
                         <i class="ion ion-android-restaurant large-icon"></i>
-                        <span id="cartCount" class="position-absolute translate-middle badge rounded-pill bg-red"><?php echo $row_count; ?></span>
+                        <span id="cartCount" class="position-absolute translate-middle badge rounded-pill bg-red">0</span>
                     </a>
                 </li>
                 <li class="nav-item">
@@ -70,7 +70,7 @@
       <div class="modal-header">
         <h5 class="modal-title" id="statusModalLabel"><?php echo $row["name"]; ?> Summary of Order/s</h5>
       </div>
-      <div class="modal-body">
+      <div class="modal-body" id="notification_desc">
             <div class="accordion p-4" id="faqAccordion">
             <?php
             $notif = mysqli_query($connection, "SELECT * FROM orders WHERE user_table_id = '$user_id'
@@ -97,6 +97,9 @@
                                         } ?>
                                     <p class="m-0 text-secondary font-weight-light font-italic">Order taken at <em><?php echo $formatted_time; ?></em></p>
                                     <p class="m-0 text-secondary font-weight-light font-italic">Elapsed time: <?=$notif_row['serve_time'];?> seconds</p>
+                                    <button class="btn btn-primary btn-mark-as-served" data-order-id="<?=$id_notif;?>">
+                                        Mark as Served
+                                    </button>
                                 </div>
                             </div>
                         </div>
@@ -165,25 +168,67 @@
   }
 
   $(document).ready(function() {
-    // Define a click event handler for the accordion items
-    $('.accordion-button').click(function() {
+    // Define a click event handler for the "Mark as Served" button
+    $('.btn-mark-as-served').click(function(e) {
+        e.stopPropagation(); // Prevent accordion toggle when the button is clicked
         var orderID = $(this).data('order-id');
-        updateReadNotifSession(orderID);
+        markOrderAsServed(orderID);
     });
 
-    // Function to update read_notif_session using AJAX
-    function updateReadNotifSession(orderID) {
+    // Function to mark the order as served using AJAX
+    function markOrderAsServed(orderID) {
         $.ajax({
             type: "POST",
             url: "cart-update.php", // Create this PHP file
             data: { orderID: orderID },
             success: function(response) {
-                // Handle the response if needed
-                // For example, you can display a success message or update the UI
+                $('#heading' + orderID + ' .accordion-button').text('Already Served.');
             }
         });
     }
+
+    // Function to fetch count from the server
+    function fetchCount() {
+        // Fetch notif_num
+        $.ajax({
+        url: 'get-notif.php',
+        method: 'POST',
+        data: {
+            action: 'getCount'
+        },
+        success: function(response) {
+            $('#notif_num').html(response);
+
+        },
+        error: function(error) {
+            console.error('Error:', error);
+        }
+        });
+
+        // Fetch cart count
+        $.ajax({
+        url: 'get-notif.php',
+        method: 'POST',
+        data: {
+            action: 'getCartCount'
+        },
+        success: function(response) {
+            $('#cartCount').html(response);
+        },
+        error: function(error) {
+            console.error('Error:', error);
+        }
+        });
+    }
+
+    // Call the fetchCount function initially
+    fetchCount();
+
+    // Set up an interval to call fetchCount every second (1000 milliseconds)
+    setInterval(fetchCount, 5000);
+
 });
 
 </script>
+
 

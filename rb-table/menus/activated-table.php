@@ -24,6 +24,7 @@ include '../../conn.php';
     <script src="../../node_modules/jquery/dist/jquery.min.js"></script>
     <!-- Bootstrap -->
     <script src="../../node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+
 </head>
 <body class="bg-black">
 
@@ -66,6 +67,7 @@ include '../../conn.php';
             <a href="#" class="text-dark" onclick="confirmLogout()"><i class="ion-android-exit"></i></a>
             </div>
             <div class="col-auto">
+                <a href="#" class="btn btn-primary" onclick="">Tutorial <i class="ion-information-circled"></i></a>
                 <a href="check-bill.php" class="btn btn-primary">Check Bill <i class="ion-arrow-right-c"></i></a>
             </div>
         </div>
@@ -84,6 +86,20 @@ include '../../conn.php';
                 </div>
                 <div class="modal-footer">
                     <button type="submit" class="btn btn-primary" onclick="checkPassword()">SUBMIT</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="welcomeModal" class="modal fade" tabindex="-1" role="dialog">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Welcome to Activate Table!</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p>Thank you for using Activate Table. Enjoy your dining experience!</p>
                 </div>
             </div>
         </div>
@@ -118,6 +134,9 @@ include '../../conn.php';
         document.getElementById('disabled_click').addEventListener('click', function(event) {
             event.preventDefault(); // Prevent the link from being followed
         });
-    </script>
+        
+
+    </script>   
+
 </body>
 </html>

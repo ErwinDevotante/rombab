@@ -64,7 +64,7 @@
                             <form action="" method="post">
                                 <div class="card p-2 mb-2 card-red text-center">
                                     <div class="img"><img class="img-fluid rounded-top custom-image" alt="Responsive Image" src ='../../rb-admin/menu-images/<?php echo $row["menu_image"]; ?>'></div>
-                                    <div class="productname bg-white text-black rounded-bottom"><h5 class="text-truncate text-uppercase"><?php echo $row["menu_name"]; ?> - ₱<?php echo $row["menu_price"]; ?></h5></div>
+                                    <div class="productname bg-white text-black rounded-bottom"><h5 class="text-truncate text-uppercase"><?php echo $row["menu_name"]; ?> - ₱<?php echo number_format($row["menu_price"], 2); ?></h5></div>
                                     <input type="hidden" name="product_image" value="<?php echo $row["menu_image"]; ?>">
                                     <input type="hidden" name="product_name" value="<?php echo $row["menu_name"]; ?>">
                                     <input type="hidden" name="product_price" value="<?php echo $row["menu_price"]; ?>">
@@ -88,7 +88,7 @@
             <p>Product Added Successfully!</p>
           </div>
           <div class="modal-footer">
-              <a href="others.php" class="btn btn-primary">Close</a>
+            <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Close</button>
           </div>
         </div>
       </div>
@@ -106,7 +106,7 @@
             <p>Product Already Added!</p>
           </div>
           <div class="modal-footer">
-            <a href="others.php" class="btn btn-primary">Close</a>
+            <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Close</button>
           </div>
         </div>
       </div>

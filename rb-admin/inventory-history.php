@@ -113,11 +113,25 @@ include '../conn.php';
 
             <div class="container-fluid text-center p-4">
                 <h1>Inventory Reports</h1>
-                <p>Start Time: <?php echo $currentDate ?></p>
-                <p>End Time: <?php echo $currentDate ?></p>
-                <form method="POST" action="generate_daily_inventory_report.php" target="_blank">
-                    <input type="submit" class="btn btn-danger" name="pdf_creater" value="PRINT DAILY REPORT" <?php echo $buttonStatus; ?>>
-                </form>
+                <p class="m-0">Start Time: <?php echo date("F d, Y", strtotime($currentDate)) ?></p>
+                <p>End Time: <?php echo date("F d, Y", strtotime($currentDate)) ?></p>
+                <div class="row justify-content-center">
+                    <div class="col-4">
+                        <form method="POST" action="generate_daily_inventory_report.php" target="_blank">
+                            <input type="submit" class="btn btn-danger w-100" name="pdf_creater" value="PDF" <?php echo $buttonStatus; ?>>
+                        </form>
+                    </div>
+                    <div class="col-4">
+                        <form method="POST" action="generate_excel_inventory.php">
+                            <input type="submit" class="btn btn-success w-100" name="export_excel" value="EXCEL">
+                        </form>
+                    </div>
+                    <div class="col-4">
+                        <form method="POST" action="generate_csv_inventory.php">
+                            <input type="submit" class="btn btn-info w-100" name="export_csv" value="CSV">
+                        </form>
+                    </div>
+                </div>
             </div>
 
             <div style="overflow-x:auto;">
