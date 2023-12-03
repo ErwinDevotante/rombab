@@ -45,18 +45,18 @@
                 </li>
                 <li class="nav-item">
                     <a class="nav-link active text-white" id="openModalButton">
-                        <i class="ion ion-android-notifications large-icon"></i>
+                        <i class="bi bi-bell-fill large-icon"></i>
                         <span class="position-absolute translate-middle badge rounded-pill bg-red" id="notif_num">0</span>
                     </a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link active text-white" href="cart.php">
-                        <i class="ion ion-android-restaurant large-icon"></i>
+                        <i class="bi bi-cart-fill large-icon"></i>
                         <span id="cartCount" class="position-absolute translate-middle badge rounded-pill bg-red">0</span>
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link active text-white" href="activated-table.php"><i class="ion ion-grid large-icon"></i></a>
+                    <a class="nav-link active text-white" href="activated-table.php"><i class="bi bi-menu-button large-icon"></i></a>
                 </li>
             </ul>
         </div>
@@ -225,7 +225,7 @@
     fetchCount();
 
     // Set up an interval to call fetchCount every second (1000 milliseconds)
-    setInterval(fetchCount, 5000);
+    //setInterval(fetchCount, 5000);
 
 });
 

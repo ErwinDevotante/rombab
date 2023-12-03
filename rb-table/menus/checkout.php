@@ -24,6 +24,8 @@ include '../../conn.php';
     <script src="../../node_modules/jquery/dist/jquery.min.js"></script>
     <!-- Bootstrap -->
     <script src="../../node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Bootstrap Icons CSS -->
+    <link href="../../node_modules/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
 </head>
 <body class="bg-black">
 

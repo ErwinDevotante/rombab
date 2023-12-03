@@ -11,7 +11,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && (isset($_POST['update_id']) && isse
         $update_value = $_POST['update_value'];
 
         // Ensure the value is within the range of 1 to 5
-        $update_value = max(1, min(5, $update_value));
+        //$update_value = max(1, min(5, $update_value));
 
         // Update the database
         $update_quantity_query = mysqli_query($connection, "UPDATE `cart` SET cart_quantity = '$update_value' WHERE cart_id = '$update_id'");

@@ -21,6 +21,8 @@
     <script src="../../node_modules/jquery/dist/jquery.min.js"></script>
     <!-- Bootstrap -->
     <script src="../../node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Bootstrap Icons CSS -->
+    <link href="../../node_modules/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
 </head>
 <body class="bg-black">
 
@@ -75,7 +77,7 @@
             <td>
                 <form action="" method="post">
                     <input type="hidden" name="update_quantity_id"  value="<?php echo $fetch_cart['cart_id']; ?>" >
-                    <input type="number" name="update_quantity" id="update_quantity" min="1" max="5" class="text-center" value="<?php echo $fetch_cart['cart_quantity']; ?>" onchange="updateDatabase(this)">
+                    <input type="number" name="update_quantity" id="update_quantity" min="1" max="<?php echo $customer["count"] + 2; ?>" class="text-center" value="<?php echo $fetch_cart['cart_quantity']; ?>" onchange="updateDatabase(this)">
                 </form> 
             </td>
             <td><a href="cart.php?remove=<?php echo $fetch_cart['cart_id']; ?>" class="delete-btn btn btn-primary"> <i class="ion ion-ios-trash"></i> Remove</a></td>
@@ -126,7 +128,7 @@
             const updateId = inputField.parentElement.querySelector('[name="update_quantity_id"]').value;
 
             // Ensure the value is within the range of 1 to 5
-            const updatedValue = Math.max(1, Math.min(5, updateValue));
+            const updatedValue = Math.max(1, Math.min(<?php echo $customer["count"] + 2;?>, updateValue));
 
             // Update the database using AJAX
             const xhr = new XMLHttpRequest();
@@ -157,8 +159,8 @@
             // Ensure the value is within the range of 1 to 10
             if (qty < 1) {
                 qtyInput.value = '1'; // Set the minimum value to 1
-            } else if (qty > 5) {
-                qtyInput.value = '5'; // Set the maximum value to 10
+            } else if (qty > <?php echo $customer["count"] + 2;?>) {
+                qtyInput.value = '<?php echo $customer["count"] + 2;?>'; // Set the maximum value to 10
             } else {
                 qtyInput.value = qty; // Update the input value with the sanitized integer value
             }

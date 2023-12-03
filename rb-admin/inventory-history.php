@@ -10,13 +10,6 @@ include '../conn.php';
     // Get the current date in the Philippines timezone in the format "Y-m-d"
     $currentDate = date('Y-m-d');
     $currentTime = date('H:i:s');
-    // Set the default value for the button status
-    $buttonStatus = 'enabled'; //disabled
-    // Check if the current time is 10 PM (22:00) Philippine time
-    if ($currentTime === '22:00:00') {
-        // Enable the button if it's 10 PM
-        $buttonStatus = 'enabled';
-    }
 
 ?>
 <!DOCTYPE html>
@@ -54,6 +47,8 @@ include '../conn.php';
     <link rel="stylesheet" href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.min.css">
     <!-- DataTables JS -->
     <script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
+    <!-- Bootstrap Icons CSS -->
+    <link href="../../node_modules/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
 </head>
 <style>
   /* Custom styles for DataTables */
@@ -115,20 +110,16 @@ include '../conn.php';
                 <h1>Inventory Reports</h1>
                 <p class="m-0">Start Time: <?php echo date("F d, Y", strtotime($currentDate)) ?></p>
                 <p>End Time: <?php echo date("F d, Y", strtotime($currentDate)) ?></p>
-                <div class="row justify-content-center">
-                    <div class="col-4">
+                <div style="overflow-x:auto;">
+                    <div class="btn-group" role="group">
                         <form method="POST" action="generate_daily_inventory_report.php" target="_blank">
-                            <input type="submit" class="btn btn-danger w-100" name="pdf_creater" value="PDF" <?php echo $buttonStatus; ?>>
+                            <button type="submit" class="btn btn-danger m-1" name="pdf_creater" value="PDF">PDF <i class="bi bi-file-earmark-pdf"></i></button>
                         </form>
-                    </div>
-                    <div class="col-4">
                         <form method="POST" action="generate_excel_inventory.php">
-                            <input type="submit" class="btn btn-success w-100" name="export_excel" value="EXCEL">
+                            <button type="submit" class="btn btn-success m-1" name="export_excel">EXCEL <i class="bi bi-file-earmark-excel"></i></button>
                         </form>
-                    </div>
-                    <div class="col-4">
                         <form method="POST" action="generate_csv_inventory.php">
-                            <input type="submit" class="btn btn-info w-100" name="export_csv" value="CSV">
+                            <button type="submit" class="btn btn-info m-1" name="export_csv" value="CSV">CSV <i class="bi bi-filetype-csv"></i></button>
                         </form>
                     </div>
                 </div>
