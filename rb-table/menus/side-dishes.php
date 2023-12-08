@@ -69,7 +69,7 @@
                                 <div class="productname bg-white text-black rounded-bottom"><h5 class="text-truncate text-uppercase"><?php echo $row["menu_name"]; ?></h5></div>
                                 <input type="hidden" name="product_image" value="<?php echo $row["menu_image"]; ?>">
                                 <input type="hidden" name="product_name" value="<?php echo $row["menu_name"]; ?>">
-                                <input type="submit" class="btn btn-md btn-outline-danger text-white w-100 mt-1" value="ADD TO ORDER" name="add_to_cart">
+                                <button type="submit" class="btn btn-md btn-outline-danger text-white w-100 mt-1" name="add_to_cart">ADD TO ORDER <i class="bi bi-cart-plus-fill"></i></button>
                             </div>
                         </form>
                         <?php }

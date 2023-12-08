@@ -79,7 +79,7 @@ include '../conn.php';
                   while ($row = mysqli_fetch_array($result_tb)) { 
                     $skillsArray = explode(",", $row['total_products']); ?>
 
-                    <form action="" method="post">
+                    <form action="see-orders.php" method="post">
                       <div class="card p-2 mb-2 card-red text-black">
                         <input type="hidden" name="update_id" value="<?php echo $row["order_id"]; ?>" >
                         <h2 class="card-title mb-3"><?php echo $row["name"]; ?></h2>

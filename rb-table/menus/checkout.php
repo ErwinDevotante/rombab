@@ -52,7 +52,7 @@ include '../../conn.php';
                 $summary_session = '0';
                 $user_summary_id = $customer["appointment_id"];
         
-                $summary_query = mysqli_query($connection, "INSERT INTO `summary_orders` (user_summary_id, summary_table_no, summary_products, summary_qty, summary_price, summary_status) VALUES ('$user_summary_id', '$cart_table', '$cart_name', '$cart_quantity', '$cart_menuprice', '$summary_session')");
+                $summary_query = mysqli_query($connection, "INSERT INTO `summary_orders` (user_summary_id, summary_table_no, summary_products, summary_qty, summary_price, summary_status, inserted_at) VALUES ('$user_summary_id', '$cart_table', '$cart_name', '$cart_quantity', '$cart_menuprice', '$summary_session', '$currentDateTime')");
             }
             } else {
                 echo "Error in SELECT query: " . mysqli_error($connection) . "<br>";
@@ -133,7 +133,7 @@ include '../../conn.php';
                     </div>
                     <form action="" method="post">
                         <div class="done-btn text-center">
-                            <input type="submit" name="done_btn" class="btn btn-primary">
+                            <button type="submit" name="done_btn" class="btn btn-primary">SUBMIT <i class="bi bi-check-circle-fill"></i></button>
                         </div>
                     </form>
                 </div>

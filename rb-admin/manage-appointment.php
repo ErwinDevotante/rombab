@@ -37,6 +37,8 @@ include '../conn.php';
     <script src="../node_modules/overlayScrollbars/js/jquery.overlayScrollbars.min.js"></script>
     <!-- AdminLTE App -->
     <script src="../node_modules/admin-lte/js/adminlte.js"></script>
+    <!-- Bootstrap Icons CSS -->
+    <link href="../../node_modules/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
 </head>
 <body class="hold-transition sidebar-mini layout-fixed">
 <div class="wrapper" >
@@ -82,15 +84,15 @@ include '../conn.php';
                             <td> <?php echo $row['name'];
                                 
                                 if($row['session_tb'] == '0') {  ?>
-                                    <p class="text-yellow font-weight-bold">[Not Available]</p>
+                                    <p class="text-black font-weight-bold"><a class="badge badge-warning">[NOT AVAILABLE]</a></p>
                                 <?php }
                                 else if($row['session_tb'] == '1')  { ?>
-                                    <p class="text-green font-weight-bold">[Activate]</p>
+                                    <p class="font-weight-bold"><a class="badge badge-success">[ACTIVATED]</a></p>
                                 <?php }
                                 else if ($row['session_tb'] == '2')  {?>
-                                    <p class="text-red font-weight-bold">[Deactivate]</p>
+                                    <p class="font-weight-bold"><a class="badge badge-danger">[DEACTIVATED]</a></p>
                                 <?php } else { ?>
-                                    <p class="text-blue font-weight-bold">[OCCUPIED] </p>
+                                    <p class="font-weight-bold"><a class="badge badge-primary">[OCCUPIED]</a></p>
                                 <?php } ?>
                             </td>
                             <td>
@@ -108,7 +110,7 @@ include '../conn.php';
                                         <select class="form-control" name="appointment" id="appointment" disabled>
                                                 <option> [OCCUPIED] <?php echo $row['appointment_name']; ?> </option>
                                         </select>
-                                        <a name="reset" type="submit" class="btn btn-info mt-2" href="activate-table-edit.php?id_reset=<?php echo $row["appointment_id"]; ?>&reset=2&table_reset=<?php echo $row["user_id"]; ?>">RESET</a>
+                                        <a name="reset" type="submit" class="btn btn-info mt-2" href="activate-table-edit.php?id_reset=<?php echo $row["appointment_id"]; ?>&reset=2&table_reset=<?php echo $row["user_id"]; ?>">RESET <i class="bi bi-arrow-clockwise"></i></a>
                                     <?php }
                                     else {?>
                                         <select class="form-control" name="appointment" id="appointment" disabled>
@@ -118,16 +120,15 @@ include '../conn.php';
                             </td>
                                 <?php 
                                     if ($row['session_tb'] == '3' && ($row['appointment_session'] == '1' && $row['table_id'] !== null)){ ?>
-                                        <td class="text-center"><a class="btn btn-success disabled">Activate</a></td>
-                                        <td class="text-center"><a class="btn btn-danger disabled">Deactivate</a></td>
-                                        <td class="text-center"><a class="btn btn-warning disabled" >Not Available</a></td>
+                                        <td class="text-center"><a class="btn btn-success btn-xs disabled">Activate <i class="bi bi-check-circle-fill"></i></a></td>
+                                        <td class="text-center"><a class="btn btn-danger btn-xs disabled">Deactivate <i class="bi bi-x-circle-fill"></i></a></td>
+                                        <td class="text-center"><a class="btn btn-warning btn-xs text-black disabled" >Not Available <i class="bi bi-ban-fill"></i></a></td>
                                     <?php }
                                     else {?>
-                                        <td class="text-center"><a href="activate-table-edit.php?id=<?php echo $row["user_id"]; ?>&session=1" name="activate-tbl" type="submit" class="btn btn-success">Activate</a></td>
-                                        <td class="text-center"><a href="activate-table-edit.php?id=<?php echo $row["user_id"]; ?>&session=2" name="deactivate-tbl" type="submit" class="btn btn-danger">Deactivate</a></td>
-                                        <td class="text-center"><a href="activate-table-edit.php?id=<?php echo $row["user_id"]; ?>&session=0" name="not-available-tbl" type="submit" class="btn btn-warning" >Not Available</a></td>
+                                        <td class="text-center"><a href="activate-table-edit.php?id=<?php echo $row["user_id"]; ?>&session=1" name="activate-tbl" type="submit" class="btn btn-success">Activate <i class="bi bi-check-circle-fill"></i></a></td>
+                                        <td class="text-center"><a href="activate-table-edit.php?id=<?php echo $row["user_id"]; ?>&session=2" name="deactivate-tbl" type="submit" class="btn btn-danger">Deactivate <i class="bi bi-x-circle-fill"></i></a></td>
+                                        <td class="text-center"><a href="activate-table-edit.php?id=<?php echo $row["user_id"]; ?>&session=0" name="not-available-tbl" type="submit" class="btn btn-warning" >Not Available <i class="bi bi-ban-fill"></i></a></td>
                                     <?php }?> 
-                            
                         </tr>
                     <?php 
                     } }

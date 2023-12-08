@@ -153,7 +153,7 @@ file_put_contents($filePath, $dompdf->output());
 $dompdf->stream($fileName, ["Attachment" => false]);
 
 // Insert the file information into the daily_reports table
-$insertQuery = "INSERT INTO daily_reports (report_file, report_time) VALUES ('$fileName', NOW())";
+$insertQuery = "INSERT INTO daily_reports (report_file, report_time, as_archived) VALUES ('$fileName', NOW(), '0')";
     if (mysqli_query($connection, $insertQuery)) {
         echo "File information saved to the database.";
     } else {

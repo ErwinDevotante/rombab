@@ -1,5 +1,11 @@
 <?php 
 include '../../conn.php';
+
+// Deleting data from summary_orders
+$deleteThreshold = date('Y-m-d H:i:s', strtotime('-30 days'));
+$delete_query = "DELETE FROM summary_orders WHERE inserted_at <= '$deleteThreshold'";
+$result_delete = mysqli_query($connection, $delete_query);
+
 ?>
 <!DOCTYPE html>
 <html lang="en">

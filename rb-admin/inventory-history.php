@@ -10,6 +10,41 @@ include '../conn.php';
     // Get the current date in the Philippines timezone in the format "Y-m-d"
     $currentDate = date('Y-m-d');
     $currentTime = date('H:i:s');
+    $currentDateTime = date('Y-m-d H:i:s');
+
+    if (isset($_POST["archive_btn_kitchen"])) {
+        $item_id_to_archive = $_POST['archive_btn_kitchen'];
+    
+            // Delete the inventory record
+            $update_query = "UPDATE log_reports SET as_archived = '1', archived_at = '$currentDateTime' WHERE report_id = '$item_id_to_archive'";
+            $result_update = mysqli_query($connection, $update_query);
+    
+            if ($result_update) {
+                // Redirect back to the inventory.php page after archiving
+                header('Location: inventory-history.php');
+                exit();
+            } else {
+                // Handle the error if the deletion fails
+                echo "Error deleting inventory record: " . mysqli_error($connection);
+            }
+    }
+
+    if (isset($_POST["archive_btn_reports"])) {
+        $item_id_to_archive_report = $_POST['archive_btn_reports'];
+    
+            // Delete the inventory record
+            $update_report_query = "UPDATE daily_reports SET as_archived = '1', archived_at = '$currentDateTime' WHERE report_id = '$item_id_to_archive_report'";
+            $result_update_report = mysqli_query($connection, $update_report_query);
+    
+            if ($result_update_report) {
+                // Redirect back to the inventory.php page after archiving
+                header('Location: inventory-history.php');
+                exit();
+            } else {
+                // Handle the error if the deletion fails
+                echo "Error deleting inventory record: " . mysqli_error($connection);
+            }
+    }
 
 ?>
 <!DOCTYPE html>
@@ -164,34 +199,39 @@ include '../conn.php';
             <div style="overflow-x:auto;">
                 <table class="table table-hover table-bordered table-dark mt-5" id="sortTable_log">
                 <thead>
-                    <tr><th colspan="5">Inventory Reports</th></tr>
+                    <tr><th colspan="6">Inventory Reports</th></tr>
                     <tr>
                         <th class="text-center" scope="col">ID</th>
                         <th class="text-center" scope="col">Item</th>
                         <th class="text-center" scope="col">Kitchen User</th>
                         <th class="text-center" scope="col">Quantity</th>
                         <th class="text-center" scope="col">Date and Time</th>
+                        <th class="text-center" scope="col">Action</th>
                     </tr>
                 </thead>
                     <tbody id="menu_table">
                     <?php 
                         $view_items = mysqli_query($connection, "SELECT * FROM log_reports
                                                                 LEFT JOIN inventory ON inventory.item_id = log_reports.report_item_id
-                                                                LEFT JOIN users ON users.user_id = log_reports.report_user_id");
+                                                                LEFT JOIN users ON users.user_id = log_reports.report_user_id
+                                                                WHERE log_reports.as_archived = '0'");
                         if(mysqli_num_rows($view_items) > 0) {
-                        while ($row = mysqli_fetch_array($view_items)) { ?>
-                            <form method="post" action="inventory.php" enctype="multipart/form-data">
+                            while ($row = mysqli_fetch_array($view_items)) { ?>
                                 <tr>
                                     <td><?php echo $row["item_id"]; ?></td>
                                     <td><?php echo $row["item_name"]; ?></td>
                                     <td><?php echo $row["name"]; ?></td>
                                     <td><?php echo $row["report_qty"]; ?><?php echo $row["unit_of_measure"]; ?></td>
                                     <td><?php echo $row["date_time"]; ?></td>
+                                    <td>
+                                        <form method="POST" enctype="multipart/form-data">
+                                            <button type="submit" class="btn btn-xs btn-warning" name="archive_btn_kitchen" value="<?php echo $row["report_id"]; ?>">ARCHIVE <i class="bi bi-archive"></i></button>
+                                        </form>
+                                    </td>
                                 </tr>
-                            </form>
                         <?php } } else {?>
                             <tr>
-                                <td class="text-center" colspan="4">No record found!</td>
+                                <td class="text-center" colspan="6">No record found!</td>
                             </tr>
                         <?php } ?>
                     </tbody>  
@@ -201,15 +241,16 @@ include '../conn.php';
             <div style="overflow-x:auto;">
                 <table class="table table-hover table-bordered table-dark mt-5" id="sortTable_report">
                 <thead>
-                    <tr><th colspan="2">File Reports</th></tr>
+                    <tr><th colspan="3">File Reports</th></tr>
                     <tr>
                         <th class="text-center" scope="col">Report File</th>
                         <th class="text-center" scope="col">Report Date</th>
+                        <th class="text-center" scope="col">Action</th>
                     </tr>
                 </thead>
                     <tbody id = "menu_table">
                     <?php 
-                        $view_reports = mysqli_query($connection, "SELECT * FROM daily_reports");
+                        $view_reports = mysqli_query($connection, "SELECT * FROM daily_reports WHERE as_archived = '0'");
                         if(mysqli_num_rows($view_reports) > 0) {
                         while ($row = mysqli_fetch_array($view_reports)) { ?>
                                 <tr>
@@ -220,10 +261,15 @@ include '../conn.php';
                                         $formattedDate = date('F j, Y | g:i A', strtotime($row["report_time"]));
                                         echo $formattedDate;
                                     ?></td>
+                                    <td>
+                                        <form method="post" enctype="multipart/form-data">
+                                        <button type="submit" class="btn btn-xs btn-warning" name="archive_btn_reports" value="<?php echo $row["report_id"]; ?>">ARCHIVE <i class="bi bi-archive"></i></button>
+                                        </form>
+                                    </td>
                                 </tr>
                         <?php } } else {?>
                             <tr>
-                                <td class="text-center" colspan="2">No record found!</td>
+                                <td class="text-center" colspan="3">No record found!</td>
                             </tr>
                         <?php } ?>
                     </tbody>  

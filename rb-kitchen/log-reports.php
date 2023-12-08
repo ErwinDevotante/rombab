@@ -20,7 +20,7 @@ if (isset($_POST['log_item'])) {
     $inventory_result = mysqli_query($connection, $inventory_query);
     if (mysqli_num_rows($inventory_result) > 0) {
         // Item is available, so proceed to log it
-        $insert_query = "INSERT INTO log_reports (report_item_id, report_qty, report_user_id, date_time) VALUES ('$item_id', '$item_qty', '$id', '$datetimeValue')";
+        $insert_query = "INSERT INTO log_reports (report_item_id, report_qty, report_user_id, date_time, as_archived) VALUES ('$item_id', '$item_qty', '$id', '$datetimeValue', '0')";
         $insert_result = mysqli_query($connection, $insert_query);
 
         if ($insert_result) {
@@ -208,7 +208,7 @@ if (isset($_POST['log_item'])) {
                     <?php 
                         $view_items = mysqli_query($connection, "SELECT * FROM log_reports
                                                                 LEFT JOIN inventory ON inventory.item_id = log_reports.report_item_id
-                                                                WHERE report_user_id = $id");
+                                                                WHERE report_user_id = $id AND as_archived = '0'");
                         if(mysqli_num_rows($view_items) > 0) {
                         while ($row = mysqli_fetch_array($view_items)) { ?>
                             <form method="post" action="inventory.php" enctype="multipart/form-data">

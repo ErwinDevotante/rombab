@@ -80,14 +80,14 @@
                     <input type="number" name="update_quantity" id="update_quantity" min="1" max="<?php echo $customer["count"] + 2; ?>" class="text-center" value="<?php echo $fetch_cart['cart_quantity']; ?>" onchange="updateDatabase(this)">
                 </form> 
             </td>
-            <td><a href="cart.php?remove=<?php echo $fetch_cart['cart_id']; ?>" class="delete-btn btn btn-primary"> <i class="ion ion-ios-trash"></i> Remove</a></td>
+            <td><a href="cart.php?remove=<?php echo $fetch_cart['cart_id']; ?>" class="delete-btn btn btn-primary">Remove <i class="bi bi-cart-dash-fill"></i></a></td>
         </tr>
         <?php
             };
         };
         ?>
         <tr class="table-bottom">
-            <td><a href="activated-table.php" class="option-btn btn btn-primary">Continue Ordering</a></td>
+            <td><a href="activated-table.php" class="option-btn btn btn-primary">Continue Ordering <i class="bi bi-arrow-right-square"></i></a></td>
                 <td></td>
                 <td></td>
                 <td></td>
@@ -97,7 +97,7 @@
             $row = mysqli_fetch_assoc($scan_result);
             $rowCount = $row['count'];
             if ($rowCount > 0) { ?>
-            <td><a href="cart.php?delete_all" onclick="return confirm('Are you sure you want to delete all?');" class="delete-btn btn btn-primary"> <i class="ion ion-ios-trash"></i> Delete All</a></td>
+            <td><a href="cart.php?delete_all" onclick="return confirm('Are you sure you want to delete all?');" class="delete-btn btn btn-primary">Delete All <i class="bi bi-trash3-fill"></i></a></td>
             <?php } else { ?>
                 <td></td>
             <?php } ?>
@@ -109,7 +109,7 @@
         if($scan_result) {
             if ($rowCount > 0) { ?>
                 <div class="checkout-btn text-center">
-                    <a href="checkout.php" class="btn btn-primary">Proceed to Checkout</a>
+                    <a href="checkout.php" class="btn btn-primary">Proceed to Checkout <i class="bi bi-cart-check-fill"></i></a>
                 </div>
         <?php }
         }?>

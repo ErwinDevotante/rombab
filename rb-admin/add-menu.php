@@ -5,6 +5,7 @@ include '../conn.php';
     $id = $_SESSION['user_id'];
     $result = mysqli_query($connection, "SELECT * FROM users where user_id = '$id' ");
     $row = mysqli_fetch_array($result);
+    date_default_timezone_set('Asia/Manila');
 
 $msg = " ";
 if (isset($_POST["upload"])) {
@@ -78,18 +79,6 @@ if (isset($_POST["confirm_update"])) {
     }
 }
 
-if (isset($_POST["delete_btn"])) {
-    $menu_id_to_delete = $_POST["delete_btn"];
-
-    // Perform the deletion query
-    $delete_query = "DELETE FROM `menus` WHERE menu_id = '$menu_id_to_delete'";
-    mysqli_query($connection, $delete_query);
-
-    // Redirect back to the add-menu.php page after deleting
-    header('Location: add-menu.php');
-    exit();
-}
-
 if (isset($_POST["activate_btn"])) {
     $status_menu = $_POST["activate_btn"];
 
@@ -112,6 +101,40 @@ if (isset($_POST["deactivate_btn"])) {
     // Redirect back to the add-menu.php page after deleting
     header('Location: add-menu.php');
     exit();
+}
+
+if (isset($_POST["archive_btn"])) {
+    $item_id_to_archive = $_POST['archive_btn'];
+    $currentDateTime = date('Y-m-d H:i:s');
+
+     // Retrieve the inventory record before archiving
+    $select_query = "SELECT * FROM menus WHERE menu_id='$item_id_to_archive'";
+    $result_select = mysqli_query($connection, $select_query);
+    $row_select = mysqli_fetch_array($result_select);
+
+    // Insert data into inventory_archive
+    $insert_archive_query = "INSERT INTO menus_archive (menu_id, menu_image, menu_name, menu_category, menu_price, menu_availability, archived_at)
+    VALUES ('{$row_select['menu_id']}', '{$row_select['menu_image']}', '{$row_select['menu_name']}', '{$row_select['menu_category']}',
+    '{$row_select['menu_price']}', '{$row_select['menu_availability']}', '$currentDateTime')";
+    $result_insert_archive = mysqli_query($connection, $insert_archive_query);
+
+    if ($result_insert_archive) {
+        // Delete the inventory record
+        $delete_query = "DELETE FROM menus WHERE menu_id='$item_id_to_archive'";
+        $result_delete = mysqli_query($connection, $delete_query);
+
+        if ($result_delete) {
+            // Redirect back to the inventory.php page after archiving
+            header('Location: add-menu.php');
+            exit();
+        } else {
+            // Handle the error if the deletion fails
+            echo "Error deleting inventory record: " . mysqli_error($connection);
+        }
+    } else {
+        // Handle the error if the archiving fails
+        echo "Error archiving inventory record: " . mysqli_error($connection);
+    }
 }
 ?>
 <!DOCTYPE html>
@@ -144,6 +167,8 @@ if (isset($_POST["deactivate_btn"])) {
     <script src="../node_modules/overlayScrollbars/js/jquery.overlayScrollbars.min.js"></script>
     <!-- AdminLTE App -->
     <script src="../node_modules/admin-lte/js/adminlte.js"></script>
+    <!-- Bootstrap Icons CSS -->
+    <link href="../../node_modules/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
 </head>
 <body class="hold-transition sidebar-mini layout-fixed">
     <div class="wrapper" >
@@ -191,7 +216,7 @@ if (isset($_POST["deactivate_btn"])) {
                             </div>
                 </div>
                 <div class="form-group">
-                    <input class="btn btn-primary" type="submit" name="upload" value="Add Menu">
+                    <button class="btn btn-danger" type="submit" name="upload">ADD MENU <i class="bi bi-plus-square"></i></button>
                 </div>
             </form>
 
@@ -225,21 +250,21 @@ if (isset($_POST["deactivate_btn"])) {
                             <td style="display: none"><?php echo $row["menu_id"]; ?></td> <!--hidden-->
                             <td class="text-center w-25"><img src ='menu-images/<?php echo $row["menu_image"]; ?>' class="img-fluid img-thumbnail custom-image">
                                 <?php if($row["menu_availability"] == 1) { ?>
-                                    <div class="text-red font-weight-bold">[DEACTIVATED]</div>
+                                    <div class="font-weight-bold"><a class="badge badge-danger">[DEACTIVATED]</a></div>
                                 <?php } else if($row["menu_availability"] == 0) { ?>
-                                    <div class="text-green font-weight-bold">[ACTIVATED]</div>
+                                    <div class="font-weight-bold"><a class="badge badge-success">[ACTIVATED]</a></div>
                                 <?php } ?>
                              </td>
                             <td class="text-center"><?php echo $row["menu_name"]; ?></td>
                             <td class="text-center"><?php echo $row["menu_price"]; ?></td>
                             <td class="text-center"><?php echo $row["menu_category"]; ?></td>
-                            <td class="text-center w-25">
-                                <div class="p-2"><button type="button" class="btn btn-primary update_btn" id="update_btn">UPDATE</button></div>
-                                <div class="p-2"><button type="submit" class="btn btn-warning" name="delete_btn" value="<?php echo $row["menu_id"]; ?>">DELETE</button></div>
+                            <td class="text-center">
+                                <div class="p-2"><button type="button" class="btn btn-primary btn-xs update_btn" id="update_btn">UPDATE <i class="bi bi-pencil-square"></i></button></div>
+                                <div class="p-2"><button type="submit" class="btn btn-warning btn-xs" name="archive_btn" value="<?php echo $row["menu_id"]; ?>">ARCHIVE <i class="bi bi-archive"></i></button></div>
                                 <?php if($row["menu_availability"] == 1) { ?>
-                                    <div class="p-2"><button type="submit" class="btn btn-success" name="activate_btn" value="<?php echo $row["menu_id"]; ?>">ACTIVATE</button></div>
+                                    <div class="p-2"><button type="submit" class="btn btn-success btn-xs" name="activate_btn" value="<?php echo $row["menu_id"]; ?>">ACTIVATE <i class="bi bi-check-circle-fill"></i></button></div>
                                 <?php } else if($row["menu_availability"] == 0) { ?>
-                                    <div class="p-2"><button type="submit" class="btn btn-danger" name="deactivate_btn" value="<?php echo $row["menu_id"]; ?>">DEACTIVATE</button></div>
+                                    <div class="p-2"><button type="submit" class="btn btn-danger btn-xs" name="deactivate_btn" value="<?php echo $row["menu_id"]; ?>">DEACTIVATE <i class="bi bi-x-circle-fill"></i></button></div>
                                 <?php } ?>
                             </td>
                         </tr>

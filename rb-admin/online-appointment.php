@@ -96,6 +96,8 @@ include '../conn.php';
     <script src="../node_modules/overlayScrollbars/js/jquery.overlayScrollbars.min.js"></script>
     <!-- AdminLTE App -->
     <script src="../node_modules/admin-lte/js/adminlte.js"></script>
+    <!-- Bootstrap Icons CSS -->
+    <link href="../../node_modules/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
 </head>
 <body class="hold-transition sidebar-mini layout-fixed">
 <div class="wrapper" >
@@ -157,7 +159,7 @@ include '../conn.php';
         <label>Note</label>
         <textarea type="text" class="form-control" id="note" name="note" placeholder="Enter note" rows="2"></textarea>
     </div>
-    <button type="submit" name="submit" class="btn btn-primary">Submit</button>
+    <button type="submit" name="submit" class="btn btn-danger">Submit <i class="bi bi-send-check-fill"></i></button>
 
     <div style="overflow-x:auto;">
         <table class="table table-hover table-bordered table-dark mt-5">

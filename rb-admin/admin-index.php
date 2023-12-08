@@ -68,6 +68,46 @@ include 'admin-auth.php';
     <section class="content">
       <div class="container-fluid">
         <div class="row">
+
+        <?php
+        // Query to retrieve the menu data.
+        $query_menu = "SELECT menu_name, menu_availability FROM menus";
+        $result_menu = mysqli_query($connection, $query_menu);
+
+        // Initialize counters for menus, activated menus, and deactivated menus.
+        $menuCount = 0;
+        $activatedCount = 0;
+        $deactivatedCount = 0;
+
+        while ($row_menu = mysqli_fetch_assoc($result_menu)) {
+            $menuCount++; // Increment the menu count for each menu.
+            
+            // Check the menu_availability field and update the counts accordingly.
+            if ($row_menu['menu_availability'] == 0) {
+                $activatedCount++;
+            } else {
+                $deactivatedCount++;
+            }
+        }
+        ?>
+      
+          <a href="add-menu.php" class="small-box-footer">
+            <div class="small-box bg-redbg text-white">
+                <div class="inner">
+                  <h4 class="font-weight-bold">Menu Counts</h4>
+                    <p>Restaurant menu counts for today.</p>
+                      <table class="table">
+                        <tbody>
+                          <tr><td>TOTAL MENUS </td><td><?php echo $menuCount; ?></td></tr>
+                          <tr><td>Activated Menus </td><td><?php echo $activatedCount; ?></td></tr>
+                          <tr><td>Deactivated Menus </td><td><?php echo $deactivatedCount; ?></td></tr>
+                        </tbody>
+                      </table>
+                </div>
+                <div class="icon text-white">
+                    <i class="ion ion-android-restaurant"></i>
+                </div>
+            </div>
           
         <?php 
         $query_inventory_item = "SELECT item_name, stock FROM inventory WHERE stock < 20"; // Modify this query to select the required columns.
@@ -165,48 +205,6 @@ include 'admin-auth.php';
           </a>
         </div>
 
-        <?php
-        // Query to retrieve the menu data.
-        $query_menu = "SELECT menu_name, menu_availability FROM menus";
-        $result_menu = mysqli_query($connection, $query_menu);
-
-        // Initialize counters for menus, activated menus, and deactivated menus.
-        $menuCount = 0;
-        $activatedCount = 0;
-        $deactivatedCount = 0;
-
-        while ($row_menu = mysqli_fetch_assoc($result_menu)) {
-            $menuCount++; // Increment the menu count for each menu.
-            
-            // Check the menu_availability field and update the counts accordingly.
-            if ($row_menu['menu_availability'] == 0) {
-                $activatedCount++;
-            } else {
-                $deactivatedCount++;
-            }
-        }
-        ?>
-        <div class="col-lg-6">
-          <a href="add-menu.php" class="small-box-footer">
-            <div class="small-box bg-redbg text-white">
-                <div class="inner">
-                  <h4 class="font-weight-bold">Menu Counts</h4>
-                    <p>Restaurant menu counts for today.</p>
-                      <table class="table">
-                        <tbody>
-                          <tr><td>TOTAL MENUS </td><td><?php echo $menuCount; ?></td></tr>
-                          <tr><td>Activated Menus </td><td><?php echo $activatedCount; ?></td></tr>
-                          <tr><td>Deactivated Menus </td><td><?php echo $deactivatedCount; ?></td></tr>
-                        </tbody>
-                      </table>
-                </div>
-                <div class="icon text-white">
-                    <i class="ion ion-android-restaurant"></i>
-                </div>
-            </div>
-      </div>
-    
-        </div>
       </div>
     </section>
 
@@ -456,14 +454,14 @@ include 'admin-auth.php';
         <div class="row">
 
           <div class="col-lg-6">
-			      <a href="add-account.php" class="small-box-footer">
+			      <a href="archived-data.php" class="small-box-footer">
             <div class="small-box bg-redbg text-white">
               <div class="inner">
-                <h3>Table</h3>
-                <p>Add Account</p>
+                <h3>Archived</h3>
+                <p>Retrive Data</p>
               </div>
               <div class="icon text-white">
-                <i class="ion ion-person-add"></i>
+                <i class="ion ion-android-archive"></i>
               </div>
             </div>
 			      </a>
@@ -533,7 +531,6 @@ include 'admin-auth.php';
                                   <label for="newPrice">New Promo Price</label>
                                   <input type="number" step="0.01" class="form-control" id="newPrice" name="newPrice" value="<?php echo number_format($promo_row['promo_price'], 2); ?>">
                               </div>
-                          
                       </div>
                       <div class="modal-footer">
                         <input type="hidden" name="promoId" value="<?php echo $promo_row['promo_id']; ?>"> <!-- Assuming you have a unique identifier for the promo -->

@@ -5,6 +5,7 @@ include '../conn.php';
     $id = $_SESSION['user_id'];
     $result = mysqli_query($connection, "SELECT * FROM users where user_id = '$id' ");
     $row = mysqli_fetch_array($result);
+    date_default_timezone_set('Asia/Manila');
 
     if (isset($_POST["upload_item"])) {
         // Get all the submitted data from the form
@@ -59,22 +60,44 @@ include '../conn.php';
         }
     }
 
-    if (isset($_POST["delete_btn"])) {
-        $item_id_to_delete = $_POST['delete_btn'];
+    if (isset($_POST["archive_btn"])) {
+        $item_id_to_archive = $_POST['archive_btn'];
+        $currentDateTime = date('Y-m-d H:i:s');
     
-        // Perform the DELETE query to delete the inventory record
-        $delete_query = "DELETE FROM inventory WHERE item_id='$item_id_to_delete'";
-        $result_delete = mysqli_query($connection, $delete_query);
+         // Retrieve the inventory record before archiving
+        $select_query = "SELECT * FROM inventory WHERE item_id='$item_id_to_archive'";
+        $result_select = mysqli_query($connection, $select_query);
+        $row_select = mysqli_fetch_array($result_select);
+
+        // Insert data into inventory_archive
+        $insert_archive_query = "INSERT INTO inventory_archive (item_id, item_name, item_desc, unit_of_measure, stock, item_status, archived_at)
+        VALUES ('{$row_select['item_id']}', '{$row_select['item_name']}', '{$row_select['item_desc']}', '{$row_select['unit_of_measure']}',
+        '{$row_select['stock']}', '{$row_select['item_status']}', '$currentDateTime')";
+        $result_insert_archive = mysqli_query($connection, $insert_archive_query);
     
-        if ($result_delete) {
-            // Redirect back to the inventory.php page after deletion
-            header('Location: inventory.php');
-            exit();
+        if ($result_insert_archive) {
+            // Delete the inventory record
+            $delete_query = "DELETE FROM inventory WHERE item_id='$item_id_to_archive'";
+            $result_delete = mysqli_query($connection, $delete_query);
+    
+            if ($result_delete) {
+                // Redirect back to the inventory.php page after archiving
+                header('Location: inventory.php');
+                exit();
+            } else {
+                // Handle the error if the deletion fails
+                echo "Error deleting inventory record: " . mysqli_error($connection);
+            }
         } else {
-            // Handle the error if the deletion fails
-            echo "Error deleting inventory record: " . mysqli_error($connection);
+            // Handle the error if the archiving fails
+            echo "Error archiving inventory record: " . mysqli_error($connection);
         }
     }
+
+    // Deleting data from inventory_archive
+    $deleteThreshold = date('Y-m-d H:i:s', strtotime('-30 days'));
+    $delete_query = "DELETE FROM inventory_archive WHERE archived_at <= '$deleteThreshold'";
+    $result_delete = mysqli_query($connection, $delete_query);
 
 ?>
 <!DOCTYPE html>
@@ -107,6 +130,8 @@ include '../conn.php';
     <script src="../node_modules/overlayScrollbars/js/jquery.overlayScrollbars.min.js"></script>
     <!-- AdminLTE App -->
     <script src="../node_modules/admin-lte/js/adminlte.js"></script>
+    <!-- Bootstrap Icons CSS -->
+    <link href="../../node_modules/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
 </head>
 </head>
 <body class="hold-transition sidebar-mini layout-fixed">
@@ -171,7 +196,7 @@ include '../conn.php';
                 </div>
 
                 <div class="form-group">
-                    <input class="btn btn-primary" type="submit" name="upload_item" value="ADD ITEM">
+                    <button class="btn btn-danger" type="submit" name="upload_item">ADD ITEM <i class="bi bi-plus-square"></i></button>
                 </div>
             </form>
 
@@ -184,7 +209,7 @@ include '../conn.php';
                     </div>
                 </div>
             </div>
-            
+
             <div style="overflow-x:auto;">
                 <table class="table table-hover table-bordered table-dark mt-2" id="sortTable">
                 <thead>
@@ -211,11 +236,16 @@ include '../conn.php';
                                     <td><?php echo $row["item_desc"]; ?></td>
                                     <td><?php echo $row["unit_of_measure"]; ?></td>
                                     <td><?php echo $row["stock"]; ?></td>
-                                    <td><?php echo $row["status"]; ?></td>
-                                    <td  class="w-25">
-                                        <div class="row text-center">
-                                            <div class="col"><button type="button" class="btn btn-primary update_btn" name="update_btn" id="update_btn">UPDATE</button></div>
-                                            <div class="col"><button type="submit" class="btn btn-warning" name="delete_btn" value="<?php echo $row["item_id"]; ?>">DELETE</button></div> 
+                                    <td><?php if ($row["status_id"] == 0) {?>
+                                        <a class="badge badge-success"><?php echo $row["status"];?></a>
+                                        <?php } else { ?>
+                                        <a class="badge badge-danger"><?php echo $row["status"];?></a>
+                                        <?php }?>
+                                    </td>
+                                    <td>
+                                        <div class="text-center" role="group">
+                                            <button type="button" class="btn btn-xs btn-primary update_btn" name="update_btn" id="update_btn">UPDATE <i class="bi bi-pencil-square"></i></button>
+                                            <button type="submit" class="btn btn-xs btn-warning" name="archive_btn" value="<?php echo $row["item_id"]; ?>">ARCHIVE <i class="bi bi-archive"></i></button>
                                         </div>
                                     </td>
                                 </tr>

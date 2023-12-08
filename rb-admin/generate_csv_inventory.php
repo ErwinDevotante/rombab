@@ -12,7 +12,7 @@ if (isset($_POST["export_csv"])) {
     file_put_contents($filePath, '');
 
     // Insert file information into the database
-    $insertQuery = "INSERT INTO daily_reports (report_file, report_time) VALUES ('$fileName', NOW())";
+    $insertQuery = "INSERT INTO daily_reports (report_file, report_time, as_archived) VALUES ('$fileName', NOW(), '0')";
     mysqli_query($connection, $insertQuery);
     
     header('Content-Type: text/csv; charset=utf-8');

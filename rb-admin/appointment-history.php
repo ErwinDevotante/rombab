@@ -41,6 +41,8 @@ include '../conn.php';
     <link rel="stylesheet" href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.min.css">
     <!-- DataTables JS -->
     <script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
+    <!-- Bootstrap Icons CSS -->
+    <link href="../../node_modules/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
 </head>
 <style>
   /* Custom styles for DataTables */
@@ -107,11 +109,12 @@ include '../conn.php';
                       <th class="text-center" scope="col">Name</th>
                       <th class="text-center" scope="col">Description</th>
                       <th class="text-center" scope="col">Table No</th>
-                      <th class="text-center" scope="col"># of People</th>
+                      <th class="text-center" scope="col">Count</th>
                       <th class="text-center" scope="col">Date</th>
-                      <th class="text-center" scope="col">Time-in</th>
-                      <th class="text-center" scope="col">Time-out</th>
+                      <th class="text-center" scope="col">In</th>
+                      <th class="text-center" scope="col">Out</th>
                       <th class="text-center" scope="col">Note</th>
+                      <th class="text-center" scope="col">Action</th>
                   </tr>
               </thead>
                   <tbody>
@@ -134,11 +137,16 @@ include '../conn.php';
                               <td class="text-center"><?php $formattedDateTimeout = date('g:i A', strtotime($row["time-out"])); 
                                                       echo $formattedDateTimeout;?></td>
                               <td><?php echo $row["note"]; ?></td>
+                              <td>
+                                <form method="POST" enctype="multipart/form-data">
+                                <button type="submit" class="btn btn-xs btn-warning" name="archive_btn" value="<?php echo $row["history_id"]; ?>">ARCHIVE <i class="bi bi-archive"></i></button>
+                                </form>
+                              </td>
                           </tr>
                           <?php 
                       } } else { ?>
                           <tr>
-                              <td class="text-center" colspan="8">No record found!</td>
+                              <td class="text-center" colspan="9">No record found!</td>
                           </tr>
                       <?php } ?>
                   </tbody>  

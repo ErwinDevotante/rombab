@@ -112,7 +112,7 @@ if(isset($_POST["export_excel"])) {
     file_put_contents($filePath, $outputInventory);
 
     // Insert file information into the database
-    $insertQuery = "INSERT INTO daily_reports (report_file, report_time) VALUES ('$fileName', NOW())";
+    $insertQuery = "INSERT INTO daily_reports (report_file, report_time, as_archived) VALUES ('$fileName', NOW(), '0')";
     mysqli_query($connection, $insertQuery);
 
     // Provide the file as a download
