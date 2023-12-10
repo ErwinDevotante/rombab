@@ -4,7 +4,7 @@ if($_SESSION['user_id'] == ''){
 }
 ?>
 
-<nav class="main-header navbar navbar-expand navbar-white navbar-light" style="background: #8b0000;">
+<nav class="main-header navbar navbar-expand navbar-white navbar-light fixed-top" style="background: #8b0000; overflow-x:auto;">
     <!-- Left navbar links -->
     <ul class="navbar-nav">
         <li class="nav-item">
@@ -12,9 +12,9 @@ if($_SESSION['user_id'] == ''){
         </li>
         <li class="nav-item d-none d-sm-inline-block">
             <?php if ($row['user_role'] == 1) { ?>
-                <a class="nav-link text-white">Welcome Super Admin <?php echo $row['name'] ?>!</a>
+                <a class="nav-link text-white text-nowrap">Welcome Super Admin <?php echo $row['name'] ?>!</a>
             <?php } else if ($row['user_role'] == 2 || $row['user_role'] == 5) { ?>
-                <a class="nav-link text-white">Welcome Admin <?php echo $row['name'] ?>!</a>
+                <a class="nav-link text-white text-nowrap">Welcome Admin <?php echo $row['name'] ?>!</a>
             <?php } else {
                 header('location:../index.php');
             } ?>

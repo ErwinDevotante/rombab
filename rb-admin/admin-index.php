@@ -40,6 +40,8 @@ include 'admin-auth.php';
     <script src="../node_modules/admin-lte/js/adminlte.js"></script>
     <!-- Chart.js -->
     <script src="../node_modules/chart.js"></script>
+    <!-- Bootstrap Icons CSS -->
+    <link href="../../node_modules/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
 </head>
     
 </head>
@@ -52,14 +54,27 @@ include 'admin-auth.php';
     ?>
   
   <!-- Content Wrapper. Contains page content -->
-  <div class="content-wrapper bg-black">
+  <div class="content-wrapper bg-black mt-5">
+
+  <div class="mt-5 d-flex justify-content-end fixed-top fixed-right" role="group">
+    <div style="overflow-x:auto;">
+      <?php if($row['user_role'] == '1' || $row['user_role'] == '2') { ?>
+        <a class="btn bg-yellow" href="#" onclick="jumpToDiv('inventory')">Inventory <i class="bi bi-box2-fill"></i></a>
+      <?php } if($row['user_role'] == '1' || $row['user_role'] == '2' || $row['user_role'] == '5') { ?>
+      <a class="btn bg-green text-white" href="#" onclick="jumpToDiv('appointment')">Appointment <i class="bi bi-clipboard-fill"></i></a>
+      <?php } if ($row['user_role'] == '1') { ?>
+      <a class="btn bg-red text-white text-nowrap" href="#" onclick="jumpToDiv('superAdmin')">Super Admin Panel <i class="bi bi-person-fill"></i></a>
+      <?php } ?>
+    </div>
+  </div>
+
   <?php if($row['user_role'] == '1' || $row['user_role'] == '2') { ?>
 
-    <div class="content-header">
+    <div class="content-header" id="inventory">
       <div class="container-fluid">
         <div class="row mb-2">
           <div class="col-sm-6">
-            <h1 class="m-0 text-white">Inventory System</h1>
+            <h1 class="m-0 text-white mt-4">Inventory System</h1>
           </div>
         </div>
       </div>
@@ -96,6 +111,7 @@ include 'admin-auth.php';
                 <div class="inner">
                   <h4 class="font-weight-bold">Menu Counts</h4>
                     <p>Restaurant menu counts for today.</p>
+                    <div style="overflow-x:auto;">
                       <table class="table">
                         <tbody>
                           <tr><td>TOTAL MENUS </td><td><?php echo $menuCount; ?></td></tr>
@@ -103,6 +119,7 @@ include 'admin-auth.php';
                           <tr><td>Deactivated Menus </td><td><?php echo $deactivatedCount; ?></td></tr>
                         </tbody>
                       </table>
+                    </div>
                 </div>
                 <div class="icon text-white">
                     <i class="ion ion-android-restaurant"></i>
@@ -125,6 +142,7 @@ include 'admin-auth.php';
             <div class="small-box bg-redbg text-white">
               <div class="inner">
                 <h4 class="font-weight-bold">Inventory Items</h4><p> (Low level stocks less than 20)</p>
+                  <div style="overflow-x:auto;">
                   <table class="table">
                     <?php
                       // Loop through the item data and display item_name and stock in table rows.
@@ -143,6 +161,7 @@ include 'admin-auth.php';
                     }
                     ?>
                   </table>
+                  </div>
                 </div>
                   <div class="icon text-white">
                   <i class="ion ion-ios-filing"></i>
@@ -165,7 +184,7 @@ include 'admin-auth.php';
         <div class="col-lg-6">
           <a href="inventory-history.php" class="small-box-footer">
             <div class="small-box bg-redbg text-white">
-              <div class="inner">
+              <div class="inner" style="overflow-x:auto;">
                 <h4 class="font-weight-bold">Inventory Reports</h4>
                 <p>Reports for <?php echo $todayDate;?>.</p>
                 <table class="table">
@@ -209,7 +228,7 @@ include 'admin-auth.php';
     </section>
 
     <?php } if($row['user_role'] == '1' || $row['user_role'] == '2' || $row['user_role'] == '5') { ?>
-    <div class="content-header">
+    <div class="content-header" id="appointment">
       <div class="container-fluid">
         <div class="row mb-2">
           <div class="col-sm-6">
@@ -343,13 +362,13 @@ include 'admin-auth.php';
           
         </div>
     </section>
-    <?php } ?>
+    <?php } if ($row['user_role'] == '1') { ?>
 
-    <div class="content-header">
+    <div class="content-header" id="superAdmin">
       <div class="container-fluid">
         <div class="row mb-2">
           <div class="col-sm-6">
-            <h1 class="m-0 text-white">Survey Results</h1>
+            <h1 class="m-0 text-white">Super Admin Panel</h1>
           </div>
         </div>
       </div>
@@ -445,9 +464,6 @@ include 'admin-auth.php';
         </div>
       </div>
     </section>
-
-      <?php
-      if ($row['user_role'] == '1') { ?>
   
       <section class="content">
         <div class="container-fluid">
@@ -568,5 +584,12 @@ include 'admin-auth.php';
 
   function closeModal(){
     $('#updatePromoModal').modal('hide');
+  }
+
+  function jumpToDiv(divId) {
+    var element = document.getElementById(divId);
+      if (element) {
+         element.scrollIntoView({ behavior: 'smooth' });
+      }
   }
 </script>

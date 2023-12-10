@@ -89,7 +89,7 @@ include '../conn.php';
         display: none;
     }
 </style>
-<body class="hold-transition sidebar-mini layout-fixed">
+<body class="hold-transition sidebar-mini layout-fixed bg-black">
     <div class="wrapper" >
 
     <?php 
@@ -97,7 +97,7 @@ include '../conn.php';
     include "side-bar.php"; 
     ?>
 
-    <div class="content-wrapper bg-black">
+    <div class="content-wrapper bg-black mt-5">
         <div class="content p-4">
             <div class="container-fluid text-center p-4">
                 <h1>Appointment History</h1>

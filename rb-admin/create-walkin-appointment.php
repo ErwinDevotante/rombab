@@ -99,7 +99,7 @@ include '../conn.php';
     <!-- Bootstrap Icons CSS -->
     <link href="../../node_modules/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
 </head>
-<body class="hold-transition sidebar-mini layout-fixed">
+<body class="hold-transition sidebar-mini layout-fixed bg-black">
 <div class="wrapper" >
 
     <?php 
@@ -107,7 +107,7 @@ include '../conn.php';
     include "side-bar.php";
     ?>
 
-    <div class="content-wrapper bg-black">
+    <div class="content-wrapper bg-black mt-5">
     <?php 
     $query_search = "SELECT user_id FROM users WHERE session_tb = '1'";
     $result_search = mysqli_query($connection, $query_search);

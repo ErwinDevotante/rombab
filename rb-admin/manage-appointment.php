@@ -48,7 +48,7 @@ include '../conn.php';
     include "side-bar.php"; 
     ?>
 
-    <div class="content-wrapper bg-black">
+    <div class="content-wrapper bg-black mt-5">
     <div class="content p-4">
 
     <div class="container-fluid text-center p-4">

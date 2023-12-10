@@ -178,7 +178,7 @@ if (isset($_POST["archive_btn"])) {
     include "side-bar.php"; 
     ?>
 
-    <div class="content-wrapper bg-black">
+    <div class="content-wrapper bg-black mt-5">
         <div class="content p-4">
             <div class="container-fluid text-center p-4">
                 <h1>Add Menu</h1>
