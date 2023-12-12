@@ -50,13 +50,24 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && (isset($_POST['to_pay']) && isset($
     $user = $_POST['userId'];
     $table = $_POST['tableNo'];
 
+    date_default_timezone_set('Asia/Manila');
+    $time = date('H:i:s');
+
     // Perform the SQL query to insert data into the billing_history table
     $insertBillingQuery = "INSERT INTO billing_history (user_id, table_no, total_bill) VALUES ('$user', '$table', '$bill')";
 
         if (mysqli_query($connection, $insertBillingQuery)) {
             // Now, perform the SQL query to update summary_orders
             $updateSummaryOrders = "UPDATE summary_orders SET summary_status = '1' WHERE user_summary_id = '$user' AND summary_table_no = '$table'";
-            //$activateTable = "UPDATE users SET session_tb = '1' WHERE user_id = '$table'";
+            
+            $query_reset= "UPDATE `appointment` SET table_id = '12', appointment_session = '2' WHERE appointment_id = '$user'";
+            $result_reset = mysqli_query($connection, $query_reset);
+
+            $query_history = "INSERT INTO `appointment_history` VALUES('', '$user', '$time', '$table', '0', NULL)";
+            $result_query_history = mysqli_query($connection, $query_history);
+
+            $ctivate_table_query = "UPDATE users SET session_tb = '1' WHERE user_id = '$table'";
+            $result_activate_table = mysqli_query($connection, $ctivate_table_query);
 
             if (mysqli_query($connection, $updateSummaryOrders)) {
                 // Update was successful

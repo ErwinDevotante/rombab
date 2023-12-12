@@ -65,7 +65,7 @@
 
 <!-- Your modal code -->
 <div id="statusModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="statusModalLabel">
-  <div class="modal-dialog modal-dialog-centered" role="document">
+  <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
     <div class="modal-content">
       <div class="modal-header">
         <h5 class="modal-title" id="statusModalLabel"><?php echo $row["name"]; ?> Summary of Order/s</h5>
@@ -85,7 +85,7 @@
                             <div class="accordion-item">
                             <h2 class="accordion-header" id="heading<?=$id_notif ;?>">
                             <button class="accordion-button collapsed text-primary" type="button" data-bs-toggle="collapse" data-bs-target="#collapse<?=$id_notif ;?>" aria-expanded="true" aria-controls="collapse<?=$id_notif ;?>" data-order-id="<?=$id_notif ;?>">
-                                Ready to serve.
+                                <small>Your order <?= $notif_row['total_products']; ?> <strong>is/are ready to serve</strong>.</small>
                             </button>
                             </h2>
                             <div id="collapse<?=$id_notif ;?>" class="accordion-collapse collapse" aria-labelledby="heading<?=$id_notif ;?>">
@@ -107,7 +107,7 @@
                         <div class="accordion-item">
                             <h2 class="accordion-header" id="heading<?=$id_notif ;?>">
                             <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse<?=$id_notif ;?>" aria-expanded="true" aria-controls="collapse<?=$id_notif ;?>" data-order-id="<?=$id_notif ;?>">
-                                Already served.
+                                <small>Your order <?= $notif_row['total_products']; ?> <strong>was/were already served</strong>.</small>
                             </button>
                             </h2>
                             <div id="collapse<?=$id_notif;?>" class="accordion-collapse collapse" aria-labelledby="heading<?=$id_notif;?>">
@@ -125,8 +125,11 @@
                         <?php } elseif ($notif_row['status'] == '0' && ($notif_row['read_notif_session'] == '1' || $notif_row['read_notif_session'] == '0')) { ?>
                         <div class="accordion-item">
                             <h2 class="accordion-header" id="heading<?=$id_notif;?>">
+                            <form action="activated-table.php">
                             <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse<?=$id_notif;?>" aria-expanded="true" aria-controls="collapse<?=$id_notif ;?>" data-order-id="<?=$id_notif;?>">
-                                For preparing.
+                                <small>Your order <?= $notif_row['total_products']; ?> <strong>is/are for preparing</strong>.</small>
+                            </button>
+                            </form>
                             </h2>
                             <div id="collapse<?=$id_notif;?>" class="accordion-collapse collapse" aria-labelledby="heading<?=$id_notif;?>">
                                 <div class="accordion-body">
@@ -182,7 +185,7 @@
             url: "cart-update.php", // Create this PHP file
             data: { orderID: orderID },
             success: function(response) {
-                $('#heading' + orderID + ' .accordion-button').text('Already Served.');
+                $('#heading' + orderID + ' .accordion-button').text('Marked as Already Served.');
             }
         });
     }

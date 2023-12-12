@@ -357,7 +357,7 @@
                     tableNo: tableNo
                 },
                 success: function(response) {
-                    window.location.href = "../../../log-out.php";
+                    window.location.href = "activated-table.php";
                 }
             });
         } else {
