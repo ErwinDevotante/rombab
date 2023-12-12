@@ -115,11 +115,16 @@ include '../conn.php';
     color: white; /* Set the text color for "Show entries" text inside the drop-down box */
   }
 
-  #sortTable_info, #sortTable_log_info, #sortTable_report,
-  #sortTable_length .dataTables_length label,
-  #sortTable_filter input[type="search"] {
+  #sortTable_info, #sortTable_log_info, #sortTable_report_info, 
+  #sortTable_length label, #sortTable_filter input[type="search"] {
     color: white; /* Set the text color for "No. of entries" text and search input */
-  }
+    }
+
+/* Custom styles for DataTables search input */
+.dataTables_filter input {
+    width: 200px; /* Set the desired width */
+    height: 30px;
+    }
 
   #sortTable_wrapper .dataTables_paginate .paginate_button {
     color: white; /* Set the text color for pagination buttons */
@@ -197,7 +202,7 @@ include '../conn.php';
             </div>
     
             <div style="overflow-x:auto;">
-                <table class="table table-hover table-bordered table-dark mt-5" id="sortTable_log">
+                <table class="table table-hover table-bordered table-dark mt-5" style="width:100%" id="sortTable_log">
                 <thead>
                     <tr><th colspan="6">Inventory Reports</th></tr>
                     <tr>
@@ -239,7 +244,7 @@ include '../conn.php';
             </div>
 
             <div style="overflow-x:auto;">
-                <table class="table table-hover table-bordered table-dark mt-5" id="sortTable_report">
+                <table class="table table-hover table-bordered table-dark mt-5" style="width:100%" id="sortTable_report">
                 <thead>
                     <tr><th colspan="3">File Reports</th></tr>
                     <tr>
@@ -300,9 +305,10 @@ include '../conn.php';
         if (!$.fn.DataTable.isDataTable('#sortTable_log')) {
             // Initialize DataTable for the table element with id "sortTable_log"
             $('#sortTable_log').DataTable({
-                order: [[5, 'desc']]
+                order: [[6, 'desc']]
             });
         }
+        
     });
 
     $('#sortTable_log').dataTable( {

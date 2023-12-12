@@ -71,6 +71,55 @@ include '../conn.php';
                 echo "Error deleting inventory record: " . mysqli_error($connection);
             }
     }
+
+    if (isset($_POST["retrieve_btn_menu"])) {
+        $menu_id_to_retrive = $_POST['retrieve_btn_menu'];
+
+        $select_query_menu = "SELECT * FROM menus_archive WHERE menu_id_archive='$menu_id_to_retrive'";
+        $result_select_menu = mysqli_query($connection, $select_query_menu);
+        $row_select_menu = mysqli_fetch_array($result_select_menu);
+
+        // Insert data into menu_archive
+        $insert_retrieve_menu_query = "INSERT INTO menus (menu_id, menu_image, menu_name, menu_category, menu_price, menu_availability)
+        VALUES ('{$row_select_menu['menu_id']}', '{$row_select_menu['menu_image']}', '{$row_select_menu['menu_name']}', '{$row_select_menu['menu_category']}',
+        '{$row_select_menu['menu_price']}', '{$row_select_menu['menu_availability']}')";
+        $result_insert_retrieve_menu = mysqli_query($connection, $insert_retrieve_menu_query);
+
+        if ($result_insert_retrieve_menu) {
+            // Delete the inventory record
+            $delete_query_menu = "DELETE FROM menus_archive WHERE menu_id_archive='$menu_id_to_retrive'";
+            $result_delete_menu = mysqli_query($connection, $delete_query_menu);
+
+            if ($result_delete_menu) {
+                // Redirect back to the inventory.php page after archiving
+                header('Location: archived-data.php');
+                exit();
+            } else {
+                // Handle the error if the deletion fails
+                echo "Error deleting inventory record: " . mysqli_error($connection);
+            }
+        } else {
+            // Handle the error if the archiving fails
+            echo "Error archiving inventory record: " . mysqli_error($connection);
+        }
+    }
+
+    if (isset($_POST["retrieve_btn_history"])) {
+        $item_id_to_retrive_history = $_POST['retrieve_btn_history'];
+    
+            // Delete the inventory record
+            $update_history_query = "UPDATE appointment_history SET as_archived = '0', archived_at = NULL WHERE history_id = '$item_id_to_retrive_history'";
+            $result_update_history = mysqli_query($connection, $update_history_query);
+    
+            if ($result_update_history) {
+                // Redirect back to the inventory.php page after retriving
+                header('Location: archived-data.php');
+                exit();
+            } else {
+                // Handle the error if the deletion fails
+                echo "Error deleting inventory record: " . mysqli_error($connection);
+            }
+    }
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -103,11 +152,12 @@ include '../conn.php';
     <!-- AdminLTE App -->
     <script src="../node_modules/admin-lte/js/adminlte.js"></script>
     <!-- DataTables CSS -->
-    <link rel="stylesheet" href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.min.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.7/css/jquery.dataTables.css"/>
     <!-- DataTables JS -->
-    <script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.7/js/jquery.dataTables.js"></script>
     <!-- Bootstrap Icons CSS -->
     <link href="../../node_modules/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+
 </head>
 </head>
 <style>
@@ -133,6 +183,10 @@ include '../conn.php';
     width: 200px; /* Set the desired width */
     height: 30px;
     }
+
+    .dataTables_info {
+      display: none;
+    }   
 </style>
 <body class="hold-transition sidebar-mini layout-fixed bg-black">
     <div class="wrapper" >
@@ -161,9 +215,9 @@ include '../conn.php';
             </div>
 
             <div style="overflow-x:auto;">
-            <table class="table table-hover table-bordered table-dark mt-5 mb-5" id="sortTable">
+            <table class="table table-hover table-striped table-bordered table-dark mt-5" style="width:100%" id="sortTable_stocks">
                 <thead>
-                    <tr><th colspan="6">Inventory Stocks</th></tr>
+                    <tr><th colspan="5"><h3>Inventory Stocks</h3></th></tr>
                     <tr>
                         <th class="text-center" scope="col">Item</th>
                         <th class="text-center" scope="col">Description</th>
@@ -179,7 +233,6 @@ include '../conn.php';
                         if(mysqli_num_rows($view_items) > 0) {
                             while ($row = mysqli_fetch_array($view_items)) { ?>
                                 <tr>
-                                    <td style="display: none"><?php echo $row["item_id"]; ?></td>
                                     <td><?php echo $row["item_name"]; ?></td>
                                     <td><?php echo $row["item_desc"]; ?></td>
                                     <td><?php echo $row["unit_of_measure"]; ?></td>
@@ -189,22 +242,18 @@ include '../conn.php';
                                         <div class="text-center">
                                             <button type="submit" class="btn btn-xs btn-info" name="retrive_btn_inventory" value="<?php echo $row["item_id_archive"]; ?>">RETRIEVE <i class="bi bi-download"></i></button>
                                         </div>
-                                    </td>
                                     </form>
+                                    </td>
                                 </tr>
-                        <?php } } else {?>
-                            <tr>
-                                <td class="text-center" colspan="7">No record found!</td>
-                            </tr>
-                        <?php } ?>
+                        <?php } }?>
                     </tbody>  
                 </table>
             </div>
 
-            <div style="overflow-x:auto;">
-                <table class="table table-hover table-bordered table-dark mt-5" id="sortTable_log">
+            <div style="overflow-x:auto;" class="mt-5">
+                <table class="table table-hover table-striped table-bordered table-dark mt-5" style="width:100%;" id="sortTable_log">
                 <thead>
-                    <tr><th colspan="6">Inventory Reports</th></tr>
+                    <tr><th colspan="6"><h3>Inventory Reports</h3></th></tr>
                     <tr>
                     <th class="text-center" scope="col">ID</th>
                         <th class="text-center" scope="col">Item</th>
@@ -230,23 +279,19 @@ include '../conn.php';
                                     <td><?php echo $row["date_time"]; ?></td>
                                     <td>
                                         <form method="POST" enctype="multipart/form-data">
-                                            <button type="submit" class="btn btn-xs btn-info" name="retrive_btn_kitchen" value="<?php echo $row["report_id"]; ?>">RETRIVE <i class="bi bi-download"></i></button>
+                                            <button type="submit" class="btn btn-xs btn-info" name="retrive_btn_kitchen" value="<?php echo $row["report_id"]; ?>">RETRIEVE <i class="bi bi-download"></i></button>
                                         </form>
                                     </td>
                                 </tr>
-                        <?php } } else {?>
-                            <tr>
-                                <td class="text-center" colspan="8">No record found!</td>
-                            </tr>
-                        <?php } ?>
+                        <?php } } ?>
                     </tbody>  
                 </table>
             </div>
 
-            <div style="overflow-x:auto;">
-                <table class="table table-hover table-bordered table-dark mt-5" id="sortTable_report">
+            <div style="overflow-x:auto;" class="mt-5">
+                <table class="table table-hover table-striped table-bordered table-dark mt-5" style="width:100%" id="sortTable_report">
                 <thead>
-                    <tr><th colspan="3">File Reports</th></tr>
+                    <tr><th colspan="3"><h3>File Reports</h3></th></tr>
                     <tr>
                         <th class="text-center" scope="col">Report File</th>
                         <th class="text-center" scope="col">Report Date</th>
@@ -268,23 +313,19 @@ include '../conn.php';
                                     ?></td>
                                     <td>
                                         <form method="post" enctype="multipart/form-data">
-                                        <button type="submit" class="btn btn-xs btn-info" name="retrive_btn_reports" value="<?php echo $row["report_id"]; ?>">RETRIVE <i class="bi bi-download"></i></button>
+                                        <button type="submit" class="btn btn-xs btn-info" name="retrive_btn_reports" value="<?php echo $row["report_id"]; ?>">RETRIEVE <i class="bi bi-download"></i></button>
                                         </form>
                                     </td>
                                 </tr>
-                        <?php } } else {?>
-                            <tr>
-                                <td class="text-center" colspan="3">No record found!</td>
-                            </tr>
-                        <?php } ?>
+                        <?php } } ?>
                     </tbody>  
                 </table>
             </div>
             
-            <div style="overflow-x:auto;">
-            <table class="table table-responsive table-hover table-bordered table-dark mt-2">
+            <div style="overflow-x:auto;" class="mt-5">
+            <table class="table table-striped table-hover table-bordered table-dark mt-5" style="width:100%" id="sortTable_menus">
             <thead>
-                <tr><th colspan="5">Archived Menus</th></tr>
+                <tr><th colspan="5"><h3>Archived Menus</h3></th></tr>
                 <tr>
                     <th class="text-center" scope="col">Image</th>
                     <th class="text-center" scope="col">Name</th>
@@ -298,25 +339,66 @@ include '../conn.php';
                     $view_menus = mysqli_query($connection, "SELECT * FROM menus_archive ORDER BY menu_id_archive DESC");
                     if(mysqli_num_rows($view_menus) > 0) {
                     while ($row = mysqli_fetch_array($view_menus)) { ?>
-                    <form method="post" enctype="multipart/form-data">
-                        <tr id="<?php echo $row["menu_id"]; ?>">
-                            <td style="display: none"><?php echo $row["menu_id"]; ?></td> <!--hidden-->
+                        <tr>
                             <td class="text-center w-25"><img src ='menu-images/<?php echo $row["menu_image"]; ?>' class="img-fluid img-thumbnail custom-image"></td>
                             <td class="text-center"><?php echo $row["menu_name"]; ?></td>
                             <td class="text-center"><?php echo $row["menu_price"]; ?></td>
                             <td class="text-center"><?php echo $row["menu_category"]; ?></td>
                             <td class="text-center">
-                               <button type="submit" class="btn btn-info btn-xs" name="archive_btn" value="<?php echo $row["menu_id_archive"]; ?>">RETRIVE <i class="bi bi-download"></i></button>
+                            <form method="post" enctype="multipart/form-data">
+                               <button type="submit" class="btn btn-info btn-xs" name="retrieve_btn_menu" value="<?php echo $row["menu_id_archive"]; ?>">RETRIEVE <i class="bi bi-download"></i></button>
+                            </form>
                             </td>
                         </tr>
-                    </form>
-                    <?php } } else {?>
-                        <tr>
-                            <td class="text-center" colspan="4">No record found!</td>
-                        </tr>
-                    <?php } ?>
+                    <?php } }?>
                 </tbody>  
             </table>
+            </div>
+
+            <div style="overflow-x:auto;" class="mt-5">
+              <table class="table table-hover table-striped table-bordered table-dark mt-5 text-white" style="width:100%" id="sortTable_history">
+              <thead>
+                <tr><th colspan="8"><h3>Appointment History</h3></th></tr>
+                  <tr>
+                      <th class="text-center" scope="col">Name</th>
+                      <th class="text-center" scope="col">Description</th>
+                      <th class="text-center" scope="col">Table No</th>
+                      <th class="text-center" scope="col">Count</th>
+                      <th class="text-center" scope="col">Date</th>
+                      <th class="text-center" scope="col">In</th>
+                      <th class="text-center" scope="col">Out</th>
+                      <th class="text-center" scope="col">Action</th>
+                  </tr>
+              </thead>
+                  <tbody>
+                  <?php 
+                      $result_tb = mysqli_query($connection, "SELECT * FROM appointment_history
+                      INNER JOIN users ON users.user_id=appointment_history.table_history_id
+                      INNER JOIN appointment ON appointment.appointment_id=appointment_history.appointment_user_id
+                      WHERE appointment.appointment_session = '2' AND as_archived = '1'");
+                      if(mysqli_num_rows($result_tb) > 0) {
+                      while ($row = mysqli_fetch_array($result_tb)) { ?> 
+                          <tr>
+                              <td class="text-center"><?php echo $row["appointment_name"]; ?></td>
+                              <td class="text-center"><?php echo $row["appointment_desc"]; ?></td>
+                              <td class="text-center"><?php echo $row["name"]; ?></td>
+                              <td class="text-center"><?php echo $row["count"]; ?></td>
+                              <td class="text-center"><?php $formattedDate = date('F j, Y', strtotime($row["date"])); 
+                                                      echo $formattedDate;?></td>
+                              <td class="text-center"><?php $formattedDateTime = date('g:i A', strtotime($row["time"])); 
+                                                      echo $formattedDateTime;?></td>
+                              <td class="text-center"><?php $formattedDateTimeout = date('g:i A', strtotime($row["time-out"])); 
+                                                      echo $formattedDateTimeout;?></td>
+                              <td>
+                                <form method="POST" enctype="multipart/form-data">
+                                  <button type="submit" class="btn btn-xs btn-info" name="retrieve_btn_history" value="<?php echo $row["history_id"]; ?>">RETRIEVE <i class="bi bi-download"></i></button>
+                                </form>
+                              </td>
+                          </tr>
+                          <?php 
+                      } } ?>
+                  </tbody>  
+              </table>
             </div>
 
             </div>
@@ -333,30 +415,35 @@ include '../conn.php';
 </footer>
 </html>
 <script>
-    document.addEventListener("DOMContentLoaded", function() {
-        // Initialize DataTable for the table element with id "sortTable"
-        $('#sortTable').DataTable({
-            order: [[0, 'desc']]
-        });
 
-        // Check if DataTable is not already initialized for the table with id "sortTable_log"
-        if (!$.fn.DataTable.isDataTable('#sortTable_log')) {
-            // Initialize DataTable for the table element with id "sortTable_log"
-            $('#sortTable_log').DataTable({
-                order: [[5, 'desc']]
-            });
-        }
+    $(document).ready( function () {
+    $('#sortTable_stocks').DataTable({
+        lengthChange: false
     });
-
-        
-    $('#sortTable_log').dataTable( {
-        //searching: false,
-        lengthChange: false
     } );
 
-    table.destroy();
-
-    $('#sortTable').dataTable( {
+    $(document).ready( function () {
+    $('#sortTable_log').DataTable({
         lengthChange: false
+    });
     } );
+
+    $(document).ready( function () {
+    $('#sortTable_report').DataTable({
+        lengthChange: false
+    });
+    } );
+
+    $(document).ready( function () {
+    $('#sortTable_history').DataTable({
+        lengthChange: false
+    });
+    } );
+
+    $(document).ready( function () {
+    $('#sortTable_menus').DataTable({
+        lengthChange: false
+    }); 
+    } );
+    
 </script>

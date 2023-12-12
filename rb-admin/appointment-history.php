@@ -109,6 +109,12 @@ include '../conn.php';
   #sortTable_length {
         display: none;
     }
+
+  /* Custom styles for DataTables search input */
+  .dataTables_filter input {
+    width: 200px; /* Set the desired width */
+    height: 30px;
+    }
 </style>
 <body class="hold-transition sidebar-mini layout-fixed bg-black">
     <div class="wrapper" >
@@ -124,7 +130,7 @@ include '../conn.php';
                 <h1>Appointment History</h1>
             </div>
             <div style="overflow-x:auto;">
-              <table class="table table-hover table-dark mt-5 text-white" id="sortTable">
+              <table class="table table-hover table-striped table-dark mt-5 text-white" id="sortTable">
               <thead>
                   <tr>
                       <th class="text-center" scope="col">Name</th>

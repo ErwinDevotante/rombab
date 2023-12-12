@@ -474,7 +474,7 @@ include 'admin-auth.php';
             <div class="small-box bg-redbg text-white">
               <div class="inner">
                 <h3>Archived</h3>
-                <p>Retrive Data</p>
+                <p>Retrieve Data</p>
               </div>
               <div class="icon text-white">
                 <i class="ion ion-android-archive"></i>

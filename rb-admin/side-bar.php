@@ -81,7 +81,7 @@
 		  <li class="nav-item has-treeview menu-open m-1">
             <a href="appointment-history.php" class="nav-link <?php if($a==7){ echo 'active'; }?>">
                <i class="ion ion-mouse nav-icon"></i>
-              <p>
+              <p class="text-nowrap">
                 Appointment History
               </p>
             </a>

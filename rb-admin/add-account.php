@@ -33,6 +33,10 @@ include '../conn.php';
         header('Location: add-account.php');
     }
 
+    if (isset($_POST["archive_btn"])) {
+
+    }
+
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -165,14 +169,14 @@ include '../conn.php';
                                 <th class="text-center" scope="col">Name</th>
                                 <th class="text-center" scope="col">Username</th>
                                 <th class="text-center" scope="col">Role</th>
-                                <th class="text-center" scope="col">Action</th>
+                                <!-- <th class="text-center" scope="col">Action</th> -->
                             </tr>
                         </thead>
                             <tbody id = "menu_table">
                             <?php 
                                 $view_items = mysqli_query($connection, "SELECT * FROM users
                                                                         LEFT JOIN user_role ON user_role.user_role_id = users.user_role
-                                                                        WHERE users.user_id != 12");
+                                                                        WHERE users.user_id != 12 AND users.user_id != 1");
                                 if(mysqli_num_rows($view_items) > 0) {
                                 while ($row = mysqli_fetch_array($view_items)) { ?>
                                     <form method="post" action="add-account.php" enctype="multipart/form-data">
@@ -180,16 +184,16 @@ include '../conn.php';
                                             <td class="text-center"><?php echo $row["name"]; ?></td>
                                             <td><?php echo $row["username"]; ?></td>
                                             <td class="text-center"><?php echo $row["roles"]; ?></td>
-                                            <td class="text-center">
+                                            <!--<td class="text-center">
                                             <form method="POST" enctype="multipart/form-data">
                                                 <button type="submit" class="btn btn-xs btn-warning" name="archive_btn" value="<?php echo $row["user_id"]; ?>">ARCHIVE <i class="bi bi-archive"></i></button>
                                             </form>
-                                            </td>
+                                            </td> -->
                                         </tr>
                                     </form>
                                 <?php } } else {?>
                                     <tr>
-                                        <td class="text-center" colspan="4">No record found!</td>
+                                        <td class="text-center" colspan="3">No record found!</td>
                                     </tr>
                                 <?php } ?>
                             </tbody>  

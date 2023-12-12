@@ -43,7 +43,9 @@ include '../conn.php';
         $item_name = $_POST['update-name'];
         $description = $_POST['update-description'];
         $oum = $_POST['update-measure'];
-        $stock = $_POST['update-stocks'];
+        $currentStock = $_POST['update-stocks'];
+        $additionalStock = $_POST['add-update-stocks'];
+        $stock = $currentStock + $additionalStock;
         $status = $_POST['update-status'];
 
         // Perform the UPDATE query to update the inventory record
@@ -93,11 +95,6 @@ include '../conn.php';
             echo "Error archiving inventory record: " . mysqli_error($connection);
         }
     }
-
-    // Deleting data from inventory_archive
-    $deleteThreshold = date('Y-m-d H:i:s', strtotime('-30 days'));
-    $delete_query = "DELETE FROM inventory_archive WHERE archived_at <= '$deleteThreshold'";
-    $result_delete = mysqli_query($connection, $delete_query);
 
 ?>
 <!DOCTYPE html>
@@ -302,9 +299,18 @@ include '../conn.php';
                             </select>
                         </div>
 
-                        <div class="form-group">
+                        <div class="form-group row">
                             <label>Stocks</label>
-                            <input type="number" class="form-control" name="update-stocks" id="update-stocks" step="any" min="0.1" placeholder="Enter Number of Stock" required>
+                            <div class="col-md-2">
+                                <span type="text" class="form-control" id="update-stocks-display"></span>
+                                <input type="hidden" name="update-stocks" id="update-stocks">
+                            </div>
+                            <div class="col-md-10 input-group">
+                                <div class="input-group-prepend">
+                                    <div class="input-group-text">+</div>
+                                </div>
+                                <input type="number" class="form-control" name="add-update-stocks" id="add-update-stocks" step="any" min="0.1" placeholder="Enter Number of Additional Stock" required>
+                            </div>
                         </div>
 
                         <div class="form-group">
@@ -346,6 +352,8 @@ include '../conn.php';
         $('#update-name').val(data[1]);
         $('#update-description').val(data[2]);
         $('#update-measure').val(data[3]);
+        // Set the value of the span to the current stock value
+        $('#update-stocks-display').text(data[4]);
         $('#update-stocks').val(data[4]);
         $('#update-status').val(data[5]);
     });
