@@ -69,6 +69,8 @@ include '../conn.php';
     <link rel="stylesheet" href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.min.css">
     <!-- DataTables JS -->
     <script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
+    <!-- Bootstrap Icons CSS -->
+    <link href="../../node_modules/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
 </head>
 <body class="hold-transition sidebar-mini layout-fixed">
     <div class="wrapper" >
@@ -110,24 +112,24 @@ include '../conn.php';
                         <div class="d-flex flex-row align-items-center mb-4">
                             <div class="form-group was-validated flex-fill mb-0">
                             <label class="form-label text-black">Name</label>
-                            <input type="text" id="name" name="name" class="form-control" required>
+                            <input type="text" id="name" name="name" class="form-control" placeholder="Enter Name" required>
                             </div>
                         </div>
 
                         <div class="d-flex flex-row align-items-center mb-4">
                             <div class="form-group was-validated flex-fill mb-0">
                             <label class="form-label text-black">Username</label>
-                            <input type="text" id="username" name="username" class="form-control" pattern=".{4,}" required> 
+                            <input type="text" id="username" name="username" class="form-control" pattern=".{4,}" placeholder="Enter Username" required> 
+                            <div class="invalid-feedback text-small">
+                                Username must be at least 4 characters long.
                             </div>
-                                <div class="invalid-feedback text-small">
-                                    Username must be at least 4 characters long.
-                                </div>
+                            </div>
                         </div>
 
                         <div class="d-flex flex-row align-items-center mb-4">
                             <div class="form-group was-validated flex-fill mb-0">
                             <label class="form-label text-black">Password</label>
-                            <input type="password" id="password" name="password" class="form-control" pattern=".{8,}" required>
+                            <input type="password" id="password" name="password" class="form-control" pattern=".{8,}" placeholder="Enter Password" required>
                                 <div class="invalid-feedback">
                                     Password must be at least 8 characters long.
                                 </div>
@@ -137,7 +139,7 @@ include '../conn.php';
                         <div class="d-flex flex-row align-items-center mb-4">
                             <div class="form-group was-validated flex-fill mb-0">
                             <label class="form-label text-black">Confirm password</label>
-                            <input type="password" id="confirm-password" name="confirm-password" class="form-control" pattern=".{8,}" required>
+                            <input type="password" id="confirm-password" name="confirm-password" class="form-control" pattern=".{8,}" placeholder="Enter Confirm Password" required>
                                 <div class="valid-feedback">
                                 Must be the same as password.
                                 </div>
@@ -145,20 +147,25 @@ include '../conn.php';
                         </div>
 
                         <div class="d-flex justify-content-center mx-4 mb-3 mb-lg-4">
-                            <button type="submit" class="btn btn-danger btn-lg" name="submit">Register</button>
+                            <button type="submit" class="btn btn-danger btn-lg" name="submit">Register <i class="bi bi-chevron-right"></i></button>
                         </div>
 
                         </form>
                     </div>
                     </div>
-                    </div>
-                    <div style="overflow-x:auto;">
+                    </div> 
+                </div>
+                </div>
+            </section>
+
+            <div style="overflow-x:auto;">
                         <table class="table table-hover table-bordered table-dark mt-2" id="sortTable">
                         <thead>
                             <tr>
                                 <th class="text-center" scope="col">Name</th>
                                 <th class="text-center" scope="col">Username</th>
                                 <th class="text-center" scope="col">Role</th>
+                                <th class="text-center" scope="col">Action</th>
                             </tr>
                         </thead>
                             <tbody id = "menu_table">
@@ -173,19 +180,21 @@ include '../conn.php';
                                             <td class="text-center"><?php echo $row["name"]; ?></td>
                                             <td><?php echo $row["username"]; ?></td>
                                             <td class="text-center"><?php echo $row["roles"]; ?></td>
+                                            <td class="text-center">
+                                            <form method="POST" enctype="multipart/form-data">
+                                                <button type="submit" class="btn btn-xs btn-warning" name="archive_btn" value="<?php echo $row["user_id"]; ?>">ARCHIVE <i class="bi bi-archive"></i></button>
+                                            </form>
+                                            </td>
                                         </tr>
                                     </form>
                                 <?php } } else {?>
                                     <tr>
-                                        <td class="text-center" colspan="3">No record found!</td>
+                                        <td class="text-center" colspan="4">No record found!</td>
                                     </tr>
                                 <?php } ?>
                             </tbody>  
                         </table> 
-                    </div>   
-                </div>
-                </div>
-            </section>
+                    </div>  
 
             </div>
         </div>

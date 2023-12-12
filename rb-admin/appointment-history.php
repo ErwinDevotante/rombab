@@ -6,6 +6,27 @@ include '../conn.php';
     $result = mysqli_query($connection, "SELECT * FROM users where user_id = '$id' ");
     $row = mysqli_fetch_array($result);
 
+    date_default_timezone_set('Asia/Manila');
+    // Get the current date in the Philippines timezone in the format "Y-m-d"
+    $currentDateTime = date('Y-m-d H:i:s');
+
+    if (isset($_POST["archive_btn_history"])) {
+      $item_id_to_archive_history = $_POST['archive_btn_history'];
+  
+          // Delete the inventory record
+          $update_history_query = "UPDATE appointment_history SET as_archived = '1', archived_at = '$currentDateTime' WHERE history_id = '$item_id_to_archive_history'";
+          $result_update_history = mysqli_query($connection, $update_history_query);
+  
+          if ($result_update_history) {
+              // Redirect back to the inventory.php page after archiving
+              header('Location: appointment-history.php');
+              exit();
+          } else {
+              // Handle the error if the deletion fails
+              echo "Error deleting inventory record: " . mysqli_error($connection);
+          }
+  }
+
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -122,7 +143,7 @@ include '../conn.php';
                       $result_tb = mysqli_query($connection, "SELECT * FROM appointment_history
                       INNER JOIN users ON users.user_id=appointment_history.table_history_id
                       INNER JOIN appointment ON appointment.appointment_id=appointment_history.appointment_user_id
-                      WHERE appointment.appointment_session = '2'");
+                      WHERE appointment.appointment_session = '2' AND as_archived = '0'");
                       if(mysqli_num_rows($result_tb) > 0) {
                       while ($row = mysqli_fetch_array($result_tb)) { ?> 
                           <tr>
@@ -138,8 +159,8 @@ include '../conn.php';
                                                       echo $formattedDateTimeout;?></td>
                               <td><?php echo $row["note"]; ?></td>
                               <td>
-                                <form method="POST" enctype="multipart/form-data">
-                                <button type="submit" class="btn btn-xs btn-warning" name="archive_btn" value="<?php echo $row["history_id"]; ?>">ARCHIVE <i class="bi bi-archive"></i></button>
+                                <form method="POST" action="appointment-history.php" enctype="multipart/form-data">
+                                  <button type="submit" class="btn btn-xs btn-warning" name="archive_btn_history" value="<?php echo $row["history_id"]; ?>">ARCHIVE <i class="bi bi-archive"></i></button>
                                 </form>
                               </td>
                           </tr>

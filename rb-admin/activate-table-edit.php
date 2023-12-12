@@ -32,7 +32,7 @@ if ($id_reset !==null && $reset !==null && $table_reset !== null) {
     $query_reset= "UPDATE `appointment` SET table_id = '12', appointment_session = $reset WHERE appointment_id = $id_reset";
     $result_reset = mysqli_query($connection, $query_reset);
 
-    $query_history = "INSERT INTO `appointment_history` VALUES('', '$id_reset', '$time', '$table_reset')";
+    $query_history = "INSERT INTO `appointment_history` VALUES('', '$id_reset', '$time', '$table_reset', '0', NULL)";
     $result_query_history = mysqli_query($connection, $query_history);
 
     $ctivate_table_query = "UPDATE users SET session_tb = '1' WHERE user_id = '$table_reset'";
