@@ -65,89 +65,13 @@
 
 <!-- Your modal code -->
 <div id="statusModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="statusModalLabel">
-  <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+  <div class="modal-dialog modal-dialog-centered" role="document">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="statusModalLabel"><?php echo $row["name"]; ?> Summary of Order/s</h5>
+        <h5 class="modal-title" id="statusModalLabel"><?php echo $row["name"]; ?> Notification</h5>
       </div>
       <div class="modal-body" id="notification_desc">
-            <div class="accordion p-4" id="faqAccordion">
-            <?php
-            $notif = mysqli_query($connection, "SELECT * FROM orders WHERE user_table_id = '$user_id'
-            AND user_table = '$table' ORDER BY time_date DESC");
-                    if(mysqli_num_rows($notif) > 0){
-                        foreach($notif as $notif_row) {
-                            $time_date = $notif_row['time_date'];
-                            $timestamp = strtotime($time_date);
-                            $formatted_time = date('g:i A', $timestamp);
-                            $id_notif = $notif_row['order_id'];
-                            if ($notif_row['read_notif_session'] == '0' && $notif_row['status'] == '1') { ?>
-                            <div class="accordion-item">
-                            <h2 class="accordion-header" id="heading<?=$id_notif ;?>">
-                            <button class="accordion-button collapsed text-primary" type="button" data-bs-toggle="collapse" data-bs-target="#collapse<?=$id_notif ;?>" aria-expanded="true" aria-controls="collapse<?=$id_notif ;?>" data-order-id="<?=$id_notif ;?>">
-                                <small>Your order <?= $notif_row['total_products']; ?> <strong>is/are ready to serve</strong>.</small>
-                            </button>
-                            </h2>
-                            <div id="collapse<?=$id_notif ;?>" class="accordion-collapse collapse" aria-labelledby="heading<?=$id_notif ;?>">
-                                <div class="accordion-body">
-                                    <?php $skillsArray = explode(",", $notif_row['total_products']);
-                                    foreach ($skillsArray as $skill) {
-                                        echo "<p class='m-0'>" . trim($skill) . "</p>";
-                                        echo "<hr class='bg-dark m-1'>";
-                                        } ?>
-                                    <p class="m-0 text-secondary font-weight-light font-italic">Order taken at <em><?php echo $formatted_time; ?></em></p>
-                                    <p class="m-0 text-secondary font-weight-light font-italic">Elapsed time: <?=$notif_row['serve_time'];?> seconds</p>
-                                    <button class="btn btn-primary btn-mark-as-served" data-order-id="<?=$id_notif;?>">
-                                        Mark as Served
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                        <?php } elseif ($notif_row['read_notif_session'] == '1' && $notif_row['status'] == '1') { ?>
-                        <div class="accordion-item">
-                            <h2 class="accordion-header" id="heading<?=$id_notif ;?>">
-                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse<?=$id_notif ;?>" aria-expanded="true" aria-controls="collapse<?=$id_notif ;?>" data-order-id="<?=$id_notif ;?>">
-                                <small>Your order <?= $notif_row['total_products']; ?> <strong>was/were already served</strong>.</small>
-                            </button>
-                            </h2>
-                            <div id="collapse<?=$id_notif;?>" class="accordion-collapse collapse" aria-labelledby="heading<?=$id_notif;?>">
-                                <div class="accordion-body">
-                                    <?php $skillsArray = explode(",", $notif_row['total_products']);
-                                    foreach ($skillsArray as $skill) {
-                                        echo "<p class='m-0'>" . trim($skill) . "</p>";
-                                        echo "<hr class='bg-dark m-1'>";
-                                        } ?>
-                                    <p class="m-0 text-secondary font-weight-light font-italic">Order taken at <em><?php echo $formatted_time; ?></em></p>
-                                    <p class="m-0 text-secondary font-weight-light font-italic">Elapsed time: <?=$notif_row['serve_time'];?> seconds</p>
-                                </div>
-                            </div>
-                        </div>
-                        <?php } elseif ($notif_row['status'] == '0' && ($notif_row['read_notif_session'] == '1' || $notif_row['read_notif_session'] == '0')) { ?>
-                        <div class="accordion-item">
-                            <h2 class="accordion-header" id="heading<?=$id_notif;?>">
-                            <form action="activated-table.php">
-                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse<?=$id_notif;?>" aria-expanded="true" aria-controls="collapse<?=$id_notif ;?>" data-order-id="<?=$id_notif;?>">
-                                <small>Your order <?= $notif_row['total_products']; ?> <strong>is/are for preparing</strong>.</small>
-                            </button>
-                            </form>
-                            </h2>
-                            <div id="collapse<?=$id_notif;?>" class="accordion-collapse collapse" aria-labelledby="heading<?=$id_notif;?>">
-                                <div class="accordion-body">
-                                    <?php $skillsArray = explode(",", $notif_row['total_products']);
-                                    foreach ($skillsArray as $skill) {
-                                        echo "<p class='m-0'>" . trim($skill) . "</p>";
-                                        echo "<hr class='bg-dark m-1'>";
-                                        } ?>
-                                    <p class="m-0 text-secondary font-weight-light font-italic">Order taken at <em><?php echo $formatted_time; ?></em></p>
-                                </div>
-                            </div>
-                        </div>
-                        <?php }
-                    } 
-                } else { ?>
-                     <div class="text-center"><em>No notifications.</em></div>
-                <?php }?>     
-            </div>
+            
       </div>
       <div class="modal-footer">
         <button class="btn btn-primary" onclick="closeModal()">Close</button>
@@ -171,24 +95,6 @@
   }
 
   $(document).ready(function() {
-    // Define a click event handler for the "Mark as Served" button
-    $('.btn-mark-as-served').click(function(e) {
-        e.stopPropagation(); // Prevent accordion toggle when the button is clicked
-        var orderID = $(this).data('order-id');
-        markOrderAsServed(orderID);
-    });
-
-    // Function to mark the order as served using AJAX
-    function markOrderAsServed(orderID) {
-        $.ajax({
-            type: "POST",
-            url: "cart-update.php", // Create this PHP file
-            data: { orderID: orderID },
-            success: function(response) {
-                $('#heading' + orderID + ' .accordion-button').text('Marked as Already Served.');
-            }
-        });
-    }
 
     // Function to fetch count from the server
     function fetchCount() {
@@ -222,13 +128,29 @@
             console.error('Error:', error);
         }
         });
+
+        // Fetch and update modal content
+        $.ajax({
+            url: 'update-modal-content.php', // Replace with the actual PHP file to fetch updated modal content
+            method: 'POST',
+            data: {
+                table: '<?php echo $table; ?>'
+            },
+            success: function(response) {
+                // Update modal content
+                $('#notification_desc').html(response);
+            },
+            error: function(error) {
+                console.error('Error:', error);
+            }
+        });
     }
 
     // Call the fetchCount function initially
     fetchCount();
 
     // Set up an interval to call fetchCount every second (1000 milliseconds)
-    //setInterval(fetchCount, 5000);
+    setInterval(fetchCount, 5000);
 
 });
 

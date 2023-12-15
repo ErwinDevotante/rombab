@@ -50,6 +50,36 @@ if(isset($_POST["submit"])){
     $_SESSION['unsuccess'] = true;
   }
 }
+
+// Delete section for archives
+$deleteThreshold = date('Y-m-d H:i:s', strtotime('-30 days'));
+
+// Deleting data from summary_orders
+mysqli_query($connection, "DELETE FROM summary_orders WHERE inserted_at <= '$deleteThreshold'");
+
+// Deleting data from inventory_archive
+mysqli_query($connection, "DELETE FROM inventory_archive WHERE archived_at <= '$deleteThreshold'");
+
+// Deleting data from log_reports
+mysqli_query($connection, "DELETE FROM log_reports WHERE archived_at <= '$deleteThreshold' AND as_archived = '1'");
+
+// Deleting data from daily_reports
+mysqli_query($connection, "DELETE FROM daily_reports WHERE archived_at <= '$deleteThreshold' AND as_archived = '1'");
+
+// Deleting data from menu_archive
+mysqli_query($connection, "DELETE FROM menus_archive WHERE archived_at <= '$deleteThreshold'");
+
+// Deleting data from appointment, appointment_history, and billing_history
+mysqli_query($connection, "DELETE appointment, appointment_history, billing_history
+                            FROM appointment_history
+                            INNER JOIN users ON users.user_id = appointment_history.table_history_id
+                            INNER JOIN appointment ON appointment.appointment_id = appointment_history.appointment_user_id
+                            INNER JOIN billing_history ON billing_history.user_id = appointment_history.appointment_user_id
+                            WHERE appointment_history.archived_at <= '$deleteThreshold' AND appointment_history.as_archived = '1'
+                            AND appointment.appointment_session = '2'");
+
+// Delete data from orders
+mysqli_query($connection, "DELETE FROM orders WHERE time_date <= '$deleteThreshold'");
 ?>
 
 <!DOCTYPE html>
