@@ -117,31 +117,46 @@ include '../conn.php';
 </footer>
 </html>
 
+<!-- ... (your HTML code above) ... -->
+
 <script>
   // JavaScript code to update the timers and elapsed time in real-time
-  function updateTimers() {
-    <?php 
-      $result_tb = mysqli_query($connection, "SELECT * FROM `orders` ");
-      if(mysqli_num_rows($result_tb) > 0){
-        while ($row = mysqli_fetch_array($result_tb)) { ?>
+function updateTimers() {
+  <?php 
+    $result_tb = mysqli_query($connection, "SELECT * FROM `orders` ");
+    if(mysqli_num_rows($result_tb) > 0){
+      while ($row = mysqli_fetch_array($result_tb)) { ?>
 
         var timerElement_<?php echo $row['order_id']; ?> = document.getElementById('timer_<?php echo $row['order_id']; ?>');
         var elapsedSecondsElement_<?php echo $row['order_id']; ?> = document.getElementById('elapsed_seconds_<?php echo $row["order_id"]; ?>');
         var timeDate_<?php echo $row['order_id']; ?> = new Date('<?php echo $row['time_date']; ?>').getTime();
 
-        setInterval(function() {
+        var interval_<?php echo $row['order_id']; ?> = setInterval(function() {
           var currentTime = new Date().getTime();
           var diffMilliseconds = currentTime - timeDate_<?php echo $row['order_id']; ?>;
           var elapsedSeconds = Math.floor(diffMilliseconds / 1000);
-          timerElement_<?php echo $row['order_id']; ?>.innerText = elapsedSeconds;
-          elapsedSecondsElement_<?php echo $row['order_id']; ?>.value = elapsedSeconds; // Update the hidden input field
+
+          // Check if elapsed time exceeds 999 seconds
+          if (elapsedSeconds >= 999) {
+            clearInterval(interval_<?php echo $row['order_id']; ?>); // Clear the interval
+            timerElement_<?php echo $row['order_id']; ?>.innerText = '999';
+            elapsedSecondsElement_<?php echo $row['order_id']; ?>.value = 999; // Update the hidden input field
+            timerElement_<?php echo $row['order_id']; ?>.style.color = 'red'; // Change text color to red
+          } else {
+            timerElement_<?php echo $row['order_id']; ?>.innerText = elapsedSeconds;
+            elapsedSecondsElement_<?php echo $row['order_id']; ?>.value = elapsedSeconds; // Update the hidden input field
+          }
         }, 1000);
       <?php 
-        } 
-      }
-    ?>
-  }
+      } 
+    }
+  ?>
+}
 
-  // Call the function to update the timers in real-time
-  updateTimers();
+// Call the function to update the timers in real-time
+updateTimers();
+
 </script>
+
+<!-- ... (your HTML code below) ... -->
+
