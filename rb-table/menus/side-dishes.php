@@ -45,7 +45,7 @@
             unset($_POST);
         } else {
             $insert_product = mysqli_query($connection, "INSERT INTO `cart`(user_cart_id, cart_table, cart_name, cart_image, cart_quantity) VALUES ('$user_cart_id', '$product_table', '$product_name', '$product_image', '$product_quantity')");
-            $_SESSION['added'] = true;
+            //$_SESSION['added'] = true;
             unset($_POST);
         }
     }
@@ -57,25 +57,43 @@
     </div>
 
     <div class="container py-5">
-        <div class="card-columns-container">
-            <?php 
-                $result_tb = mysqli_query($connection, "SELECT * FROM `menus`
-                             WHERE menu_category = 'Side Dishes' and menu_availability = '0'");
-                        if(mysqli_num_rows($result_tb) > 0){
-                        while ($row = mysqli_fetch_array($result_tb)) { ?> 
-                        <form action="" method="post">
-                            <div class="card p-2 mb-2 card-red text-center">
-                                <div class="img"><img class="img-fluid rounded-top custom-image" alt="Responsive Image" src ='../../rb-admin/menu-images/<?php echo $row["menu_image"]; ?>'></div>
-                                <div class="productname bg-white text-black rounded-bottom"><h5 class="text-truncate text-uppercase"><?php echo $row["menu_name"]; ?></h5></div>
-                                <input type="hidden" name="product_image" value="<?php echo $row["menu_image"]; ?>">
-                                <input type="hidden" name="product_name" value="<?php echo $row["menu_name"]; ?>">
-                                <button type="submit" class="btn btn-md btn-outline-danger text-white w-100 mt-1" name="add_to_cart">ADD TO ORDER <i class="bi bi-cart-plus-fill"></i></button>
-                            </div>
-                        </form>
-                        <?php }
-                        }  
-            ?>
-        </div>
+      <div class="card-columns-container">
+        <?php
+          $result_tb = mysqli_query($connection, "SELECT * FROM `menus` WHERE menu_category = 'Side Dishes'");
+          if(mysqli_num_rows($result_tb) > 0){
+            while ($row = mysqli_fetch_array($result_tb)) {
+        ?> 
+          <form action="" method="post">
+            <div class="card p-2 mb-2 card-red text-center position-relative">
+              <?php if($row["menu_availability"] == 1) { ?>
+                <div class="ribbon">
+                  <span class="bg-danger text-white">NOT AVAILABLE</span>
+                </div>
+              <?php } ?>
+              <div class="img">
+                <img class="img-fluid rounded-top custom-image" alt="Responsive Image" src ='../../rb-admin/menu-images/<?php echo $row["menu_image"]; ?>'>
+              </div>
+              <div class="productname bg-white text-black rounded-bottom">
+                <h5 class="text-truncate text-uppercase"><?php echo $row["menu_name"]; ?></h5>
+              </div>
+              <input type="hidden" name="product_image" value="<?php echo $row["menu_image"]; ?>">
+              <input type="hidden" name="product_name" value="<?php echo $row["menu_name"]; ?>">
+              <?php if($row["menu_availability"] == 1) { ?>
+                <button type="submit" class="btn btn-md btn-outline-danger text-white w-100 mt-1 bg-dark" disabled>
+                  ADD TO CART <i class="bi bi-cart-plus-fill"></i>
+                </button>
+              <?php } else { ?>
+                <button type="submit" class="btn btn-md btn-outline-danger text-white w-100 mt-1" name="add_to_cart">
+                  ADD TO CART <i class="bi bi-cart-plus-fill"></i>
+                </button>
+              <?php } ?>
+            </div>
+          </form>
+        <?php
+            }
+          }
+        ?>
+      </div>
     </div>
 
     <!-- Added alert modal -->

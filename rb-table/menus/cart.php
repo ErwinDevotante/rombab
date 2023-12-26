@@ -72,12 +72,12 @@
             <td><img src="../../rb-admin/menu-images/<?php echo $fetch_cart['cart_image']; ?>" height="100" alt=""></td>
             <td><?php echo $fetch_cart['cart_name']; ?></td>
             <td id="total_price_<?php echo $fetch_cart['cart_id']; ?>">
-                <?php echo $fetch_cart['cart_menuprice'] * $fetch_cart['cart_quantity']; ?>
+                <?php echo number_format($fetch_cart['cart_menuprice'] * $fetch_cart['cart_quantity'], 2); ?>
             </td>
             <td>
                 <form action="" method="post">
                     <input type="hidden" name="update_quantity_id"  value="<?php echo $fetch_cart['cart_id']; ?>" >
-                    <input type="number" name="update_quantity" id="update_quantity" min="1" max="<?php echo $customer["count"] + 2; ?>" class="text-center" value="<?php echo $fetch_cart['cart_quantity']; ?>" onchange="updateDatabase(this)">
+                    <input type="number" name="update_quantity" id="update_quantity_<?php echo $fetch_cart['cart_id']; ?>" min="1" max="<?php echo $customer["count"] + 2; ?>" class="text-center" value="<?php echo $fetch_cart['cart_quantity']; ?>" onchange="updateDatabase(this)">
                 </form> 
             </td>
             <td><a href="cart.php?remove=<?php echo $fetch_cart['cart_id']; ?>" class="delete-btn btn btn-primary">Remove <i class="bi bi-cart-dash-fill"></i></a></td>
@@ -122,50 +122,53 @@
         Romantic Baboy – SM City Sta. Rosa Branch
         &copy; <?php echo date("Y"); ?>
     </footer>
-    <script>
-        function updateDatabase(inputField) {
-            const updateValue = inputField.value;
-            const updateId = inputField.parentElement.querySelector('[name="update_quantity_id"]').value;
-
-            // Ensure the value is within the range of 1 to 5
-            const updatedValue = Math.max(1, Math.min(<?php echo $customer["count"] + 2;?>, updateValue));
-
-            // Update the database using AJAX
-            const xhr = new XMLHttpRequest();
-            xhr.open('POST', 'cart-update.php', true); // Use 'cart.php' as the target
-            xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
-            xhr.send(`update_id=${updateId}&update_value=${updatedValue}`);
-            // You can add success/failure handling for the AJAX request here
-        }
-    </script>
 </body>
 </html>
 
 <script>
+    function updateDatabase(inputField) {
+        const updateValue = inputField.value;
+        const updateId = inputField.parentElement.querySelector('[name="update_quantity_id"]').value;
+
+        // Ensure the value is within the range of 1 to 5
+        const updatedValue = Math.max(1, Math.min(<?php echo $customer["count"] + 2;?>, updateValue));
+
+        // Update the database using AJAX
+        const xhr = new XMLHttpRequest();
+        xhr.open('POST', 'cart-update.php', true); // Use 'cart.php' as the target
+        xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+        xhr.send(`update_id=${updateId}&update_value=${updatedValue}`);
+        // You can add success/failure handling for the AJAX request here
+    }
+
     // Add event listener for No of people input
-    const qtyInput = document.getElementById('update_quantity');
-    qtyInput.addEventListener('input', function() {
-        const inputValue = qtyInput.value;
-        
-        // Remove any non-digit characters (including decimal points)
-        const sanitizedValue = inputValue.replace(/[^0-9]/g, '');
-        
-        // Ensure the value is not empty
-        if (sanitizedValue === '') {
-            qtyInput.value = '1'; // Set a default value if the input is empty
-        } else {
-            const qty = parseInt(sanitizedValue, 10);
-            
-            // Ensure the value is within the range of 1 to 10
-            if (qty < 1) {
-                qtyInput.value = '1'; // Set the minimum value to 1
-            } else if (qty > <?php echo $customer["count"] + 2;?>) {
-                qtyInput.value = '<?php echo $customer["count"] + 2;?>'; // Set the maximum value to 10
+    const qtyInputs = document.querySelectorAll('[name="update_quantity"]');
+    qtyInputs.forEach(function(qtyInput) {
+        qtyInput.addEventListener('input', function() {
+            const inputValue = qtyInput.value;
+
+            // Remove any non-digit characters (including decimal points)
+            const sanitizedValue = inputValue.replace(/[^0-9]/g, '');
+
+            // Ensure the value is not empty
+            if (sanitizedValue === '') {
+                qtyInput.value = '1'; // Set a default value if the input is empty
             } else {
-                qtyInput.value = qty; // Update the input value with the sanitized integer value
+                const qty = parseInt(sanitizedValue, 10);
+
+                // Ensure the value is within the range of 1 to the maximum specified in the input field
+                const maxAllowed = parseInt(qtyInput.getAttribute('max'), 10);
+                if (qty < 1) {
+                    qtyInput.value = '1'; // Set the minimum value to 1
+                } else if (qty > maxAllowed) {
+                    qtyInput.value = String(maxAllowed); // Set the maximum value to the specified maximum
+                } else {
+                    qtyInput.value = qty; // Update the input value with the sanitized integer value
+                }
             }
-        }
+        });
     });
+
 </script>
 
 

@@ -28,7 +28,7 @@
 </style>
 <nav class="navbar navbar-expand-lg navbar-dark p-3">
     <div class="container-fluid">
-        <img class="p-2" src="/assets/rombab-logo.png" alt="Romantic Baboy Logo" width="130">
+        <a href="activated-table.php"><img class="p-2" src="/assets/rombab-logo.png" alt="Romantic Baboy Logo" width="130"> </a>
         <a class="navbar-brand" href="activated-table.php">
             <img src="/assets/unlimited_korean_grill.png" alt="Romantic Baboy Logo" width="400">
         </a>
@@ -150,7 +150,7 @@
     fetchCount();
 
     // Set up an interval to call fetchCount every second (1000 milliseconds)
-    setInterval(fetchCount, 5000);
+     //setInterval(fetchCount, 5000);
 
 });
 
