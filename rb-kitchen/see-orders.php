@@ -8,14 +8,6 @@ include '../conn.php';
 
   date_default_timezone_set('Asia/Manila'); // Set the timezone to Philippine Time
 
-  if(isset($_POST['serve_order'])) {
-    $update_id = $_POST['update_id'];
-    $serve_time = $_POST['elapsed_seconds'];
-    $update_query = mysqli_query($connection, "UPDATE `orders` SET status = '1', serve_time = '$serve_time' WHERE order_id = '$update_id'");
-        if($update_query){
-           header('location:see-orders.php');
-        };
-    }
 
 ?>
 <!DOCTYPE html>
@@ -69,39 +61,11 @@ include '../conn.php';
         <!-- /.card-tools -->
     </div>
     <!-- /.card-header -->
-    <div class="card-body">
-        <div class="card-columns-container">
-            <?php
-              $result_tb = mysqli_query($connection, "SELECT * FROM `orders`
-                            LEFT JOIN `users` ON orders.user_table = users.user_id
-                            WHERE status = 0");
-                if(mysqli_num_rows($result_tb) > 0){
-                  while ($row = mysqli_fetch_array($result_tb)) { 
-                    $skillsArray = explode(",", $row['total_products']); ?>
-
-                    <form action="see-orders.php" method="post">
-                      <div class="card p-2 mb-2 card-red text-black">
-                        <input type="hidden" name="update_id" value="<?php echo $row["order_id"]; ?>" >
-                        <h2 class="card-title mb-3"><?php echo $row["name"]; ?></h2>
-                        <h6 class="card-subtitle mb-2 text-muted"><?php echo $row["time_date"]; ?></h6>
-                          <?php foreach ($skillsArray as $skill) {
-                            echo "<p class='card-text m-0'>" . trim($skill) . "</p>";
-                            echo "<hr class='bg-dark m-1'>";
-                            } ?>
-                        <p class="card-text m-0">Elapsed time: <span id="timer_<?php echo $row['order_id']; ?>"></span> seconds</p>
-                        <input type="hidden" name="elapsed_seconds" id="elapsed_seconds_<?php echo $row["order_id"]; ?>" value="0">
-
-                        <input type="submit" class="btn btn-md btn-outline-danger w-100 mt-1 serve-order-button" value="SERVE ORDER" name="serve_order">
-                      </div>
-                    </form>
-                  <?php }
-                  } else { ?>
-                    <div>
-                      <p>No available orders!</p>
-                    </div>
-                  <?php }  ?>
-          </div>
-    </div>
+      <div class="card-body" id="see_orders">
+        <div class="card-columns-container" id="ordersContainer">
+          
+        </div>
+      </div>
     <!-- /.card-body -->
     </div>
     <!-- /.card -->
@@ -117,46 +81,25 @@ include '../conn.php';
 </footer>
 </html>
 
-<!-- ... (your HTML code above) ... -->
-
 <script>
-  // JavaScript code to update the timers and elapsed time in real-time
-function updateTimers() {
-  <?php 
-    $result_tb = mysqli_query($connection, "SELECT * FROM `orders` ");
-    if(mysqli_num_rows($result_tb) > 0){
-      while ($row = mysqli_fetch_array($result_tb)) { ?>
+$(document).ready(function() {
+  function updateOrders() {
+    $.ajax({
+      url: 'fetch-orders.php',
+      type: 'GET',
+      success: function (data) {
+        $('#ordersContainer').html(data);
+        // No updateTimers call here
+      },
+      error: function (xhr, status, error) {
+        console.error('Error fetching orders:', error);
+      }
+    });
+  }
 
-        var timerElement_<?php echo $row['order_id']; ?> = document.getElementById('timer_<?php echo $row['order_id']; ?>');
-        var elapsedSecondsElement_<?php echo $row['order_id']; ?> = document.getElementById('elapsed_seconds_<?php echo $row["order_id"]; ?>');
-        var timeDate_<?php echo $row['order_id']; ?> = new Date('<?php echo $row['time_date']; ?>').getTime();
-
-        var interval_<?php echo $row['order_id']; ?> = setInterval(function() {
-          var currentTime = new Date().getTime();
-          var diffMilliseconds = currentTime - timeDate_<?php echo $row['order_id']; ?>;
-          var elapsedSeconds = Math.floor(diffMilliseconds / 1000);
-
-          // Check if elapsed time exceeds 999 seconds
-          if (elapsedSeconds >= 999) {
-            clearInterval(interval_<?php echo $row['order_id']; ?>); // Clear the interval
-            timerElement_<?php echo $row['order_id']; ?>.innerText = '999';
-            elapsedSecondsElement_<?php echo $row['order_id']; ?>.value = 999; // Update the hidden input field
-            timerElement_<?php echo $row['order_id']; ?>.style.color = 'red'; // Change text color to red
-          } else {
-            timerElement_<?php echo $row['order_id']; ?>.innerText = elapsedSeconds;
-            elapsedSecondsElement_<?php echo $row['order_id']; ?>.value = elapsedSeconds; // Update the hidden input field
-          }
-        }, 1000);
-      <?php 
-      } 
-    }
-  ?>
-}
-
-// Call the function to update the timers in real-time
-updateTimers();
-
+  // Uncomment the line below if you want to periodically update orders
+  setInterval(updateOrders, 5000);
+});
 </script>
 
-<!-- ... (your HTML code below) ... -->
 
