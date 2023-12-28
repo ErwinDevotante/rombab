@@ -15,6 +15,9 @@ $log_reports_query = mysqli_query($connection, "SELECT * FROM log_reports
                                                 LEFT JOIN inventory ON inventory.item_id = log_reports.report_item_id
                                                 LEFT JOIN users ON users.user_id = log_reports.report_user_id
                                                 WHERE DATE(date_time) = '$currentDate'");
+$menu_query = mysqli_query($connection, "SELECT summary_products, summary_qty, summary_price, inserted_at, summary_status FROM `summary_orders` 
+                                        WHERE DATE(inserted_at) = '$currentDate' AND summary_status = '1' ORDER BY summary_products ASC");
+$billing_query = mysqli_query($connection, "SELECT total_bill, date_time, pwddisc, seniordisc, bdaydisc FROM billing_history WHERE DATE(date_time) = '$currentDate'");
 
 $i = 1;
 
@@ -132,6 +135,104 @@ $html = '
         </tr>';
         }
         $html .= '</tbody>
+    </table>
+
+    <table>
+        <thead>
+            <tr><th colspan="4">Daily Menu Reports</th></tr>
+            <tr>
+                <th>No</th>
+                <th>Item</th>
+                <th>Qty</th>
+                <th>Price</th>
+            </tr>
+        </thead>
+        <tbody>';
+        $i = 1;
+        $productQuantity = array(); // An associative array to store product quantities
+        $othersBill = 0;
+
+        if (mysqli_num_rows($menu_query) > 0) {
+            while ($row_menu = mysqli_fetch_array($menu_query)) {
+                $product = $row_menu['summary_products'];
+                $quantity = $row_menu['summary_qty'];
+                $price = $row_menu['summary_price'];
+
+                // Check if the product already exists in the array
+                if (isset($productQuantity[$product])) {
+                    // If it does, add the quantity and total price to the existing entry
+                    $productQuantity[$product]['quantity'] += $quantity;
+                    //$productQuantity[$product]['totalPrice'] += $price;
+                } else {
+                    // If it doesn't, create a new entry in the array
+                    $productQuantity[$product] = array('quantity' => $quantity, 'totalPrice' => $price);
+                }
+            }
+
+            // Loop through the array and display product quantities and prices
+            foreach ($productQuantity as $product => $data) {
+                $quantity = $data['quantity'];
+                $totalPrice = $data['totalPrice'];
+                $totalothers = 0;
+                $totalothers = $totalPrice * $quantity;
+
+                $html .= '<tr>
+                    <td>'.$i.'</td>
+                    <td>'.$product.'</td>
+                    <td>'.$quantity.'</td>
+                    <td>'.number_format($totalothers, 2).'</td>
+                </tr>';
+                // Add the product's total price to the overall bill
+                $othersBill = $othersBill + $totalothers;
+                $i++;
+            }
+
+            $html .= '<tr>
+            <td colspan="3" class="text-right">Menu Bill:</td>
+            <td><strong> ₱ '.number_format($othersBill, 2).'</strong></td>
+            </tr>';
+        }        
+        else {
+        $html .='<tr>
+            <td class="text-center" colspan="4">No record found!</td>
+        </tr>';
+        }
+        $html .= '</tbody>
+    </table>
+
+    <table>';
+    $totalBill = 0;
+    $seniorDisc = 0;
+    $pwdDisc = 0;
+    $bdayDisc = 0;
+        if (mysqli_num_rows($billing_query) > 0) {
+            while ($row_billing = mysqli_fetch_array($billing_query)) {
+                $totalBill += $row_billing['total_bill']; // Accumulate total bill
+                $seniorDisc += $row_billing['seniordisc'];
+                $pwdDisc += $row_billing['pwddisc'];
+                $bdayDisc += $row_billing['bdaydisc'];
+            }
+        }
+
+        $html .= '<tr>
+        <td colspan="3" class="text-right">Total Senior Discount:</td>
+        <td><small><strong>₱ '.number_format($seniorDisc, 2).'</small></strong></td>
+        </tr>';
+
+        $html .= '<tr>
+        <td colspan="3" class="text-right">Total PWD Discount:</td>
+        <td><small><strong>₱ '.number_format($pwdDisc, 2).'</small></strong></td>
+        </tr>';
+
+        $html .= '<tr> 
+        <td colspan="3" class="text-right">Total Bday Discount:</td>
+        <td><small><strong>₱ '.number_format($bdayDisc, 2).'</small></strong></td>
+        </tr> ';
+
+        $html .= '<tr>
+        <td colspan="3" class="text-right"><strong>Daily Total Revenue:</strong></td>
+        <td><strong>₱ '.number_format($totalBill, 2).'</strong></td>
+        </tr>
     </table>
 </body>
 </html>';

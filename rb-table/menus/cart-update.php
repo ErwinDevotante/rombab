@@ -49,12 +49,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && (isset($_POST['to_pay']) && isset($
     $bill = $_POST['to_pay'];
     $user = $_POST['userId'];
     $table = $_POST['tableNo'];
+    $pwdDisc = $_POST['pwdDiscount'];
+    $seniorDisc = $_POST['seniorDiscount'];
+    $bdayDisc = $_POST['bdayPromoDiscount'];
 
     date_default_timezone_set('Asia/Manila');
     $time = date('H:i:s');
+    $currentDateTime = date('Y-m-d H:i:s');
 
     // Perform the SQL query to insert data into the billing_history table
-    $insertBillingQuery = "INSERT INTO billing_history (user_id, table_no, total_bill) VALUES ('$user', '$table', '$bill')";
+    $insertBillingQuery = "INSERT INTO billing_history (user_id, table_no, total_bill, pwddisc, seniordisc, bdaydisc, date_time) VALUES ('$user', '$table', '$bill', '$pwdDisc', '$seniorDisc', '$bdayDisc', '$currentDateTime')";
 
         if (mysqli_query($connection, $insertBillingQuery)) {
             // Now, perform the SQL query to update summary_orders

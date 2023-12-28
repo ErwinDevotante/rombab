@@ -217,27 +217,7 @@
             </div>
         </div>
     </div>
-
-    <?php
-        //$check_tableNo = $row['user_id'];
-        //$check_userId = $customer['appointment_id'];
-        //$check_query = mysqli_query($connection, "SELECT * FROM survey WHERE survey_table_no = $check_tableNo AND survey_user_id = $check_userId");
-        //if (mysqli_num_rows($check_query) > 0) {
-         // If there are results in the query, call confirmLogout()
-            //echo '<div class="done-btn text-center">';
-            //echo '<h6 class="text-white"><em>*Note: Please look for the crew to settle the bill and log-out the table.</em></h6>';
-            //echo '<a href="#" onclick="confirmLogout()" class="btn btn-primary">Bill-out <i class="ion-arrow-right-c"></i></a>';
-            //echo '</div>';
-        //} else {
-        // If there are no results, call submitsurvey()
-            //echo '<div class="done-btn text-center">';
-            //echo '<h6 class="text-white"><em>*Note: Please look for the crew to settle the bill and log-out the table.</em></h6>';
-            //echo '<a href="#" onclick="submitSurvey()" class="btn btn-primary">Bill-out <i class="ion-arrow-right-c"></i></a>';
-            //echo '</div>';
-            //}
-        ?>
-
-    
+   
     <footer class="main-footer bg-black text-center">
     <div class="float-right d-none d-sm-block">
         <!-- Additional footer content or links can go here -->
@@ -348,13 +328,20 @@
                 var to_pay = <?php echo $to_pay; ?>;
                 var tableNo = <?php echo $row['user_id']; ?>;
                 var userId = <?php echo $customer['appointment_id']; ?>;
+
+                var seniorDiscount = <?php echo $seniorCount * $afterDiscount; ?>;
+                var pwdDiscount = <?php echo $pwdCount * $afterDiscount; ?>;
+                var bdayPromoDiscount = <?php echo $bdayPromoDiscount; ?>;
             $.ajax({
                 type: "POST",
                 url: "cart-update.php", // Create this PHP file to handle the database operation
                 data: {
                     to_pay: to_pay,
                     userId: userId,
-                    tableNo: tableNo
+                    tableNo: tableNo,
+                    seniorDiscount: seniorDiscount,
+                    pwdDiscount: pwdDiscount,
+                    bdayPromoDiscount: bdayPromoDiscount
                 },
                 success: function(response) {
                     window.location.href = "activated-table.php";
