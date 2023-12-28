@@ -130,9 +130,10 @@ include '../conn.php';
 
                               // Get the average serve time.
                               $averageServeTime = $row_serve_time['avg_serve_time'];
-
+                              echo "<div style='overflow-x:auto;'>";
                               // Display the average serve time inside the small-box.
                               echo "<h1 class='text-center font-weight-bold'>" . round($averageServeTime, 2) . " second/s</h1>";
+                              echo "</div>";
                           } else {
                               // Handle the case where the query fails.
                               echo "<p>Error retrieving average serve time.</p>";
@@ -161,25 +162,29 @@ include '../conn.php';
             <a href="log-reports.php" class="small-box-footer">
               <div class="small-box bg-redbg text-white">
                 <div class="inner">
+                <div style="overflow-x:auto;">
                   <h4 class="font-weight-bold">Inventory Items</h4><p> (Low level stocks less than 20)</p>
-                    <table class="table">
-                      <?php
-                        // Loop through the item data and display item_name and stock in table rows.
-                      if(mysqli_num_rows($result_inventory_item) > 0) {
-                        foreach ($itemData as $item) {
-                          if ($item['stock'] <= 10) {
-                            echo "<tr><td><span class='badge badge-pill badge-warning text-uppercase'>[WARNING] {$item['item_name']}</span></td>";
-                            echo "<td> <span class='badge badge-pill badge-warning text-uppercase'>Stock: {$item['stock']}</span></td></tr>";
-                          } else {
-                          echo "<tr><td>{$item['item_name']}</td>";
-                          echo "<td>Stock: {$item['stock']}</td></tr>";
+                </div>
+                    <div style="overflow-x:auto;">
+                      <table class="table">
+                        <?php
+                          // Loop through the item data and display item_name and stock in table rows.
+                        if(mysqli_num_rows($result_inventory_item) > 0) {
+                          foreach ($itemData as $item) {
+                            if ($item['stock'] <= 10) {
+                              echo "<tr><td><span class='badge badge-pill badge-warning text-uppercase'>[WARNING] {$item['item_name']}</span></td>";
+                              echo "<td> <span class='badge badge-pill badge-warning text-uppercase'>Stock: {$item['stock']}</span></td></tr>";
+                            } else {
+                            echo "<tr><td>{$item['item_name']}</td>";
+                            echo "<td>Stock: {$item['stock']}</td></tr>";
+                            }
                           }
+                        } else {
+                          echo "<tr><td class='text-center' colspan='2'>All stocks are in good levels.</td></tr>";
                         }
-                      } else {
-                        echo "<tr><td class='text-center' colspan='2'>All stocks are in good levels.</td></tr>";
-                      }
-                      ?>
-                    </table>
+                        ?>
+                      </table>
+                    </div>
                   </div>
                     <div class="icon text-white">
                     <i class="ion ion-ios-filing"></i>
@@ -201,6 +206,7 @@ include '../conn.php';
             <a href="log-reports.php" class="small-box-footer">
               <div class="small-box bg-redbg text-white">
                 <div class="inner">
+                <div style="overflow-x:auto;">
                   <h4 class="font-weight-bold">Inventory Reports</h4>
                   <p>Reports for <?php echo $todayDate;?>.</p>
                   <table class="table">
@@ -232,6 +238,7 @@ include '../conn.php';
                       ?>
                     </tbody>
                   </table>
+                </div>
                 </div>
                 <div class="icon text-white">
                   <i class="ion ion-document-text"></i>

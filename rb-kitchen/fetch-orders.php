@@ -14,7 +14,7 @@ if (mysqli_num_rows($result_tb) > 0) {
         echo "<div class='card p-2 mb-2 card-red text-black'>";
         echo "<input type='hidden' name='update_id' value='" . $row["order_id"] . "'>";
         echo "<h2 class='card-title mb-3'>" . $row["name"] . "</h2>";
-        echo "<h6 class='card-subtitle mb-2 text-muted'>" . $row["time_date"] . "</h6>";
+        echo "<h6 class='card-subtitle mb-2 text-muted'>" . date('Y-m-d H:i:s', strtotime($row["time_date"])) . "</h6>";
 
         $skillsArray = explode(",", $row['total_products']);
         foreach ($skillsArray as $skill) {

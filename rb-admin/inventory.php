@@ -48,9 +48,17 @@ include '../conn.php';
         $stock = $currentStock + $additionalStock;
         $status = $_POST['update-status'];
 
+        $currentDateTime = new DateTime();
+        $datetimeValue = $currentDateTime->format('Y-m-d H:i:s'); 
+
         // Perform the UPDATE query to update the inventory record
         $update_query = "UPDATE inventory SET item_name='$item_name', item_desc='$description', unit_of_measure='$oum', stock='$stock', item_status='$status' WHERE item_id='$item_id'";
         $result_update = mysqli_query($connection, $update_query);
+
+        if ($additionalStock != 0) {
+        $log_query = "INSERT INTO log_reports (user_roles, report_item_id, report_qty, report_user_id, date_time, as_archived) VALUES ('{$row['user_role']}', '$item_id', '$additionalStock', '$id', '$datetimeValue', '0')";
+        $result_log = mysqli_query($connection, $log_query);
+        }
 
         if ($result_update) {
             // Redirect back to the inventory.php page after updating
@@ -309,7 +317,7 @@ include '../conn.php';
                                 <div class="input-group-prepend">
                                     <div class="input-group-text">+</div>
                                 </div>
-                                <input type="number" class="form-control" name="add-update-stocks" id="add-update-stocks" step="any" min="0.1" placeholder="Enter Number of Additional Stock" required>
+                                <input type="number" class="form-control" name="add-update-stocks" id="add-update-stocks" step="any" min="0" placeholder="Enter Number of Additional Stock" value="0" required>
                             </div>
                         </div>
 

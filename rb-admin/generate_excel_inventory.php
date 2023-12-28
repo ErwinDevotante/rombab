@@ -72,12 +72,13 @@ if(isset($_POST["export_excel"])) {
     $outputInventory .= '
     <table>
     <thead>
-        <tr><th colspan="5"></tr>
-        <tr><th colspan="5">Daily Inventory Log Report</th></tr>
+        <tr><th colspan="6"></tr>
+        <tr><th colspan="6">Daily Inventory Log Report</th></tr>
         <tr>
             <th>No</th>
             <th>Item</th>
             <th>User</th>
+            <th>Type</th>
             <th>Qty</th>
             <th>Date</th>
         </tr>
@@ -86,14 +87,21 @@ if(isset($_POST["export_excel"])) {
     ';
     $i=1;
     if (mysqli_num_rows($log_reports_query) > 0) {
-        while ($rowInventoryRep = mysqli_fetch_array($log_reports_query)){
+        while ($rowInventoryRep = mysqli_fetch_array($log_reports_query)) {
             $outputInventory .= '
                 <tr>
                     <td>'.$i.'</td>
                     <td>'.$rowInventoryRep['item_name'].'</td>
-                    <td>'.$rowInventoryRep['name'].'</td>
-                    <td>'.$rowInventoryRep['report_qty'].'</td>
-                    <td>'.$rowInventoryRep['date_time'].'</td>
+                    <td>'.$rowInventoryRep['name'].'</td>';
+    
+            // Check user role and adjust the sign accordingly
+            if ($rowInventoryRep['user_roles'] == 3) {
+                $outputInventory .= '<td>-</td>';
+            } else {
+                $outputInventory .= '<td>+</td>';
+            }
+            $outputInventory .= '<td>'.$rowInventoryRep['report_qty'].'</td>';
+            $outputInventory .= '<td>'.$rowInventoryRep['date_time'].'</td>
                 </tr>
             ';
             $i++;

@@ -208,7 +208,7 @@ include '../conn.php';
                     <tr>
                         <th class="text-center" scope="col">ID</th>
                         <th class="text-center" scope="col">Item</th>
-                        <th class="text-center" scope="col">Kitchen User</th>
+                        <th class="text-center" scope="col">User</th>
                         <th class="text-center" scope="col">Quantity</th>
                         <th class="text-center" scope="col">Date and Time</th>
                         <th class="text-center" scope="col">Action</th>
@@ -226,8 +226,12 @@ include '../conn.php';
                                     <td><?php echo $row["item_id"]; ?></td>
                                     <td><?php echo $row["item_name"]; ?></td>
                                     <td><?php echo $row["name"]; ?></td>
-                                    <td><?php echo $row["report_qty"]; ?><?php echo $row["unit_of_measure"]; ?></td>
-                                    <td><?php echo $row["date_time"]; ?></td>
+                                    <?php if($row["user_roles"] == 3) { ?>
+                                        <td><span class="badge badge-danger">- </span><?php echo $row["report_qty"]; ?><?php echo $row["unit_of_measure"]; ?></td>
+                                    <?php } else { ?>
+                                        <td><span class="badge badge-info">+ </span><?php echo $row["report_qty"]; ?><?php echo $row["unit_of_measure"]; ?></td>
+                                    <?php } ?>
+                                    <td><?php echo date('F j, Y | g:i A', strtotime($row["date_time"])) ?></td>
                                     <td>
                                         <form method="POST" enctype="multipart/form-data">
                                             <button type="submit" class="btn btn-xs btn-warning" name="archive_btn_kitchen" value="<?php echo $row["report_id"]; ?>">ARCHIVE <i class="bi bi-archive"></i></button>

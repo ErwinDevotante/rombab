@@ -107,18 +107,25 @@ $html = '
         </thead>
         <tbody>';
         $i = 1;
-        if(mysqli_num_rows($log_reports_query) > 0) {
+        if (mysqli_num_rows($log_reports_query) > 0) {
             while ($row_logs = mysqli_fetch_array($log_reports_query)) {
                 $html .= '<tr>
                     <td>'.$i.'</td>
                     <td>'.$row_logs['item_name'].'</td>
-                    <td>'.$row_logs['name'].'</td>
-                    <td>'.$row_logs['report_qty'].''.$row_logs['unit_of_measure'].'</td>
-                    <td>'.$row_logs['date_time'].'</td>
+                    <td>'.$row_logs['name'].'</td>';
+        
+                // Check user role and adjust the sign accordingly
+                if ($row_logs['user_roles'] == 3) {
+                    $html .= '<td>- '.$row_logs['report_qty'].''.$row_logs['unit_of_measure'].'</td>';
+                } else {
+                    $html .= '<td>+ '.$row_logs['report_qty'].''.$row_logs['unit_of_measure'].'</td>';
+                }
+        
+                $html .= '<td>'.$row_logs['date_time'].'</td>
                 </tr>';
                 $i++;
             }
-        }
+        }        
         else {
         $html .='<tr>
             <td class="text-center" colspan="5">No record found!</td>

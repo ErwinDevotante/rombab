@@ -39,27 +39,34 @@ if (isset($_POST["export_csv"])) {
     }
 
     // Add a separator between stocks and reports
-    fputcsv($output, array());
+fputcsv($output, array());
 
-    fputcsv($output, array('Item', 'Kitchen User', 'Quantity', 'Date and Time'));
-    $query_reports = "SELECT inventory.item_name, users.name, log_reports.report_qty, log_reports.date_time FROM log_reports
-    LEFT JOIN inventory ON inventory.item_id = log_reports.report_item_id
-    LEFT JOIN users ON users.user_id = log_reports.report_user_id
-    WHERE DATE(date_time) = '$currentDate'";
-    $result_reports = mysqli_query($connection, $query_reports);
+fputcsv($output, array('Item', 'Kitchen User', 'Type', 'Quantity', 'Date and Time'));
+$query_reports = "SELECT inventory.item_name, users.name, log_reports.user_roles, log_reports.report_qty, log_reports.date_time FROM log_reports
+LEFT JOIN inventory ON inventory.item_id = log_reports.report_item_id
+LEFT JOIN users ON users.user_id = log_reports.report_user_id
+WHERE DATE(date_time) = '$currentDate'";
+$result_reports = mysqli_query($connection, $query_reports);
 
-    // Check if there are reports
-    if (mysqli_num_rows($result_reports) > 0) {
-        // Write rows for reports
-        while ($row_reports = mysqli_fetch_assoc($result_reports)) {
-            fputcsv($output, $row_reports);
-        }
-    } else {
-        // Write message if there are no reports
-        fputcsv($output, array('No reports found for the specified date'));
+// Check if there are reports
+if (mysqli_num_rows($result_reports) > 0) {
+    // Write rows for reports
+    while ($row_reports = mysqli_fetch_assoc($result_reports)) {
+        // Check user_roles and set the character accordingly
+        $userRolesCharacter = ($row_reports['user_roles'] == 3) ? '-' : '+';
+
+        // Modify the row before writing to CSV
+        $row_reports['user_roles'] = $userRolesCharacter;
+
+        fputcsv($output, $row_reports);
     }
+} else {
+    // Write message if there are no reports
+    fputcsv($output, array('No reports found for the specified date'));
+}
 
-    fclose($output);
+fclose($output);
+
 }
 
 ?>
