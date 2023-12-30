@@ -554,6 +554,20 @@ include 'admin-auth.php';
               </div>
           </div>
 
+          <div class="col-lg-6">
+            <a href="reports.php" class="small-box-footer">
+                <div class="small-box bg-redbg text-white">
+                    <div class="inner">
+                        <h3>Generate Reports</h3>
+                        <p>Daily, Weekly, Monthly, and Annual Reports</p>
+                    </div>
+                    <div class="icon text-white">
+                        <i class="ion ion-printer"></i>
+                    </div>
+                </div>
+            </a>
+          </div>
+
         </div>
         </div>
       </section>

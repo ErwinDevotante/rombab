@@ -55,6 +55,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && (isset($_POST['to_pay']) && isset($
 
     date_default_timezone_set('Asia/Manila');
     $time = date('H:i:s');
+    $currentDate = date('Y-m-d');
     $currentDateTime = date('Y-m-d H:i:s');
 
     // Perform the SQL query to insert data into the billing_history table
@@ -116,7 +117,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && (isset($_POST['submit_tableNo']) &&
     $rating = $_POST['rating'];
 
     // Insert the user's rating into the database
-    $submit_query = "INSERT INTO survey (survey_table_no, survey_user_id, survey_answer) VALUES ($submit_tableNo, $submit_userId, $rating)";
+    $submit_query = "INSERT INTO survey (survey_table_no, survey_user_id, date, survey_answer) VALUES ($submit_tableNo, $submit_userId, '$currentDate', $rating)";
     $submit_result = mysqli_query($connection, $submit_query);
 
     if ($submit_result) {

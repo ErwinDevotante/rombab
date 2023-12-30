@@ -157,8 +157,6 @@ include '../conn.php';
     <script src="https://cdn.datatables.net/1.13.7/js/jquery.dataTables.js"></script>
     <!-- Bootstrap Icons CSS -->
     <link href="../../node_modules/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
-
-</head>
 </head>
 <style>
    /* Custom styling for DataTables */

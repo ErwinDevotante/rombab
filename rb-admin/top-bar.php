@@ -41,7 +41,7 @@ if($_SESSION['user_id'] == ''){
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <input type="password" id="passwordInput" class="form-control" placeholder="Password">
+                    <input type="password" id="passwordInput" class="form-control" placeholder="Enter Password">
                 </div>
                 <div class="modal-footer">
                     <button type="submit" class="btn btn-primary" onclick="checkPassword()">SUBMIT</button>
