@@ -152,7 +152,7 @@ include '../conn.php';
                 <p>End Time: <?php echo date("F d, Y", strtotime($currentDate)) ?></p>
                 <div style="overflow-x:auto;">
                     <div class="btn-group" role="group">
-                        <form method="POST" action="generate_reports/generate_csv_inventory.php" target="_blank">
+                        <form method="POST" action="generate_reports/generate_daily_inventory_report.php" target="_blank">
                             <button type="submit" class="btn btn-danger m-1" name="pdf_creater" value="PDF">PDF <i class="bi bi-file-earmark-pdf"></i></button>
                         </form>
                         <form method="POST" action="generate_reports/generate_excel_inventory.php">

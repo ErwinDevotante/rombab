@@ -1,5 +1,5 @@
 <?php
-include '../conn.php';
+include '../../conn.php';
 $outputInventory = '';
 $i = 1;
 
@@ -224,7 +224,7 @@ if(isset($_POST["export_excel"])) {
 
     $uniqueId = uniqid();
     $fileName = 'daily_report_' . $currentDate . '_' . $uniqueId . '.xls';
-    $filePath = 'daily_reports/' . $fileName; // Replace with the actual path to your folder
+    $filePath = '../daily_reports/' . $fileName; // Replace with the actual path to your folder
     file_put_contents($filePath, $outputInventory);
 
     // Insert file information into the database

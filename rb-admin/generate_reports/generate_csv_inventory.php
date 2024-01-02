@@ -1,5 +1,5 @@
 <?php 
-include '../conn.php';
+include '../../conn.php';
 date_default_timezone_set('Asia/Manila');
 // Get the current date in the Philippines timezone in the format "Y-m-d"
 $currentDate = date('Y-m-d');
@@ -8,7 +8,7 @@ $formattedDate = date("F d, Y", strtotime($currentDate));
 if (isset($_POST["export_csv"])) {
     $uniqueId = uniqid();
     $fileName = 'daily_report_' . $currentDate . '_' . $uniqueId . '.csv';
-    $filePath = 'daily_reports/' . $fileName; // Replace with the actual path to your folder
+    $filePath = '../daily_reports/' . $fileName; // Replace with the actual path to your folder
     file_put_contents($filePath, '');
 
     // Insert file information into the database

@@ -1,25 +1,37 @@
 <?php
-require '../vendor/autoload.php';
+require '../../vendor/autoload.php';
 use Dompdf\Dompdf;
 use Dompdf\Options;
 
-include '../conn.php';
+include '../../conn.php';
 
 date_default_timezone_set('Asia/Manila');
 // Get the current date in the Philippines timezone in the format "Y-m-d"
 $currentDate = date('Y-m-d');
 $formattedDate = date("F d, Y", strtotime($currentDate));
 
-$inventory_query = mysqli_query($connection, "SELECT * FROM inventory WHERE item_status = 0 ORDER BY item_desc ASC");
-$log_reports_query = mysqli_query($connection, "SELECT * FROM log_reports
-                                                LEFT JOIN inventory ON inventory.item_id = log_reports.report_item_id
-                                                LEFT JOIN users ON users.user_id = log_reports.report_user_id
-                                                WHERE DATE(date_time) = '$currentDate'");
-$menu_query = mysqli_query($connection, "SELECT summary_products, summary_qty, summary_price, inserted_at, summary_status FROM `summary_orders` 
-                                        WHERE DATE(inserted_at) = '$currentDate' AND summary_status = '1' ORDER BY summary_products ASC");
-$billing_query = mysqli_query($connection, "SELECT total_bill, date_time, pwddisc, seniordisc, bdaydisc FROM billing_history WHERE DATE(date_time) = '$currentDate'");
 
-$i = 1;
+    $title = 'Daily';
+    $inventory_query = "SELECT * FROM inventory WHERE item_status = 0 ORDER BY item_desc ASC";
+    $log_reports_query = "SELECT * FROM log_reports
+                        LEFT JOIN inventory ON inventory.item_id = log_reports.report_item_id
+                        LEFT JOIN users ON users.user_id = log_reports.report_user_id
+                        WHERE DATE(date_time) = '$currentDate'";
+    $menu_query = "SELECT summary_products, summary_qty, summary_price, inserted_at, summary_status FROM `summary_orders` 
+                WHERE DATE(inserted_at) = '$currentDate' AND summary_status = '1' ORDER BY summary_products ASC";
+    $billing_query = "SELECT total_bill, date_time, pwddisc, seniordisc, bdaydisc FROM billing_history WHERE DATE(date_time) = '$currentDate'";
+    $appointment_query ="SELECT count, date, appointment_session FROM appointment
+                        WHERE appointment_session = '2' AND date = '$currentDate'";
+    $survey_query = "SELECT date, survey_answer FROM survey
+                    WHERE date = '$currentDate'";
+
+    $i = 1;
+    $inventory_result = mysqli_query($connection, $inventory_query);
+    $menu_result = mysqli_query($connection, $menu_query);
+    $log_reports_result = mysqli_query($connection, $log_reports_query);
+    $billing_result = mysqli_query($connection, $billing_query);
+    $appointment_result = mysqli_query($connection, $appointment_query);
+    $survey_result = mysqli_query($connection, $survey_query);
 
 $html = '
 
@@ -30,7 +42,7 @@ $html = '
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Romantic Baboy | Generate Reports</title>
-    <p>Generated on: ' . date('F j, Y | g:i A') . '</p>
+    <p>Generated on: ' . date('F j, Y | g:i A'). '</p>
     <!--Google Fonts-->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -64,10 +76,11 @@ $html = '
         }
 </style>
 <body>
-    <h2>Romantic Baboy Daily Report</h2>
+    <h2>Romantic Baboy '.$title.' Report</h2>
+    
     <table>
         <thead>
-            <tr><th colspan="5">Daily Inventory Report</th></tr>
+            <tr><th colspan="5">'.$title.' Inventory Report</th></tr>
             <tr>
                 <th>No</th>
                 <th>Item</th>
@@ -77,8 +90,8 @@ $html = '
             </tr>
         </thead>
         <tbody>';
-        if(mysqli_num_rows($inventory_query) > 0) {
-            while ($row_inventory = mysqli_fetch_array($inventory_query)) {
+        if(mysqli_num_rows($inventory_result) > 0) {
+            while ($row_inventory = mysqli_fetch_array($inventory_result)) {
             $html .= '<tr>
                     <td>'.$i.'</td>
                     <td>'.$row_inventory['item_name'].'</td>
@@ -96,10 +109,10 @@ $html = '
             }
         $html .= '</tbody>
     </table>
-
+    
     <table>
         <thead>
-            <tr><th colspan="5">Daily Log Report</th></tr>
+            <tr><th colspan="5">'.$title.' Inventory Report</th></tr>
             <tr>
                 <th>No</th>
                 <th>Item</th>
@@ -110,8 +123,8 @@ $html = '
         </thead>
         <tbody>';
         $i = 1;
-        if (mysqli_num_rows($log_reports_query) > 0) {
-            while ($row_logs = mysqli_fetch_array($log_reports_query)) {
+        if (mysqli_num_rows($log_reports_result) > 0) {
+            while ($row_logs = mysqli_fetch_array($log_reports_result)) {
                 $html .= '<tr>
                     <td>'.$i.'</td>
                     <td>'.$row_logs['item_name'].'</td>
@@ -139,7 +152,7 @@ $html = '
 
     <table>
         <thead>
-            <tr><th colspan="4">Daily Menu Reports</th></tr>
+            <tr><th colspan="4">'.$title.' Menu Report</th></tr>
             <tr>
                 <th>No</th>
                 <th>Item</th>
@@ -152,8 +165,8 @@ $html = '
         $productQuantity = array(); // An associative array to store product quantities
         $othersBill = 0;
 
-        if (mysqli_num_rows($menu_query) > 0) {
-            while ($row_menu = mysqli_fetch_array($menu_query)) {
+        if (mysqli_num_rows($menu_result) > 0) {
+            while ($row_menu = mysqli_fetch_array($menu_result)) {
                 $product = $row_menu['summary_products'];
                 $quantity = $row_menu['summary_qty'];
                 $price = $row_menu['summary_price'];
@@ -205,14 +218,49 @@ $html = '
     $seniorDisc = 0;
     $pwdDisc = 0;
     $bdayDisc = 0;
-        if (mysqli_num_rows($billing_query) > 0) {
-            while ($row_billing = mysqli_fetch_array($billing_query)) {
+    $customerCount = 0;
+    $averageSurvey = 0.00;
+
+        if (mysqli_num_rows($billing_result) > 0) {
+            while ($row_billing = mysqli_fetch_array($billing_result)) {
                 $totalBill += $row_billing['total_bill']; // Accumulate total bill
                 $seniorDisc += $row_billing['seniordisc'];
                 $pwdDisc += $row_billing['pwddisc'];
                 $bdayDisc += $row_billing['bdaydisc'];
             }
         }
+
+        if (mysqli_num_rows($appointment_result) > 0) {
+            while ($row_appointment = mysqli_fetch_array($appointment_result)) {
+                $customerCount += $row_appointment['count']; // Accumulate total bill
+            }
+        }
+
+        if (mysqli_num_rows($survey_result) > 0) {
+            $totalSurveyAnswers = 0;
+            $numRows = 0;
+        
+            while ($row_survey = mysqli_fetch_array($survey_result)) {
+                $totalSurveyAnswers += $row_survey['survey_answer'];
+                $numRows++;
+            }
+        
+            if ($numRows > 0) {
+                $averageSurvey = $totalSurveyAnswers / $numRows;
+                $averageSurvey = round($averageSurvey, 2);
+            }
+          
+        }
+
+        $html .= '<tr>
+        <td colspan="3" class="text-right">'.$title.' Customer Count:</td>
+        <td><small><strong>'.$customerCount.'</small></strong></td>
+        </tr>';
+
+        $html .= '<tr>
+        <td colspan="3" class="text-right">'.$title.' Customer Rating:</td>
+        <td><small><strong>'.$averageSurvey.' %</small></strong></td>
+        </tr>';
 
         $html .= '<tr>
         <td colspan="3" class="text-right">Total Senior Discount:</td>
@@ -230,7 +278,7 @@ $html = '
         </tr> ';
 
         $html .= '<tr>
-        <td colspan="3" class="text-right"><strong>Daily Total Revenue:</strong></td>
+        <td colspan="3" class="text-right"><strong>'.$title.' Total Revenue:</strong></td>
         <td><strong>₱ '.number_format($totalBill, 2).'</strong></td>
         </tr>
     </table>
@@ -250,10 +298,10 @@ $dompdf->render();
 $uniqueId = uniqid();
 $NameModified = strtolower(str_replace(' ', '', $formattedDate));
 // Generate the file name with the current time, unique identifier, and equipment name
-$fileName = 'daily_report_' . $NameModified . '_' . $uniqueId . '.pdf';
+$fileName = $title .'_report_' . $NameModified . '_' . $uniqueId . '.pdf';
 
 // Save the PDF to a directory in your file system
-$directoryPath = 'daily_reports/';
+$directoryPath = '../daily_reports/';
 $filePath = $directoryPath . $fileName;
 file_put_contents($filePath, $dompdf->output());
 

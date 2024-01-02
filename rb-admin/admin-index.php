@@ -169,7 +169,7 @@ include 'admin-auth.php';
         <?php
         date_default_timezone_set('Asia/Manila');
         $todayDate = date('Y-m-d');
-        $query_inventory_reports = "SELECT inventory.item_name, users.name, log_reports.report_qty, log_reports.date_time
+        $query_inventory_reports = "SELECT inventory.item_name, users.name, users.user_role, log_reports.report_qty, log_reports.date_time, inventory.unit_of_measure
                                     FROM log_reports
                                     LEFT JOIN inventory ON inventory.item_id = log_reports.report_item_id
                                     LEFT JOIN users ON users.user_id = log_reports.report_user_id
@@ -199,7 +199,11 @@ include 'admin-auth.php';
                         echo "<tr>";
                         echo "<td>{$row_reports['item_name']}</td>";
                         echo "<td>{$row_reports['name']}</td>";
-                        echo "<td>{$row_reports['report_qty']}</td>";
+                        if ($row_reports['user_role'] == 3) {
+                          echo "<td>- {$row_reports['report_qty']}{$row_reports['unit_of_measure']}</td>";
+                        } else {
+                          echo "<td>+ {$row_reports['report_qty']}{$row_reports['unit_of_measure']}</td>";
+                        }
                         // Format date_time in 12-hour time format
                         $formattedTime = date('h:i A', strtotime($row_reports['date_time']));
                         echo "<td>{$formattedTime}</td>";

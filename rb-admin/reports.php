@@ -14,7 +14,7 @@ include '../conn.php';
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Romantic Baboy | Archived Data</title>
+    <title>Romantic Baboy | Generate Report</title>
     <!--Google Fonts-->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -72,22 +72,21 @@ include '../conn.php';
                                 <option value="annually">Annually</option>
                             </select>
                         </div>
-                    
 
                         <div class="form-group col-md-8">
                             <div id="daily" class="date-input form-group col-md-6">
                                 <label for="daily_date">Select Date:</label>
-                                <input type="date" class="form-control" id="daily_date" name="daily_date" value="<?php echo date("Y-m-d"); ?>">
+                                <input type="date" class="form-control" id="daily_date" name="daily_date" value="<?php echo date("Y-m-d"); ?>" max="<?php echo date("Y-m-d"); ?>" min="1900-01">
                             </div>
 
                             <div id="weekly" class="date-input form-group col-md-6">
                                 <label for="weekly_start_date">Select Start Date:</label>
-                                <input type="date" class="form-control" id="weekly_start_date" name="weekly_start_date" value="<?php echo date("Y-m-d"); ?>">
+                                <input type="date" class="form-control" id="weekly_start_date" name="weekly_start_date" value="<?php echo date("Y-m-d");?>" max="<?php echo date("Y-m-d"); ?>" min="1900-01">
                             </div>
 
                             <div id="monthly" class="date-input form-group col-md-6">
                                 <label for="monthly_month">Select Month:</label>
-                                <input type="month" class="form-control" id="monthly_month" name="monthly_month" value="<?php echo date("Y-m"); ?>">
+                                <input type="month" class="form-control" id="monthly_month" name="monthly_month" value="<?php echo date("Y-m"); ?>" max="<?php echo date("Y-m"); ?>" min="1900-01">
                             </div>
 
                             <div id="annually" class="date-input form-group col-md-6">
@@ -96,6 +95,12 @@ include '../conn.php';
                             </div>
                         </div>
                     </div>
+
+                    <input type="hidden" name="selected_duration" id="selected_duration" value="<?php echo isset($_POST["duration"]) ? $_POST["duration"] : ''; ?>">
+                    <input type="hidden" name="selected_annually_year" id="selected_annually_year" value="<?php echo isset($_POST["annually_year"]) ? $_POST["annually_year"] : ''; ?>">
+                    <input type="hidden" name="selected_monthly_month" id="selected_monthly_month" value="<?php echo isset($_POST["monthly_month"]) ? $_POST["monthly_month"] : ''; ?>">
+                    <input type="hidden" name="selected_weekly_start_date" id="selected_weekly_start_date" value="<?php echo isset($_POST["weekly_start_date"]) ? $_POST["weekly_start_date"] : ''; ?>">
+                    <input type="hidden" name="selected_daily_date" id="selected_daily_date" value="<?php echo isset($_POST["daily_date"]) ? $_POST["daily_date"] : ''; ?>">
 
                     <button type="submit" name="show_table" class="btn bg-red">SHOW</button>
                 </form>
@@ -130,6 +135,9 @@ include '../conn.php';
 
                             $survey_query = "SELECT date, survey_answer FROM survey
                                         WHERE date = '$choosenDate'";
+
+                            echo "<h2 class='mt-3'>Romantic Baboy $title Report</h2>";
+                            echo "Date: ". date('F j, Y', strtotime($choosenDate))."<br>";
                         
                         } elseif ($selectedOption == 'weekly') {
                             // For weekly, use the start date and consider the entire week
@@ -155,9 +163,10 @@ include '../conn.php';
 
                             $survey_query = "SELECT date, survey_answer FROM survey
                                         WHERE date BETWEEN '$startOfWeek' AND '$endOfWeek'";
-                                        
-                            echo "Start of Week: $startOfWeek<br>";
-                            echo "End of Week: $endOfWeek<br>";
+                            
+                            echo "<h2 class='mt-3'>Romantic Baboy $title Report</h2>";
+                            echo "Start of Week: ". date('F j, Y', strtotime($startOfWeek))."<br>";
+                            echo "End of Week: ". date('F j, Y', strtotime($endOfWeek))."<br>";
 
                         
                         } elseif ($selectedOption == 'monthly') {
@@ -175,26 +184,28 @@ include '../conn.php';
                             $endOfMonth = $selectedYear . '-' . $selectedMonth . '-' . $lastDayOfMonth;
 
                             $menu_query = "SELECT summary_products, summary_qty, summary_price, inserted_at, summary_status 
-                                        FROM `summary_orders` 
-                                        WHERE DATE(inserted_at) BETWEEN '$selectedMonthYear' AND '$endOfMonth' AND summary_status = '1' 
-                                        ORDER BY summary_products ASC";
-                            
+                                            FROM `summary_orders` 
+                                            WHERE DATE(inserted_at) BETWEEN '$selectedMonthYear-01' AND '$endOfMonth' AND summary_status = '1' 
+                                            ORDER BY summary_products ASC";
+                                                        
                             $log_reports_query = "SELECT * FROM log_reports
-                                        LEFT JOIN inventory ON inventory.item_id = log_reports.report_item_id
-                                        LEFT JOIN users ON users.user_id = log_reports.report_user_id
-                                        WHERE DATE(date_time) BETWEEN '$selectedMonthYear' AND '$endOfMonth'";
+                                                LEFT JOIN inventory ON inventory.item_id = log_reports.report_item_id
+                                                LEFT JOIN users ON users.user_id = log_reports.report_user_id
+                                                WHERE DATE(date_time) BETWEEN '$selectedMonthYear-01' AND '$endOfMonth'";
 
                             $billing_query = "SELECT total_bill, date_time, pwddisc, seniordisc, bdaydisc FROM billing_history 
-                                        WHERE DATE(date_time) BETWEEN '$selectedMonthYear' AND '$endOfMonth'";
+                                            WHERE DATE(date_time) BETWEEN '$selectedMonthYear-01' AND '$endOfMonth'";
 
                             $appointment_query = "SELECT count, date, appointment_session FROM appointment
-                                        WHERE appointment_session = '2' AND date BETWEEN '$selectedMonthYear' AND '$endOfMonth'";
+                                                WHERE appointment_session = '2' AND date BETWEEN '$selectedMonthYear-01' AND '$endOfMonth'";
 
                             $survey_query = "SELECT date, survey_answer FROM survey
-                                        WHERE date BETWEEN '$selectedMonthYear' AND '$endOfMonth'";
+                                            WHERE date BETWEEN '$selectedMonthYear-01' AND '$endOfMonth'";
 
-                            echo "Start of Month: $selectedMonthYear<br>";
-                            echo "End of Month: $endOfMonth<br>";
+
+                            echo "<h2 class='mt-3'>Romantic Baboy $title Report</h2>";
+                            echo "Start of Month: ". date('F j, Y', strtotime($selectedMonthYear))."<br>";
+                            echo "End of Month: ". date('F j, Y', strtotime($endOfMonth))."<br>";
                         
                         } elseif ($selectedOption == 'annually') {
                             // For annually, use the selected year and consider the entire year
@@ -220,7 +231,11 @@ include '../conn.php';
                                         WHERE appointment_session = '2' AND date BETWEEN '$startOfYear' AND '$endOfYear'";
 
                             $survey_query = "SELECT date, survey_answer FROM survey
-                                        WHERE date '$startOfYear' AND '$endOfYear'";
+                                        WHERE date BETWEEN '$startOfYear' AND '$endOfYear'";
+
+                            echo "<h2 class='mt-3'>Romantic Baboy $title Report</h2>";
+                            echo "Start of Year: ". date('F j, Y', strtotime($startOfYear))."<br>";
+                            echo "End of Year: ". date('F j, Y', strtotime($endOfYear))."<br>";
                             
                         }
 
@@ -236,8 +251,53 @@ include '../conn.php';
                             } else {
                                 // Display the table
                                 ?>
-                                <div class="table table-hover table-bordered table-dark mt-5 mb-5">
-                                    <table class="table">
+                                
+                                <div>
+                                    <div class="text-right">
+                                        <a class="btn btn-danger m-1" id="print_button" onclick="printReport()">PRINT <i class="bi bi-file-earmark-pdf"></i></a>             
+                                    </div>
+                                    <table class="table table-hover table-bordered table-dark  mb-5">
+                                        <thead>
+                                            <tr><th colspan="6"><?php echo $title?> Inventory Report</th></tr>
+                                            <tr>
+                                                <th>No</th>
+                                                <th>Item</th>
+                                                <th>User</th>
+                                                <th>Qty</th>
+                                                <th>Time</th>
+                                                <th>Date</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <?php
+                                            $i = 1;
+                                            if (mysqli_num_rows($log_reports_result) > 0) {
+                                                while ($row_logs = mysqli_fetch_array($log_reports_result)) {
+                                                    echo "<tr>";
+                                                        echo "<td>".$i."</td>";
+                                                        echo "<td>".$row_logs['item_name']."</td>";
+                                                        echo "<td>".$row_logs['name']."</td>";
+
+                                                    // Check user role and adjust the sign accordingly
+                                                    if ($row_logs['user_role'] == 3) {
+                                                        echo "<td>- ".$row_logs['report_qty']." ".$row_logs['unit_of_measure']."</td>";
+                                                    } else {
+                                                        echo "<td>+ ".$row_logs['report_qty']." ".$row_logs['unit_of_measure']."</td>";
+                                                    }
+                                                    echo "<td>".date(' g:i A', strtotime($row_logs['date_time']))."</td>";
+                                                    echo "<td>".date('F j, Y', strtotime($row_logs['date_time']))."</td>";
+                                                    echo "<tr>";
+                                                    $i++;
+                                                }
+                                            } else {
+                                                echo "<td class='text-center' colspan='6'>No record available!</td>";
+                                            }   
+                                            
+                                            ?>
+                                        </tbody>
+                                    </table>
+                                    
+                                    <table class="table table-hover table-bordered table-dark mt-5 mb-5">
                                         <thead>
                                             <tr><th colspan="4"><?php echo $title;?> Menu Report</th></tr>
                                             <tr>
@@ -297,47 +357,6 @@ include '../conn.php';
                                             }
                                             ?>
                                         </tbody>
-                                    </table>
-
-                                    <table class="table table-hover table-bordered table-dark mt-5 mb-5">
-                                    <thead>
-                                        <tr><th colspan="6"><?php echo $title?> Inventory Report</th></tr>
-                                        <tr>
-                                            <th>No</th>
-                                            <th>Item</th>
-                                            <th>User</th>
-                                            <th>Qty</th>
-                                            <th>Time</th>
-                                            <th>Date</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <?php
-                                        $i = 1;
-                                        if (mysqli_num_rows($log_reports_result) > 0) {
-                                            while ($row_logs = mysqli_fetch_array($log_reports_result)) {
-                                                echo "<tr>";
-                                                    echo "<td>".$i."</td>";
-                                                    echo "<td>".$row_logs['item_name']."</td>";
-                                                    echo "<td>".$row_logs['name']."</td>";
-
-                                                // Check user role and adjust the sign accordingly
-                                                if ($row_logs['user_roles'] == 3) {
-                                                    echo "<td>- ".$row_logs['report_qty']." ".$row_logs['unit_of_measure']."</td>";
-                                                } else {
-                                                    echo "<td>+ ".$row_logs['report_qty']." ".$row_logs['unit_of_measure']."</td>";
-                                                }
-                                                echo "<td>".date(' g:i A', strtotime($row_logs['date_time']))."</td>";
-                                                echo "<td>".date('F j, Y', strtotime($row_logs['date_time']))."</td>";
-                                                echo "<tr>";
-                                                $i++;
-                                            }
-                                        } else {
-                                            echo "<td class='text-center' colspan='6'>No record available!</td>";
-                                        }   
-                                        
-                                        ?>
-                                    </tbody>
                                     </table>
 
                                     <table class="table table-hover table-bordered table-dark mt-5 mb-5">
@@ -407,8 +426,7 @@ include '../conn.php';
                                         echo "<tr>";
                                         echo "<td colspan='3' class='text-left'><strong>".$title." Total Revenue:</strong></td>";
                                         echo "<td><strong>₱ ".number_format($totalBill, 2)."</strong></td>";
-                                        echo "</tr>";
-                                    
+                                        echo "</tr>";       
                                     ?>
                                     </table>
                                 </div>
@@ -420,11 +438,6 @@ include '../conn.php';
                     }
                 }
             ?>
-            <div class="text-center">
-            <form method="POST" action="#" target="_blank">
-                <button type="submit" class="btn btn-danger m-1" name="pdf_creater">PRINT <i class="bi bi-file-earmark-pdf"></i></button>
-            </form>
-            </div>
             </div>
         </div>
     </div>
@@ -440,6 +453,7 @@ include '../conn.php';
 </html>
 
 <script>
+
     document.getElementById('duration').addEventListener('change', function () {
     var duration = this.value;
     var dateInputs = document.getElementsByClassName('date-input');
@@ -453,6 +467,40 @@ include '../conn.php';
     }
     });
 
+    // Function to handle PRINT button click
+    function printReport() {
+        // Read the duration value using jQuery
+        var duration = $("#selected_duration").val();
+        var startDate = '';
+
+        // Check if a duration is selected
+        if (duration) {
+            // Set startDate based on the selected duration
+            if (duration === 'annually') {
+                startDate = $("#selected_annually_year").val();
+            } else if (duration === 'monthly') {
+                startDate = $("#selected_monthly_month").val();
+            } else if (duration === 'weekly') {
+                startDate = $("#selected_weekly_start_date").val();
+            } else if (duration === 'daily') {
+                startDate = $("#selected_daily_date").val();
+            }
+
+            // Redirect to report.php with the duration and startDate as parameters in the URL
+            var url = "generate_reports/generate_reports.php?duration=" + duration + "&startDate=" + startDate;
+
+            // Open the URL in a new tab
+            var newTab = window.open(url, '_blank');
+            newTab.focus(); // Focus on the new tab
+        } else {
+            // Display an error message or take appropriate action
+            alert("Please select a duration before printing.");
+        }
+    }
+
+    
+
     // Trigger the change event to display the correct date input on page load
     document.getElementById('duration').dispatchEvent(new Event('change'));
+
 </script>
