@@ -572,6 +572,20 @@ include 'admin-auth.php';
             </a>
           </div>
 
+          <div class="col-lg-6">
+            <a href="activity-logs.php" class="small-box-footer">
+                <div class="small-box bg-redbg text-white">
+                    <div class="inner">
+                        <h3>Activity Log</h3>
+                        <p>Monitor Activity Logs</p>
+                    </div>
+                    <div class="icon text-white">
+                        <i class="ion ion-clock"></i>
+                    </div>
+                </div>
+            </a>
+          </div>
+
         </div>
         </div>
       </section>

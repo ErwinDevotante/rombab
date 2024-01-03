@@ -4,50 +4,26 @@ session_start();
 if(!empty($_SESSION["user_id"])){
   header("Location: index.php");
 }
-if(isset($_POST["submit"])){
+if (isset($_POST["submit"])) {
   $username = $_POST["username"];
   $password = $_POST["password"];
   $result = mysqli_query($connection, "SELECT * FROM users WHERE username = '$username'");
   $row = mysqli_fetch_assoc($result);
-  if(mysqli_num_rows($result) > 0){
-    if($password == $row['password'] && $row['user_id'] !== null){
-      $_SESSION["login"] = true;
-      $_SESSION["user_id"] = $row["user_id"];
-      $_SESSION['success'] = true;
-      //if($roles == 1){ //super_admin
-        //$_SESSION['success'] = true;
-        //echo 'window.location.href = "rb-admin/admin-index.php";';
-        //header("Location: rb-admin/admin-index.php");
-
-        //echo '<script type="text/javascript">'; 
-        //echo $_SESSION['success'] = true; echo 'window.location.href = "rb-admin/admin-index.php";';
-        //echo '</script>';
-      //}
-      //else if($roles == 2){ //admin
-        //echo '<script type="text/javascript">'; 
-        //echo 'alert("Log-in Sucessfully!");'; echo 'window.location.href = "rb-admin/admin-index.php";';
-        //echo '</script>';
-      //}
-      //else if($roles == 3){ //kitchen
-        //echo '<script type="text/javascript">'; 
-        //echo 'alert("Log-in Sucessfully!");'; echo 'window.location.href = "rb-kitchen/kitchen-index.php";';
-        //echo '</script>';
-      //}
-      //else if($roles == 4){ //table
-        //echo '<script type="text/javascript">'; 
-        //echo 'alert("Log-in Sucessfully!");'; echo 'window.location.href = "rb-table/table-index.php";';
-        //echo '</script>';
-      //} else if($roles == 5){ //appointment
-        //echo '<script type="text/javascript">'; 
-        //echo 'alert("Log-in Sucessfully!");'; echo 'window.location.href = "rb-admin/admin-index.php";';
-        //echo '</script>';
-      //}
-    } else {
+  if (mysqli_num_rows($result) > 0) {
+      if ($password == $row['password'] && $row['user_id'] !== null) {
+          $_SESSION["login"] = true;
+          $_SESSION["user_id"] = $row["user_id"];
+          date_default_timezone_set('Asia/Manila');
+          $user_log = $_SESSION["user_id"];
+          $action = "Log-In";
+          $dateTime = date('Y-m-d H:i:s');
+          mysqli_query($connection, "INSERT INTO activity_log (log_user_id, action, date_time) VALUES ('$user_log', '$action', '$dateTime')");
+          $_SESSION['success'] = true;
+      } else {
+          $_SESSION['unsuccess'] = true;
+      }
+  } else {
       $_SESSION['unsuccess'] = true;
-    }
-  }
-  else{
-    $_SESSION['unsuccess'] = true;
   }
 }
 
@@ -55,7 +31,7 @@ if(isset($_POST["submit"])){
 $deleteThreshold = date('Y-m-d H:i:s', strtotime('-30 days'));
 
 // Deleting data from summary_orders
-mysqli_query($connection, "DELETE FROM summary_orders WHERE inserted_at <= '$deleteThreshold'");
+//mysqli_query($connection, "DELETE FROM summary_orders WHERE inserted_at <= '$deleteThreshold'");
 
 // Deleting data from inventory_archive
 mysqli_query($connection, "DELETE FROM inventory_archive WHERE archived_at <= '$deleteThreshold'");

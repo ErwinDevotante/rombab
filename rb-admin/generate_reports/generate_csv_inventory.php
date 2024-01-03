@@ -7,7 +7,7 @@ $formattedDate = date("F d, Y", strtotime($currentDate));
 
 if (isset($_POST["export_csv"])) {
     $uniqueId = uniqid();
-    $fileName = 'daily_report_' . $currentDate . '_' . $uniqueId . '.csv';
+    $fileName = 'daily_inventory_report_' . $currentDate . '_' . $uniqueId . '.csv';
     $filePath = '../daily_reports/' . $fileName; // Replace with the actual path to your folder
     file_put_contents($filePath, '');
 

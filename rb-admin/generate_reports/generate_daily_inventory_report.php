@@ -298,7 +298,7 @@ $dompdf->render();
 $uniqueId = uniqid();
 $NameModified = strtolower(str_replace(' ', '', $formattedDate));
 // Generate the file name with the current time, unique identifier, and equipment name
-$fileName = $title .'_report_' . $NameModified . '_' . $uniqueId . '.pdf';
+$fileName = 'daily_inventory_report_' . $NameModified . '_' . $uniqueId . '.pdf';
 
 // Save the PDF to a directory in your file system
 $directoryPath = '../daily_reports/';

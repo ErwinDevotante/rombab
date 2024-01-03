@@ -65,8 +65,22 @@ if($_SESSION['user_id'] == ''){
 
             // Check if the entered password is correct
             if (enteredPassword === "<?php echo $row['password'];?>") {
-                // Redirect to the logout page if the password is correct
-                window.location.href = "../../../log-out.php";
+                // Log the logout action in the activity_log table
+                var userId = "<?php echo $row['user_id'];?>";
+                var action = "Log-Out";
+
+                $.ajax({
+                    type: "POST",
+                    url: "log-activity.php", // Adjust the URL to the appropriate script
+                    data: { userId: userId, action: action },
+                    success: function(response) {
+                        // Redirect to the logout page if the password is correct
+                        window.location.href = "../../../log-out.php";
+                    },
+                    error: function() {
+                        alert("Failed to log the logout action.");
+                    }
+                });
             } else {
                 // Show an alert if the password is incorrect
                 alert("Incorrect password. Logout action canceled.");

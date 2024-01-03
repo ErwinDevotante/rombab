@@ -91,7 +91,7 @@ include '../conn.php';
 
                             <div id="annually" class="date-input form-group col-md-6">
                                 <label for="annually_year">Select Year:</label>
-                                <input type="number" class="form-control" id="annually_year" name="annually_year" min="1900" max="2100" step="1" value="<?php echo date("Y"); ?>">
+                                <input type="text" class="form-control" id="annually_year" name="annually_year" maxlength="4" required value="<?php echo date("Y"); ?>" oninput="validateInput(this)">
                             </div>
                         </div>
                     </div>
@@ -254,7 +254,9 @@ include '../conn.php';
                                 
                                 <div>
                                     <div class="text-right">
-                                        <a class="btn btn-danger m-1" id="print_button" onclick="printReport()">PRINT <i class="bi bi-file-earmark-pdf"></i></a>             
+                                        <a class="btn btn-danger mb-1" onclick="printPDFReport()"><i class="bi bi-file-earmark-pdf"></i></a>
+                                        <a class="btn btn-success mb-1" onclick="printEXCELReport()"><i class="bi bi-file-earmark-excel"></i></a>
+                                        <a class="btn btn-info mb-1" onclick="printCSVReport()"><i class="bi bi-filetype-csv"></i></a>       
                                     </div>
                                     <table class="table table-hover table-bordered table-dark  mb-5">
                                         <thead>
@@ -468,7 +470,7 @@ include '../conn.php';
     });
 
     // Function to handle PRINT button click
-    function printReport() {
+    function printPDFReport() {
         // Read the duration value using jQuery
         var duration = $("#selected_duration").val();
         var startDate = '';
@@ -487,7 +489,7 @@ include '../conn.php';
             }
 
             // Redirect to report.php with the duration and startDate as parameters in the URL
-            var url = "generate_reports/generate_reports.php?duration=" + duration + "&startDate=" + startDate;
+            var url = "generate_reports/generate_pdf_reports.php?duration=" + duration + "&startDate=" + startDate;
 
             // Open the URL in a new tab
             var newTab = window.open(url, '_blank');
@@ -498,6 +500,18 @@ include '../conn.php';
         }
     }
 
+    function validateInput(input) {
+        input.value = input.value.replace(/[^0-9eE]/g, ''); // Remove any non-numeric or non-'e' characters
+        if (input.value.length > 4) {
+            input.value = input.value.slice(0, 4); // Limit to 4 characters
+        }
+
+        // Enforce a maximum value of the current year
+        var currentYear = new Date().getFullYear();
+        if (parseInt(input.value) > currentYear) {
+            input.value = currentYear.toString();
+        }
+    }
     
 
     // Trigger the change event to display the correct date input on page load

@@ -223,7 +223,7 @@ if(isset($_POST["export_excel"])) {
     </table>';
 
     $uniqueId = uniqid();
-    $fileName = 'daily_report_' . $currentDate . '_' . $uniqueId . '.xls';
+    $fileName = 'daily_inventory_report_' . $currentDate . '_' . $uniqueId . '.xls';
     $filePath = '../daily_reports/' . $fileName; // Replace with the actual path to your folder
     file_put_contents($filePath, $outputInventory);
 
