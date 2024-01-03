@@ -397,7 +397,7 @@ if ($duration == 'annually') {
 } elseif ($duration == 'weekly') {
     $NameModified = strtolower(str_replace(' ', '', date('F j, Y', strtotime($startOfWeek)).'-'. date('F j, Y', strtotime($endOfWeek))));
 } elseif ($duration == 'daily') {
-    $NameModified = strtolower(str_replace(' ', '', $choosenDate));
+    $NameModified = strtolower(str_replace(' ', '', date('F j, Y', strtotime($choosenDate))));
 }
 // Generate the file name with the current time, unique identifier, and equipment name
 $fileName = $title .'_report_' . $NameModified . '_' . $uniqueId . '.pdf';

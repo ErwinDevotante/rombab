@@ -41,7 +41,7 @@ if (isset($_POST["export_csv"])) {
 
 // Add a separator between stocks and reports
 fputcsv($output, array());
-fputcsv($output, array('Daily Log Report'));
+fputcsv($output, array('Daily Inventory Report'));
 fputcsv($output, array('Item', 'Kitchen User', 'Type', 'Quantity', 'Date and Time'));
 $query_reports = "SELECT inventory.item_name, users.name, log_reports.user_roles, log_reports.report_qty, log_reports.date_time FROM log_reports
 LEFT JOIN inventory ON inventory.item_id = log_reports.report_item_id
@@ -64,90 +64,6 @@ if (mysqli_num_rows($result_reports) > 0) {
 } else {
     // Write message if there are no reports
     fputcsv($output, array('No reports found for the specified date'));
-}
-
-fputcsv($output, array());
-
-// Output CSV for Daily Menu Report
-fputcsv($output, array('Daily Menu Report'));
-fputcsv($output, array('Item', 'Qty', 'Price'));
-
-$productQuantity = array(); // An associative array to store product quantities
-$othersBill = 0;
-
-$menu_query = mysqli_query($connection, "SELECT summary_products, summary_qty, summary_price FROM `summary_orders` 
-                                        WHERE DATE(inserted_at) = '$currentDate' AND summary_status = '1' ORDER BY summary_products ASC");
-
-if (mysqli_num_rows($menu_query) > 0) {
-    while ($row_menu = mysqli_fetch_array($menu_query)) {
-        $product = $row_menu['summary_products'];
-        $quantity = $row_menu['summary_qty'];
-        $price = $row_menu['summary_price'];
-
-        // Check if the product already exists in the array
-        if (isset($productQuantity[$product])) {
-            // If it does, add the quantity and total price to the existing entry
-            $productQuantity[$product]['quantity'] += $quantity;
-            //$productQuantity[$product]['totalPrice'] += $price;
-        } else {
-            // If it doesn't, create a new entry in the array
-            $productQuantity[$product] = array('quantity' => $quantity, 'totalPrice' => $price);
-        }
-    }
-
-    // Output CSV headers
-    fputcsv($output, array('No', 'Item', 'Qty', 'Total Price'));
-
-    $i = 1;
-
-    // Loop through the array and output CSV rows
-    foreach ($productQuantity as $product => $data) {
-        $quantity = $data['quantity'];
-        $totalPrice = $data['totalPrice'];
-        $totalothers = $totalPrice * $quantity;
-
-        // Output CSV row
-        fputcsv($output, array($i, $product, $quantity, number_format($totalothers, 2)));
-
-        // Add the product's total price to the overall bill
-        $othersBill = $othersBill + $totalothers;
-
-        $i++;
-    }
-
-    // Output CSV row for Menu Bill
-    fputcsv($output, array('Menu Bill', '', '', ''. number_format($othersBill, 2)));
-} else {
-    // Output CSV row if no records found
-    fputcsv($output, array('No record found!'));
-}
-
-fputcsv($output, array());
-
-$totalBill = 0;
-$seniorDisc = 0;
-$pwdDisc = 0;
-$bdayDisc = 0;
-
-$billing_query = mysqli_query($connection, "SELECT total_bill, date_time, pwddisc, seniordisc, bdaydisc FROM billing_history 
-                                            WHERE DATE(date_time) = '$currentDate'");
-
-if (mysqli_num_rows($billing_query) > 0) {
-    while ($row_billing = mysqli_fetch_array($billing_query)) {
-        $totalBill += $row_billing['total_bill']; // Accumulate total bill
-        $seniorDisc += $row_billing['seniordisc'];
-        $pwdDisc += $row_billing['pwddisc'];
-        $bdayDisc += $row_billing['bdaydisc'];
-    }
-
-    // Output CSV rows for discount information
-    fputcsv($output, array('Total Senior Discount', '', '', '' . number_format($seniorDisc, 2)));
-    fputcsv($output, array('Total PWD Discount', '', '', '' . number_format($pwdDisc, 2)));
-    fputcsv($output, array('Total Bday Discount', '', '', '' . number_format($bdayDisc, 2)));
-    fputcsv($output, array('Daily Total Revenue', '', '', '' . number_format($totalBill, 2)));
-} else {
-    // Output CSV row if no records found
-    fputcsv($output, array('No record found!'));
 }
 
 fclose($output);

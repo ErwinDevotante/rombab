@@ -1,0 +1,183 @@
+
+            <style>
+            table {
+                width: 100%;
+                border-collapse: collapse;
+                margin-bottom: 20px;
+            }
+            th, td {
+                border: 1px solid #4444;
+                padding: 8px;
+                text-align: left;
+                width: 100px; /* Set your desired width here */
+            }
+            th {
+                background-color: #8b0000;
+                color: white;
+            }
+            </style>
+            <table>
+            <thead>
+                <tr><th colspan="5">Generated on: January 3, 2024 | 10:40 PM</tr>
+                <tr><th colspan="5"></tr>
+                <tr><th colspan="5">Romantic Baboy Annually Report</th></tr><tr><th colspan="5">January 1, 2023 -
+                    December 31, 2023</th></tr></thead>
+            </table>
+
+            <table>
+            <thead>
+                <tr><th colspan="6"></tr>
+                <tr><th colspan="6">Annually Inventory Report</th></tr>
+                <tr>
+                    <th>No</th>
+                    <th>Item</th>
+                    <th>User</th>
+                    <th>Type</th>
+                    <th>Qty</th>
+                    <th>Date</th>
+                </tr>
+            </thead>
+            <tbody>
+            
+                        <tr>
+                            <td>1</td>
+                            <td>Pork Belly-Seara</td>
+                            <td>Chef Dizzy</td><td>-</td><td>2</td><td>2023-12-08 15:52:07</td>
+                        </tr>
+                    
+                        <tr>
+                            <td>2</td>
+                            <td>Royal Tru Orange 320ml</td>
+                            <td>Chef Dizzy</td><td>-</td><td>12</td><td>2023-12-08 21:26:50</td>
+                        </tr>
+                    
+                        <tr>
+                            <td>3</td>
+                            <td>Coke Regular 320ml</td>
+                            <td>Chef Dizzy</td><td>-</td><td>20</td><td>2023-12-08 21:26:59</td>
+                        </tr>
+                    
+                        <tr>
+                            <td>4</td>
+                            <td>Kkimchi 10kg/box</td>
+                            <td>Chef Dizzy</td><td>-</td><td>1</td><td>2023-12-15 22:08:38</td>
+                        </tr>
+                    
+                        <tr>
+                            <td>5</td>
+                            <td>Royal Tru Orange 320ml</td>
+                            <td>Chef Dizzy</td><td>-</td><td>2</td><td>2023-12-27 16:03:48</td>
+                        </tr>
+                    
+                        <tr>
+                            <td>6</td>
+                            <td>Sprite Regular 320ml</td>
+                            <td>Chef Dizzy</td><td>-</td><td>1</td><td>2023-12-27 16:26:19</td>
+                        </tr>
+                    
+                        <tr>
+                            <td>7</td>
+                            <td>Kkimchi 10kg/box</td>
+                            <td>Alvz Buenafe</td><td>+</td><td>3</td><td>2023-12-27 16:36:56</td>
+                        </tr>
+                    
+                        <tr>
+                            <td>8</td>
+                            <td>Chunilyum 3kg/pack</td>
+                            <td>Alvz Buenafe</td><td>+</td><td>2</td><td>2023-12-28 13:12:56</td>
+                        </tr>
+                    
+                        <tr>
+                            <td>9</td>
+                            <td>Pork-Loin</td>
+                            <td>Chef Dizzy</td><td>-</td><td>3</td><td>2023-12-28 14:45:20</td>
+                        </tr>
+                    
+                        <tr>
+                            <td>10</td>
+                            <td>Kkimchi 10kg/box</td>
+                            <td>Alvz Buenafe</td><td>+</td><td>1</td><td>2023-12-31 15:08:37</td>
+                        </tr>
+                    
+            </tbody>
+            </table>
+
+            <table>
+            <thead>
+                <tr><th colspan="6"></tr>
+                <tr><th colspan="4">Annually Menu Report</th></tr>
+                <tr>
+                    <th>No</th>
+                    <th>Item</th>
+                    <th>Qty</th>
+                    <th>Price</th>
+                </tr>
+            </thead>
+            <tbody>
+            <tr>
+                        <td>1</td>
+                        <td>Bibimbap</td>
+                        <td>3</td>
+                        <td>900.00</td>
+                    </tr><tr>
+                        <td>2</td>
+                        <td>Cheese</td>
+                        <td>1</td>
+                        <td>0.00</td>
+                    </tr><tr>
+                        <td>3</td>
+                        <td>Jeyuk Daepae</td>
+                        <td>1</td>
+                        <td>0.00</td>
+                    </tr><tr>
+                        <td>4</td>
+                        <td>Lettuce</td>
+                        <td>11</td>
+                        <td>0.00</td>
+                    </tr><tr>
+                        <td>5</td>
+                        <td>Misoo Soup</td>
+                        <td>3</td>
+                        <td>0.00</td>
+                    </tr><tr>
+                        <td>6</td>
+                        <td>Royal Can</td>
+                        <td>2</td>
+                        <td>60.00</td>
+                    </tr><tr>
+                        <td>7</td>
+                        <td>Sprite Can</td>
+                        <td>6</td>
+                        <td>120.00</td>
+                    </tr><tr>
+                        <td>8</td>
+                        <td>Stir Dried Fish Cake</td>
+                        <td>1</td>
+                        <td>0.00</td>
+                    </tr><tr>
+                    <td colspan="3" class="text-right">Menu Bill:</td>
+                    <td><strong>1,080.00</strong></td>
+                    </tr>
+            </tbody>
+            </table>
+
+            <table><tr>
+                    <td colspan="3" class="text-right">Annually Customer Count:</td>
+                    <td><small><strong>62</small></strong></td>
+                    </tr><tr>
+                    <td colspan="3" class="text-right">Annually Customer Rating:</td>
+                    <td><small><strong>9.1 %</small></strong></td>
+                    </tr><tr>
+                    <td colspan="3" class="text-right">Total Senior Discount:</td>
+                    <td><small><strong>219.60</small></strong></td>
+                    </tr><tr>
+                    <td colspan="3" class="text-right">Total PWD Discount:</td>
+                    <td><small><strong>109.80</small></strong></td>
+                    </tr><tr> 
+                    <td colspan="3" class="text-right">Total Bday Discount:</td>
+                    <td><small><strong>549.00</small></strong></td>
+                    </tr> <tr>
+                    <td colspan="3" class="text-right"><strong>Daily Total Revenue:</strong></td>
+                    <td><strong>7,258.60</strong></td>
+                    </tr>
+            </table>

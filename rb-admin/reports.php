@@ -500,6 +500,66 @@ include '../conn.php';
         }
     }
 
+    function printEXCELReport() {
+        // Read the duration value using jQuery
+        var duration = $("#selected_duration").val();
+        var startDate = '';
+
+        // Check if a duration is selected
+        if (duration) {
+            // Set startDate based on the selected duration
+            if (duration === 'annually') {
+                startDate = $("#selected_annually_year").val();
+            } else if (duration === 'monthly') {
+                startDate = $("#selected_monthly_month").val();
+            } else if (duration === 'weekly') {
+                startDate = $("#selected_weekly_start_date").val();
+            } else if (duration === 'daily') {
+                startDate = $("#selected_daily_date").val();
+            }
+
+            // Redirect to report.php with the duration and startDate as parameters in the URL
+            var url = "generate_reports/generate_excel_reports.php?duration=" + duration + "&startDate=" + startDate;
+
+            // Open the URL in a new tab
+            var newTab = window.open(url, '_blank');
+            newTab.focus(); // Focus on the new tab
+        } else {
+            // Display an error message or take appropriate action
+            alert("Please select a duration before printing.");
+        }
+    }
+
+    function printCSVReport() {
+        // Read the duration value using jQuery
+        var duration = $("#selected_duration").val();
+        var startDate = '';
+
+        // Check if a duration is selected
+        if (duration) {
+            // Set startDate based on the selected duration
+            if (duration === 'annually') {
+                startDate = $("#selected_annually_year").val();
+            } else if (duration === 'monthly') {
+                startDate = $("#selected_monthly_month").val();
+            } else if (duration === 'weekly') {
+                startDate = $("#selected_weekly_start_date").val();
+            } else if (duration === 'daily') {
+                startDate = $("#selected_daily_date").val();
+            }
+
+            // Redirect to report.php with the duration and startDate as parameters in the URL
+            var url = "generate_reports/generate_csv_reports.php?duration=" + duration + "&startDate=" + startDate;
+
+            // Open the URL in a new tab
+            var newTab = window.open(url, '_blank');
+            newTab.focus(); // Focus on the new tab
+        } else {
+            // Display an error message or take appropriate action
+            alert("Please select a duration before printing.");
+        }
+    }
+
     function validateInput(input) {
         input.value = input.value.replace(/[^0-9eE]/g, ''); // Remove any non-numeric or non-'e' characters
         if (input.value.length > 4) {

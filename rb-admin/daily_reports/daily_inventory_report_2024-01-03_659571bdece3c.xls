@@ -1,0 +1,161 @@
+
+    <style>
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-bottom: 20px;
+    }
+    th, td {
+        border: 1px solid #4444;
+        padding: 8px;
+        text-align: left;
+        width: 100px; /* Set your desired width here */
+    }
+    th {
+        background-color: #8b0000;
+        color: white;
+    }
+    </style>
+    <table>
+    <thead>
+        <tr><th colspan="5">Generated on: January 3, 2024 | 10:39 PM</tr>
+        <tr><th colspan="5"></tr>
+        <tr><th colspan="5">Daily Inventory Report</th></tr>
+        <tr>
+            <th>No</th>
+            <th>Item</th>
+            <th>Description</th>
+            <th>OUM</th>
+            <th>Available Stocks</th>
+        </tr>
+    </thead>
+    <tbody>
+    
+                <tr>
+                    <td>1</td>
+                    <td>Coke Regular 320ml</td>
+                    <td>Beverages</td>
+                    <td>can</td>
+                    <td>96</td>
+                </tr>
+            
+                <tr>
+                    <td>2</td>
+                    <td>Sprite Regular 320ml</td>
+                    <td>Beverages</td>
+                    <td>can</td>
+                    <td>97</td>
+                </tr>
+            
+                <tr>
+                    <td>3</td>
+                    <td>Royal Tru Orange 320ml</td>
+                    <td>Beverages</td>
+                    <td>can</td>
+                    <td>88</td>
+                </tr>
+            
+                <tr>
+                    <td>4</td>
+                    <td>Pork Belly-Seara</td>
+                    <td>Meats</td>
+                    <td>kg</td>
+                    <td>131</td>
+                </tr>
+            
+                <tr>
+                    <td>5</td>
+                    <td>Chicken Leg-Boneless</td>
+                    <td>Meats</td>
+                    <td>kg</td>
+                    <td>32</td>
+                </tr>
+            
+                <tr>
+                    <td>6</td>
+                    <td>Beef Shortplate</td>
+                    <td>Meats</td>
+                    <td>kg</td>
+                    <td>235.71</td>
+                </tr>
+            
+                <tr>
+                    <td>7</td>
+                    <td>Smoked - Pork Belly</td>
+                    <td>Meats</td>
+                    <td>kg</td>
+                    <td>23.29</td>
+                </tr>
+            
+                <tr>
+                    <td>8</td>
+                    <td>Scallops</td>
+                    <td>Meats</td>
+                    <td>kg</td>
+                    <td>24</td>
+                </tr>
+            
+                <tr>
+                    <td>9</td>
+                    <td>Pork-Loin</td>
+                    <td>Meats</td>
+                    <td>kg</td>
+                    <td>69</td>
+                </tr>
+            
+                <tr>
+                    <td>10</td>
+                    <td>Coke Zero 320ml</td>
+                    <td>Meats</td>
+                    <td>kg</td>
+                    <td>28</td>
+                </tr>
+            
+                <tr>
+                    <td>11</td>
+                    <td>Matsugom 2kg</td>
+                    <td>Meats</td>
+                    <td>kg</td>
+                    <td>29</td>
+                </tr>
+            
+                <tr>
+                    <td>12</td>
+                    <td>Chunilyum 3kg/pack</td>
+                    <td>Meats</td>
+                    <td>pack</td>
+                    <td>28</td>
+                </tr>
+            
+                <tr>
+                    <td>13</td>
+                    <td>Kkimchi 10kg/box</td>
+                    <td>Meats</td>
+                    <td>kg</td>
+                    <td>28</td>
+                </tr>
+            
+    </tbody>
+    </table>
+
+    <table>
+    <thead>
+        <tr><th colspan="6"></tr>
+        <tr><th colspan="6">Daily Inventory Report</th></tr>
+        <tr>
+            <th>No</th>
+            <th>Item</th>
+            <th>User</th>
+            <th>Type</th>
+            <th>Qty</th>
+            <th>Date</th>
+        </tr>
+    </thead>
+    <tbody>
+    
+            <tr>
+                <td colspan="5">No record found!</td>
+            </tr>
+        
+    </tbody>
+    </table>
