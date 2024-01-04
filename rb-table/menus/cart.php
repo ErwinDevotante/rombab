@@ -75,10 +75,12 @@
                 <?php echo number_format($fetch_cart['cart_menuprice'] * $fetch_cart['cart_quantity'], 2); ?>
             </td>
             <td>
-                <form action="" method="post">
+                <div class="btn-group" role="group">
+                    <button type="button" class="btn btn-primary btn-sm quantity-btn" onclick="decrementQuantity(<?php echo $fetch_cart['cart_id']; ?>)"><i class="bi bi-dash-lg"></i></button>
                     <input type="hidden" name="update_quantity_id"  value="<?php echo $fetch_cart['cart_id']; ?>" >
-                    <input type="number" name="update_quantity" id="update_quantity_<?php echo $fetch_cart['cart_id']; ?>" min="1" max="<?php echo $customer["count"] + 2; ?>" class="text-center" value="<?php echo $fetch_cart['cart_quantity']; ?>" onchange="updateDatabase(this)">
-                </form> 
+                    <input type="number" name="update_quantity" id="update_quantity_<?php echo $fetch_cart['cart_id']; ?>" min="1" max="<?php echo $customer["count"] + 2; ?>" class="btn text-center bg-black text-white" value="<?php echo $fetch_cart['cart_quantity']; ?>" onchange="updateDatabase(this)" disabled>
+                    <button type="button" class="btn btn-primary btn-sm quantity-btn" onclick="incrementQuantity(<?php echo $fetch_cart['cart_id']; ?>)"><i class="bi bi-plus-lg"></i></button>
+                </div>
             </td>
             <td><a href="cart.php?remove=<?php echo $fetch_cart['cart_id']; ?>" class="delete-btn btn btn-primary">Remove <i class="bi bi-cart-dash-fill"></i></a></td>
         </tr>
@@ -139,6 +141,18 @@
         xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
         xhr.send(`update_id=${updateId}&update_value=${updatedValue}`);
         // You can add success/failure handling for the AJAX request here
+    }
+
+    function incrementQuantity(cartId) {
+        const quantityInput = document.getElementById('update_quantity_' + cartId);
+        quantityInput.stepUp();
+        updateDatabase(quantityInput);
+    }
+
+    function decrementQuantity(cartId) {
+        const quantityInput = document.getElementById('update_quantity_' + cartId);
+        quantityInput.stepDown();
+        updateDatabase(quantityInput);
     }
 
     // Add event listener for No of people input

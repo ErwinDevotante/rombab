@@ -115,6 +115,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && (isset($_POST['submit_tableNo']) &&
     $submit_tableNo = $_POST['submit_tableNo'];
     $submit_userId = $_POST['submit_userId'];
     $rating = $_POST['rating'];
+    date_default_timezone_set('Asia/Manila');
+    $currentDate = date('Y-m-d');
 
     // Insert the user's rating into the database
     $submit_query = "INSERT INTO survey (survey_table_no, survey_user_id, date, survey_answer) VALUES ($submit_tableNo, $submit_userId, '$currentDate', $rating)";
