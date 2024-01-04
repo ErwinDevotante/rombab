@@ -1,10 +1,6 @@
 <?php 
 include '../../conn.php';
 include '../table-auth.php';
-    if($_SESSION['user_id']==''){
-        header('location:../../index.php');
-        exit();
-    } 
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && (isset($_POST['update_id']) && isset($_POST['update_value']))) {
         $update_id = $_POST['update_id'];

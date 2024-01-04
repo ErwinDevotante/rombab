@@ -1,5 +1,9 @@
 <?php
 include '../../conn.php';
+if($_SESSION['user_id']==''){
+    header('location:../../index.php');
+    exit();
+} 
 $outputInventory = '';
 $i = 1;
 
