@@ -5,11 +5,6 @@ use Dompdf\Options;
 
 include '../../conn.php';
 
-if($_SESSION['user_id']==''){
-    header('location:../../index.php');
-    exit();
-} 
-
 date_default_timezone_set('Asia/Manila');
 // Get the current date in the Philippines timezone in the format "Y-m-d"
 $currentDate = date('Y-m-d');
