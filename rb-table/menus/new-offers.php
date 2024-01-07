@@ -81,7 +81,7 @@
               <input type="hidden" name="product_price" value="<?php echo $row["menu_price"]; ?>">
               <?php if($row["menu_availability"] == 1) { ?>
                 <button type="submit" class="btn btn-md btn-outline-danger text-white w-100 mt-1 bg-dark" disabled>
-                  ADD TO CART <i class="bi bi-cart-plus-fill"></i>
+                  NOT AVAILABLE <i class="bi bi-ban"></i>
                 </button>
               <?php } else { ?>
                 <button type="submit" class="btn btn-md btn-outline-danger text-white w-100 mt-1" name="add_to_cart">

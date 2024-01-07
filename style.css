@@ -127,26 +127,39 @@ html, body {
     top: 10px;
     right: 10px;
     overflow: hidden;
-    width: 120px;
-    height: 120px;
+    width: 240px; /* Adjusted width */
+    height: 240px; /* Adjusted height */
     text-align: right;
-  }
-  
-  .ribbon span {
-    font-size: 12px;
+}
+
+.ribbon span {
+    font-size: 25px; /* Adjusted font size */
     font-weight: bold;
     color: #fff;
     text-transform: uppercase;
     text-align: center;
-    line-height: 20px;
+    line-height: 40px; /* Adjusted line height */
     transform: rotate(45deg);
     -webkit-transform: rotate(45deg);
-    width: 240px;
+    width: 480px; /* Adjusted width */
     display: block;
     background: #8b0000;
     background: linear-gradient(#8b0000 0%, #8b0000 100%);
     box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
     position: absolute;
-    top: 44px;
-    right: -72px;
-  }
+    top: 64px; /* Adjusted top position */
+    right: -144px; /* Adjusted right position */
+    border: 2px solid #fff; /* Added border */
+}
+
+@media only screen and (max-width: 768px) {
+    .ribbon {
+        width: auto;
+        height: auto;
+    }
+
+    .ribbon span {
+        width: auto;
+        right: -50px; /* Adjusted right position for smaller screens */
+    }
+}
