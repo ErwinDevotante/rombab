@@ -119,11 +119,11 @@
                                     
                                     $totalBill = $othersBill + $promo_bill;
                                     // Display the total bill
-                                    echo '<tr>';
-                                    echo '<td class="text-center"><h5><strong>TOTAL</strong></h5></td>';
-                                    echo '<td></td>';
-                                    echo '<td><h5><strong>₱ ' . number_format($totalBill, 2) . '</strong></h5></td>';
-                                    echo '</tr>';
+                                    //echo '<tr>';
+                                    //echo '<td class="text-center"><h5><strong>TOTAL</strong></h5></td>';
+                                    //echo '<td></td>';
+                                    //echo '<td><h5><strong>₱ ' . number_format($totalBill, 2) . '</strong></h5></td>';
+                                    //echo '</tr>';
                                     ?>
                                 </tbody>
                                 
@@ -131,21 +131,19 @@
                             
                             <?php
                             $to_pay = $totalBill;
-                            $seniorCount = isset($_POST['senior_no']) ? $_POST['senior_no'] : 0;
-                            $pwdCount = isset($_POST['pwd_no']) ? $_POST['pwd_no'] : 0;
-                            $bdayCount = isset($_POST['bday_no']) ? $_POST['bday_no'] : 0;
+                            $seniorCount = $customer['senior_no'];
+                            $pwdCount = $customer['pwd_no'];
+                            $bdayCount = $customer['bday_no'];
                             $afterDiscount = ($row_promo['promo_price'] * 0.20);
                             $bdayPromoDiscount = 0;
                             $totalDiscount = 0;
 
-                            if(isset($_POST['to_pay'])) {
-                                $totalDiscount = ($seniorCount + $pwdCount) * $afterDiscount;
+                            $totalDiscount = ($seniorCount + $pwdCount) * $afterDiscount;
                                 
-                                $to_pay = $totalBill - $totalDiscount;
+                            $to_pay = $totalBill - $totalDiscount;
                             
-                                // Calculate discounts for birthday celebrants
-                                
-                                $bdayPromoDiscount = 0;
+                            // Calculate discounts for birthday celebrants 
+                            $bdayPromoDiscount = 0;
                             
                                 if ($bdayCount >= 1 && $bdayCount <= 4 && $customer['count'] > $bdayCount) {
                                     $bdayPromoDiscount = ($row_promo['promo_price']); // Divide by 5 paying companions
@@ -154,57 +152,39 @@
 
                                 $to_pay = $totalBill - ($totalDiscount + $bdayPromoDiscount);
             
-                            }
+                            
                             
                             ?>
                             <h6><em>*Note: Present a senior/PWD card or birthday proof to the crew. This will compute the total bill if your companion is eligible for a discount. The birthday promo is applicable with four (4) paying companions.</em></h6>
-                            <form action="" method="post" enctype="multipart/form-data">
                             <div class="container">
-                                <div class="row">
-                                    <div class="col-md-6">
-                                            <label>No. of senior</label>
-                                            <input type="number" name="senior_no" min="0" max="<?php echo $customer['count'];?>" class="form-control" value="<?php echo $seniorCount?>" oninput="validateInput(this)">
-                                            <label>No. of PWD</label>
-                                            <input type="number" name="pwd_no" min="0" max="<?php echo $customer['count'];?>" class="form-control" value="<?php echo $pwdCount?>" oninput="validateInput(this)">
-                                            <?php if($customer['count'] >= 5) {?>
-                                            <label>No. of birthday celebrant</label>
-                                            <input type="number" name="bday_no" min="0" max="<?php echo $customer['count'];?>" class="form-control" value="<?php echo $bdayCount?>" oninput="validateInput(this)">
-                                            <?php } ?>
-                                            <button type="submit" name="to_pay" class="btn btn-primary mt-2 mb-3">Compute Total Bill</button>
-                                        </div>
-                                        <div class="col-md-6 mt-auto d-flex flex-column">
-                                            <div class="ml-auto">
-                                                <table class="table text-white">
-                                                <tr>
-                                                    <td><p class="mb-0"><small>Total</small></td>
-                                                    <td><p class="mb-0 text-left"><small>₱<?php echo number_format($totalBill, 2)?></small></p></td>
-                                                </tr>
-                                                <tr>
-                                                    <td><p class="mb-0"><small>Senior Disc. (x<?php echo $seniorCount;?>)</small></td>
-                                                    <td><p class="mb-0 text-right"><small>₱<?php echo number_format($seniorCount * $afterDiscount, 2)?></small></p></td>
-                                                </tr>
-                                                <tr>
-                                                    <td><p class="mb-0"><small>PWD Disc. (x<?php echo $pwdCount;?>)</small></td>
-                                                    <td><p class="mb-0 text-right"><small>₱<?php echo number_format($pwdCount * $afterDiscount, 2)?></small></p></td>
-                                                </tr>
-                                                <tr>
-                                                    <td><p class="mb-0"><small>Bday Promo (x<?php echo $bdayCount;?>)</small></td>
-                                                    <td><p class="mb-0 text-right">₱<small><?php echo number_format($bdayPromoDiscount, 2)?></small></p></td>
-                                                </tr>
-                                                <tr>
-                                                    <td><p class="mb-0"><small>Total Discount</small></td>
-                                                    <td><p class="mb-0 text-right">₱<small><?php echo number_format($totalDiscount + $bdayPromoDiscount, 2)?></small></p></td>
-                                                </tr>
-                                                </table>
-                                                <h5 name="to_pay"><strong>TO PAY ➜ ₱<?php echo number_format($to_pay, 2 );?></strong></h5>
-                                                
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </form>
-                        </div>
-                        
+                                <table class="table text-white">
+                                    <tr>
+                                        <td colspan="3"><p class="mb-0"><small>Total</small></td>
+                                        <td><p class="mb-0 text-left"><small>₱<?php echo number_format($totalBill, 2)?></small></p></td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="3"><p class="mb-0"><small>Senior Disc. (x<?php echo $seniorCount;?>)</small></td>
+                                        <td><p class="mb-0 text-right"><small>₱<?php echo number_format($seniorCount * $afterDiscount, 2)?></small></p></td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="3"><p class="mb-0"><small>PWD Disc. (x<?php echo $pwdCount;?>)</small></td>
+                                        <td><p class="mb-0 text-right"><small>₱<?php echo number_format($pwdCount * $afterDiscount, 2)?></small></p></td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="3"><p class="mb-0"><small>Bday Promo (x<?php echo $bdayCount;?>)</small></td>
+                                        <td><p class="mb-0 text-right">₱<small><?php echo number_format($bdayPromoDiscount, 2)?></small></p></td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="3"><p class="mb-0"><small>Total Discount</small></td>
+                                        <td><p class="mb-0 text-right">₱<small><?php echo number_format($totalDiscount + $bdayPromoDiscount, 2)?></small></p></td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="3"><h3 class="mb-0"><strong>TO PAY</strong></h3></td>
+                                        <td><h3 name="to_pay" class="text-right"><strong>₱<?php echo number_format($to_pay, 2 );?></strong></h3></td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>   
                     </div>
                     <?php if (mysqli_num_rows($select_cart) > 0) { ?>
                         <div class="done-btn text-center">
