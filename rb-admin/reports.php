@@ -76,22 +76,22 @@ include '../conn.php';
                         <div class="form-group col-md-8">
                             <div id="daily" class="date-input form-group col-md-6">
                                 <label for="daily_date">Select Date:</label>
-                                <input type="date" class="form-control" id="daily_date" name="daily_date" value="<?php echo date("Y-m-d"); ?>" max="<?php echo date("Y-m-d"); ?>" min="1900-01">
+                                <input type="date" class="form-control" id="daily_date" name="daily_date" value="<?php echo date("Y-m-d"); ?>" max="<?php echo date("Y-m-d"); ?>" min="2022-11-09">
                             </div>
 
                             <div id="weekly" class="date-input form-group col-md-6">
                                 <label for="weekly_start_date">Select Start Date:</label>
-                                <input type="date" class="form-control" id="weekly_start_date" name="weekly_start_date" value="<?php echo date("Y-m-d");?>" max="<?php echo date("Y-m-d"); ?>" min="1900-01">
+                                <input type="date" class="form-control" id="weekly_start_date" name="weekly_start_date" value="<?php echo date("Y-m-d");?>" max="<?php echo date("Y-m-d"); ?>" min="2022-11-09">
                             </div>
 
                             <div id="monthly" class="date-input form-group col-md-6">
                                 <label for="monthly_month">Select Month:</label>
-                                <input type="month" class="form-control" id="monthly_month" name="monthly_month" value="<?php echo date("Y-m"); ?>" max="<?php echo date("Y-m"); ?>" min="1900-01">
+                                <input type="month" class="form-control" id="monthly_month" name="monthly_month" value="<?php echo date("Y-m"); ?>" max="<?php echo date("Y-m"); ?>" min="2022-11">
                             </div>
 
                             <div id="annually" class="date-input form-group col-md-6">
                                 <label for="annually_year">Select Year:</label>
-                                <input type="text" class="form-control" id="annually_year" name="annually_year" maxlength="4" required value="<?php echo date("Y"); ?>" oninput="validateInput(this)">
+                                <input type="number" class="form-control" id="annually_year" name="annually_year" maxlength="4" required value="<?php echo date("Y"); ?>" oninput="validateInput(this)">
                             </div>
                         </div>
                     </div>
@@ -561,17 +561,26 @@ include '../conn.php';
     }
 
     function validateInput(input) {
-        input.value = input.value.replace(/[^0-9eE]/g, ''); // Remove any non-numeric or non-'e' characters
-        if (input.value.length > 4) {
-            input.value = input.value.slice(0, 4); // Limit to 4 characters
-        }
+    input.value = input.value.replace(/[^0-9eE]/g, ''); // Remove any non-numeric or non-'e' characters
+    if (input.value.length > 4) {
+        input.value = input.value.slice(0, 4); // Limit to 4 characters
+    }
 
+    // Enforce a minimum value of 2022
+    var minValue = 2022;
+    var inputValue = parseInt(input.value);
+
+    if (isNaN(inputValue) || inputValue < minValue) {
+        input.value = minValue.toString();
+    } else {
         // Enforce a maximum value of the current year
         var currentYear = new Date().getFullYear();
-        if (parseInt(input.value) > currentYear) {
+        if (inputValue > currentYear) {
             input.value = currentYear.toString();
         }
     }
+}
+
     
 
     // Trigger the change event to display the correct date input on page load

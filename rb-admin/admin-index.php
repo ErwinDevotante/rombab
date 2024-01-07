@@ -52,7 +52,7 @@ include 'admin-auth.php';
   <!-- Content Wrapper. Contains page content -->
   <div class="content-wrapper bg-black mt-5">
 
-  <div class="mt-5 d-flex justify-content-end fixed-top fixed-right" role="group">
+  <!--<div class="mt-5 d-flex justify-content-end fixed-top fixed-right" role="group">
     <div style="overflow-x:auto;">
       <?php if($row['user_role'] == '1' || $row['user_role'] == '2') { ?>
         <a class="btn bg-yellow" href="#" onclick="jumpToDiv('inventory')">Inventory <i class="bi bi-box2-fill"></i></a>
@@ -62,7 +62,7 @@ include 'admin-auth.php';
       <a class="btn bg-red text-white text-nowrap" href="#" onclick="jumpToDiv('superAdmin')">Super Admin Panel <i class="bi bi-person-fill"></i></a>
       <?php } ?>
     </div>
-  </div>
+  </div> -->
 
   <?php if($row['user_role'] == '1' || $row['user_role'] == '2') { ?>
 
