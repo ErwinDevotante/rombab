@@ -137,6 +137,7 @@ include '../conn.php';
                       <th class="text-center" scope="col">Description</th>
                       <th class="text-center" scope="col">Table No</th>
                       <th class="text-center" scope="col">Count</th>
+                      <th class="text-center" scope="col">SN / PWD / Bday</th>
                       <th class="text-center" scope="col">Date</th>
                       <th class="text-center" scope="col">In</th>
                       <th class="text-center" scope="col">Out</th>
@@ -157,6 +158,7 @@ include '../conn.php';
                               <td class="text-center"><?php echo $row["appointment_desc"]; ?></td>
                               <td class="text-center"><?php echo $row["name"]; ?></td>
                               <td class="text-center"><?php echo $row["count"]; ?></td>
+                              <td class="text-center"><?php echo $row["senior_no"]; ?> / <?php echo $row["pwd_no"]; ?> / <?php echo $row["bday_no"]; ?></td>
                               <td class="text-center"><?php $formattedDate = date('F j, Y', strtotime($row["date"])); 
                                                       echo $formattedDate;?></td>
                               <td class="text-center"><?php $formattedDateTime = date('g:i A', strtotime($row["time"])); 
@@ -198,7 +200,7 @@ include '../conn.php';
      $(document).ready(function() {
     // Initialize DataTable for the table element with class "table"
     $('#sortTable').DataTable({
-      order: [[4, 'desc']]
+      order: [[5, 'desc']]
     });
     });
 </script>
