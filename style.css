@@ -95,9 +95,24 @@ html, body {
 }
 
 .card-columns-container {
-    column-count: 3;
-    column-gap: 1rem; /* Adjust the gap between columns as needed */
-}
+    display: grid;
+    grid-template-columns: repeat(3, 1fr); /* Adjust the number (3) as needed */
+    gap: 15px; /* Adjust the gap between cards as needed */
+  }
+
+  @media (max-width: 992px) {
+    /* Adjust the number (2) as needed for smaller screens */
+    .card-columns-container {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  @media (max-width: 576px) {
+    /* Adjust the number (1) as needed for even smaller screens */
+    .card-columns-container {
+      grid-template-columns: repeat(1, 1fr);
+    }
+  }
 
 .card {
     background-color: #8b0000;

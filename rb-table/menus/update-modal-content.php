@@ -27,7 +27,6 @@ if (mysqli_num_rows($orders_query) > 0) {
             <button class="btn btn-light btn-outline-dark mt-2 w-100 text-danger" type="button">
                 Your order <?= $order_row['total_products']; ?> <strong>is/are ready to serve</strong>.
                 <small><p class="m-0 text-secondary font-weight-light font-italic">Order taken at <?php echo $formatted_time; ?></p></small>
-                <small><p class="m-0 text-secondary font-weight-light font-italic">Elapsed time: <?= $order_row['serve_time']; ?> seconds</p></small>
                 <span class="btn btn-light btn-outline-dark btn-sm btn-mark-as-served " data-order-id="<?=$id_notif;?>">
                     Mark as Served <i class="bi bi-check2"></i>
                 </span>
@@ -37,7 +36,6 @@ if (mysqli_num_rows($orders_query) > 0) {
             <button class="btn btn-light btn-outline-dark mt-2 w-100" type="button">
                 Your order <?= $order_row['total_products']; ?> <strong>was/were already served</strong>.
                 <small><p class="m-0 text-secondary font-weight-light font-italic">Order taken at <?php echo $formatted_time; ?></p></small>
-                <small><p class="m-0 text-secondary font-weight-light font-italic">Elapsed time: <?= $order_row['serve_time']; ?> seconds</p></small>
             </button>
         <?php }}
         ?>
