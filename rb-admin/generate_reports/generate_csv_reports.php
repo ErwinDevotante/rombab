@@ -23,7 +23,7 @@ if (!empty($duration)) {
                     WHERE DATE(inserted_at) = '$choosenDate' AND summary_status = '1' 
                     ORDER BY summary_products ASC";
 
-        $log_reports_query = "SELECT inventory.item_name, users.name, log_reports.user_roles, log_reports.report_qty, log_reports.date_time FROM log_reports
+        $log_reports_query = "SELECT inventory.item_name, users.name, log_reports.action, log_reports.report_qty, log_reports.date_time FROM log_reports
                     LEFT JOIN inventory ON inventory.item_id = log_reports.report_item_id
                     LEFT JOIN users ON users.user_id = log_reports.report_user_id
                     WHERE DATE(date_time) = '$choosenDate'";
@@ -50,7 +50,7 @@ if (!empty($duration)) {
                     ORDER BY summary_products ASC";
         
         
-        $log_reports_query = "SELECT inventory.item_name, users.name, log_reports.user_roles, log_reports.report_qty, log_reports.date_time FROM log_reports
+        $log_reports_query = "SELECT inventory.item_name, users.name, log_reports.action, log_reports.report_qty, log_reports.date_time FROM log_reports
                     LEFT JOIN inventory ON inventory.item_id = log_reports.report_item_id
                     LEFT JOIN users ON users.user_id = log_reports.report_user_id
                     WHERE DATE(date_time) BETWEEN '$startOfWeek' AND '$endOfWeek'";
@@ -84,7 +84,7 @@ if (!empty($duration)) {
                 WHERE DATE(inserted_at) BETWEEN '$selectedMonthYear-01' AND '$endOfMonth' AND summary_status = '1' 
                 ORDER BY summary_products ASC";
                             
-        $log_reports_query = "SELECT inventory.item_name, users.name, log_reports.user_roles, log_reports.report_qty, log_reports.date_time FROM log_reports
+        $log_reports_query = "SELECT inventory.item_name, users.name, log_reports.action, log_reports.report_qty, log_reports.date_time FROM log_reports
                             LEFT JOIN inventory ON inventory.item_id = log_reports.report_item_id
                             LEFT JOIN users ON users.user_id = log_reports.report_user_id
                             WHERE DATE(date_time) BETWEEN '$selectedMonthYear-01' AND '$endOfMonth'";
@@ -111,7 +111,7 @@ if (!empty($duration)) {
                     WHERE DATE(inserted_at) BETWEEN '$startOfYear' AND '$endOfYear' AND summary_status = '1' 
                     ORDER BY summary_products ASC";
 
-        $log_reports_query = "SELECT inventory.item_name, users.name, log_reports.user_roles, log_reports.report_qty, log_reports.date_time FROM log_reports
+        $log_reports_query = "SELECT inventory.item_name, users.name, log_reports.action, log_reports.report_qty, log_reports.date_time FROM log_reports
                     LEFT JOIN inventory ON inventory.item_id = log_reports.report_item_id
                     LEFT JOIN users ON users.user_id = log_reports.report_user_id
                     WHERE DATE(date_time) BETWEEN '$startOfYear' AND '$endOfYear'";
@@ -167,11 +167,11 @@ if (!empty($duration)) {
             if ($duration == 'annually') { 
                 fputcsv($output, array(date('F j, Y', strtotime($startOfYear)).' - '. date('F j, Y', strtotime($endOfYear))));
             } else if ($duration == 'monthly') { 
-                fputcsv($output, array(date('F j, Y', strtotime($selectedMonth)).' - '. date('F j, Y', strtotime($endOfMonth))));
+                fputcsv($output, array(date('F j, Y', strtotime($selectedMonthYear)).' - '. date('F j, Y', strtotime($endOfMonth))));
             } else if ($duration == 'weekly') { 
                 fputcsv($output, array(date('F j, Y', strtotime($startOfWeek)).' - '. date('F j, Y', strtotime($endOfWeek))));
             } else if ($duration == 'daily') { 
-                fputcsv($output, array('Date: '.date('F j, Y', strtotime($startOfYear))));
+                fputcsv($output, array('Date: '.date('F j, Y', strtotime($choosenDate))));
             }
             fputcsv($output, array());
 
@@ -182,11 +182,11 @@ if (!empty($duration)) {
             if (mysqli_num_rows($log_reports_result) > 0) {
                 // Write rows for reports
                 while ($row_reports = mysqli_fetch_assoc($log_reports_result)) {
-                    // Check user_roles and set the character accordingly
-                    $userRolesCharacter = ($row_reports['user_roles'] == 3) ? '-' : '+';
+                    // Check action and set the character accordingly
+                    $userRolesCharacter = ($row_reports['action'] == 0) ? '-' : '+';
 
                     // Modify the row before writing to CSV
-                    $row_reports['user_roles'] = $userRolesCharacter;
+                    $row_reports['action'] = $userRolesCharacter;
 
                     fputcsv($output, $row_reports);
                 }

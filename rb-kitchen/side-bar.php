@@ -50,7 +50,15 @@
                 Inventory Reports
               </p>
             </a>
-        </li> 
+        </li>
+        <li class="nav-item has-treeview menu-open m-1">
+            <a href="menu-inventory.php" class="nav-link <?php if($a==5){ echo 'active'; }?>">
+               <i class="ion ion-cube nav-icon"></i>
+              <p>
+                Menu and Inventory
+              </p>
+            </a>
+        </li>
           
         </ul>
       </nav>

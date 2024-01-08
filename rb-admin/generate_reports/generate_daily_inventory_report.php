@@ -3,6 +3,7 @@ require '../../vendor/autoload.php';
 use Dompdf\Dompdf;
 use Dompdf\Options;
 
+include '../../conn.php';
 date_default_timezone_set('Asia/Manila');
 // Get the current date in the Philippines timezone in the format "Y-m-d"
 $currentDate = date('Y-m-d');
@@ -118,7 +119,7 @@ $html = '
                     <td>'.$row_logs['name'].'</td>';
         
                 // Check user role and adjust the sign accordingly
-                if ($row_logs['user_roles'] == 3) {
+                if ($row_logs['action'] == 0) {
                     $html .= '<td>- '.$row_logs['report_qty'].''.$row_logs['unit_of_measure'].'</td>';
                 } else {
                     $html .= '<td>+ '.$row_logs['report_qty'].''.$row_logs['unit_of_measure'].'</td>';

@@ -226,7 +226,7 @@ include '../conn.php';
                                     <td><?php echo $row["item_id"]; ?></td>
                                     <td><?php echo $row["item_name"]; ?></td>
                                     <td><?php echo $row["name"]; ?></td>
-                                    <?php if($row["user_roles"] == 3) { ?>
+                                    <?php if($row["action"] == 0) { ?>
                                         <td><span class="badge badge-danger">- </span><?php echo $row["report_qty"]; ?><?php echo $row["unit_of_measure"]; ?></td>
                                     <?php } else { ?>
                                         <td><span class="badge badge-info">+ </span><?php echo $row["report_qty"]; ?><?php echo $row["unit_of_measure"]; ?></td>

@@ -208,7 +208,7 @@ if (!empty($duration)) {
                             <td>'.$rowInventoryRep['name'].'</td>';
             
                     // Check user role and adjust the sign accordingly
-                    if ($rowInventoryRep['user_roles'] == 3) {
+                    if ($rowInventoryRep['action'] == 0) {
                         $outputInventory .= '<td>-</td>';
                     } else {
                         $outputInventory .= '<td>+</td>';

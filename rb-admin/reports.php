@@ -280,8 +280,8 @@ include '../conn.php';
                                                         echo "<td>".$row_logs['item_name']."</td>";
                                                         echo "<td>".$row_logs['name']."</td>";
 
-                                                    // Check user role and adjust the sign accordingly
-                                                    if ($row_logs['user_role'] == 3) {
+                                                    // Check user action and adjust the sign accordingly
+                                                    if ($row_logs['action'] == 0) {
                                                         echo "<td>- ".$row_logs['report_qty']." ".$row_logs['unit_of_measure']."</td>";
                                                     } else {
                                                         echo "<td>+ ".$row_logs['report_qty']." ".$row_logs['unit_of_measure']."</td>";

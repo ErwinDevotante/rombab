@@ -222,7 +222,7 @@ if (!empty($duration)) {
                             <td>'.$row_logs['name'].'</td>';
                 
                         // Check user role and adjust the sign accordingly
-                        if ($row_logs['user_roles'] == 3) {
+                        if ($row_logs['action'] == 0) {
                             $html .= '<td>- '.$row_logs['report_qty'].''.$row_logs['unit_of_measure'].'</td>';
                         } else {
                             $html .= '<td>+ '.$row_logs['report_qty'].''.$row_logs['unit_of_measure'].'</td>';

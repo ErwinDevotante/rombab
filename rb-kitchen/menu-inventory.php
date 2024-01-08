@@ -1,40 +1,11 @@
 <?php 
-$a = 2;
+$a = 5;
 session_start();
 include '../conn.php';
     $id = $_SESSION['user_id'];
-    $result = mysqli_query($connection, "SELECT * FROM users where user_id = '$id' ");
-    $row = mysqli_fetch_array($result);
+	$result = mysqli_query($connection, "SELECT * FROM users where user_id = '$id'");
+	$row = mysqli_fetch_array($result);
     date_default_timezone_set('Asia/Manila');
-
-    if (isset($_POST["upload_item"])) {
-        // Get all the submitted data from the form
-        $item_name = $_POST['item-name'];
-        $description = $_POST['item-description'];
-        $oum = $_POST['item-measure'];
-        $stock = $_POST['item-stock'];
-        $status = $_POST['item-status'];
-    
-        // Check for redundant data before inserting
-        $check_query = "SELECT * FROM inventory WHERE LOWER(item_name) = LOWER('$item_name')";
-        $result = mysqli_query($connection, $check_query);
-    
-        if (mysqli_num_rows($result) > 0) {
-            // Redundant data found, show an error message
-            echo '<script type="text/javascript">'; 
-            echo 'alert("Menu item with the same name already exists.");'; echo 'window.location.href = "inventory.php";';
-            echo '</script>';
-        } else {
-            // No redundant data, proceed with insertion
-            $insert_query = "INSERT INTO inventory (item_name, item_desc, unit_of_measure, stock, item_status) 
-                            VALUES ('$item_name', '$description', '$oum', '$stock', '$status')";
-            $result_insert = mysqli_query($connection, $insert_query);
-    
-            // Redirect back to the add-menu.php page after inserting
-            header('Location: inventory.php');
-            exit();
-        }
-    }
 
     // Check if the update form is submitted
     if (isset($_POST["confirm_update"])) {
@@ -62,7 +33,7 @@ include '../conn.php';
 
         if ($result_update) {
             // Redirect back to the inventory.php page after updating
-            header('Location: inventory.php');
+            header('Location: menu-inventory.php');
             exit(); 
         } else {
             // Handle the error if the update fails
@@ -70,40 +41,29 @@ include '../conn.php';
         }
     }
 
-    if (isset($_POST["archive_btn"])) {
-        $item_id_to_archive = $_POST['archive_btn'];
-        $currentDateTime = date('Y-m-d H:i:s');
+    if (isset($_POST["activate_btn"])) {
+        $status_menu = $_POST["activate_btn"];
     
-         // Retrieve the inventory record before archiving
-        $select_query = "SELECT * FROM inventory WHERE item_id='$item_id_to_archive'";
-        $result_select = mysqli_query($connection, $select_query);
-        $row_select = mysqli_fetch_array($result_select);
-
-        // Insert data into inventory_archive
-        $insert_archive_query = "INSERT INTO inventory_archive (item_id, item_name, item_desc, unit_of_measure, stock, item_status, archived_at)
-        VALUES ('{$row_select['item_id']}', '{$row_select['item_name']}', '{$row_select['item_desc']}', '{$row_select['unit_of_measure']}',
-        '{$row_select['stock']}', '{$row_select['item_status']}', '$currentDateTime')";
-        $result_insert_archive = mysqli_query($connection, $insert_archive_query);
+        // Perform the update query
+        $update_query = "UPDATE `menus` SET menu_availability = '0' WHERE menu_id = '$status_menu'";
+        mysqli_query($connection, $update_query);
     
-        if ($result_insert_archive) {
-            // Delete the inventory record
-            $delete_query = "DELETE FROM inventory WHERE item_id='$item_id_to_archive'";
-            $result_delete = mysqli_query($connection, $delete_query);
-    
-            if ($result_delete) {
-                // Redirect back to the inventory.php page after archiving
-                header('Location: inventory.php');
-                exit();
-            } else {
-                // Handle the error if the deletion fails
-                echo "Error deleting inventory record: " . mysqli_error($connection);
-            }
-        } else {
-            // Handle the error if the archiving fails
-            echo "Error archiving inventory record: " . mysqli_error($connection);
-        }
+        // Redirect back to the add-menu.php page after deleting
+        header('Location: menu-inventory.php');
+        exit();
     }
-
+    
+    if (isset($_POST["deactivate_btn"])) {
+        $status_menu = $_POST["deactivate_btn"];
+    
+        // Perform the update query
+        $update_query = "UPDATE `menus` SET menu_availability = '1' WHERE menu_id = '$status_menu'";
+        mysqli_query($connection, $update_query);
+    
+        // Redirect back to the add-menu.php page after deleting
+        header('Location: menu-inventory.php');
+        exit();
+    }
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -111,13 +71,15 @@ include '../conn.php';
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Romantic Baboy | Inventory</title>
+    <title>Romantic Baboy | Kitchen</title>
     <!--Google Fonts-->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap" rel="stylesheet">
     <!--Icon-->
     <link rel="icon" type="image/x-icon" href="../assets/rombab-logo.png">
+    <!-- Ionicons -->
+    <link rel="stylesheet" href="../node_modules/ionicons/css/ionicons.min.css">
     <!-- Bootstrap -->
     <link rel="stylesheet" href="../node_modules/bootstrap/dist/css/bootstrap.min.css">
     <!-- Theme Style -->
@@ -125,8 +87,6 @@ include '../conn.php';
     <link rel="stylesheet" href="../node_modules/admin-lte/css/adminlte.min.css">
     <!-- overlayScrollbars -->
     <link rel="stylesheet" href="../node_modules/overlayScrollbars/css/OverlayScrollbars.min.css">
-    <!-- Ionicons -->
-    <link rel="stylesheet" href="../node_modules/ionicons/css/ionicons.min.css">
     <!-- JQuery -->
     <script src="../node_modules/jquery/dist/jquery.min.js"></script>
     <!-- Bootstrap -->
@@ -138,72 +98,17 @@ include '../conn.php';
     <!-- Bootstrap Icons CSS -->
     <link href="../../node_modules/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
 </head>
-</head>
 <body class="hold-transition sidebar-mini layout-fixed">
-    <div class="wrapper" >
-
-        <?php 
-        include "top-bar.php";
-        include "side-bar.php";
-        ?>
-
-        <div class="content-wrapper bg-black mt-5">
-            <div class="content p-4">
-
+<div class="wrapper">
+    <?php 
+    include "top-bar.php";
+    include "side-bar.php"; 
+    ?>
+    <div class="content-wrapper bg-black">
+        <div class="content p-4">
             <div class="container-fluid text-center p-4">
-                <h1>Inventory</h1>
+                <h1>Menu and Inventory</h1>
             </div>
-
-            <form method="post" action="inventory.php" enctype="multipart/form-data">
-                <div class="form-row">
-                    <div class="form-group col">
-                        <label>Item Name</label>
-                        <input type="text" class="form-control" name="item-name" placeholder="Enter Item Name" required>
-                    </div>
-
-                    <div class="form-group col">
-                        <label>Description</label>
-                        <select name="item-description" class="form-control" required>
-                            <option hidden value="">-----Select Here-----</option>
-                            <option value="Meats">Meats</option>
-                            <option value="Ingredients">Ingredients</option>
-                            <option value="Beverages">Beverages</option>
-                            <option value="Sauces">Sauces</option>
-                        </select>
-                    </div>
-                    
-                    <div class="form-group col">
-                        <label>UOM</label>
-                        <select name="item-measure" class="form-control" required>
-                            <option hidden value="">-----Select Here-----</option>
-                            <option value="kg">kg</option>
-                            <option value="can">can</option>
-                            <option value="pack">pack</option>
-                            <option value="box">box</option>
-                            <option value="gal">gal</option>
-                            <option value="tub">tub</option>
-                            <option value="case">case</option>
-                        </select>
-                    </div>
-
-                    <div class="form-group col">
-                        <label>Stocks</label>
-                        <input type="number" class="form-control" name="item-stock" step="any" min="0.1" placeholder="Enter Number of Stock" required>
-                    </div>
-
-                    <div class="form-group col">
-                        <label>Status</label>
-                        <select name="item-status" class="form-control" required>
-                            <option value="0">Activated</option>
-                            <option value="1">Deactivated</option>
-                        </select>
-                    </div>
-                </div>
-
-                <div class="form-group">
-                    <button class="btn btn-danger" type="submit" name="upload_item">ADD ITEM <i class="bi bi-plus-square"></i></button>
-                </div>
-            </form>
 
             <!-- Search -->
             <div class="d-flex w-100 justify-content-end p-0">
@@ -216,8 +121,53 @@ include '../conn.php';
             </div>
 
             <div style="overflow-x:auto;">
-                <table class="table table-hover table-bordered table-dark mt-2" id="sortTable">
+            <table class="table table-hover table-bordered table-dark mt-2">
+            <thead>
+                <tr><th colspan="3"><h4><strong>Activate/Deactivate Menu</strong></h4></th></tr>
+                <tr>
+                    <th class="text-center" scope="col">Image</th>
+                    <th class="text-center" scope="col">Name</th>
+                    <th class="text-center" scope="col">Action</th>
+                </tr>
+            </thead>
+                <tbody id = "menu_table">
+                <?php 
+                    $view_menus = mysqli_query($connection, "SELECT * FROM menus ORDER BY menu_id DESC");
+                    if(mysqli_num_rows($view_menus) > 0) {
+                    while ($row = mysqli_fetch_array($view_menus)) { ?>
+                    <form method="post" action="menu-inventory.php" enctype="multipart/form-data">
+                        <tr id="<?php echo $row["menu_id"]; ?>">
+                            <td style="display: none"><?php echo $row["menu_id"]; ?></td> <!--hidden-->
+                            <td class="text-center w-25"><img src ='../rb-admin/menu-images/<?php echo $row["menu_image"]; ?>' class="img-fluid img-thumbnail custom-image">
+                                <?php if($row["menu_availability"] == 1) { ?>
+                                    <div class="font-weight-bold"><a class="badge badge-danger">[DEACTIVATED]</a></div>
+                                <?php } else if($row["menu_availability"] == 0) { ?>
+                                    <div class="font-weight-bold"><a class="badge badge-success">[ACTIVATED]</a></div>
+                                <?php } ?>
+                             </td>
+                            <td class="text-center"><?php echo $row["menu_name"]; ?></td>
+                            <td class="text-center">
+                                <?php if($row["menu_availability"] == 1) { ?>
+                                    <div class="p-2"><button type="submit" class="btn btn-success btn-xs" name="activate_btn" value="<?php echo $row["menu_id"]; ?>">ACTIVATE <i class="bi bi-check-circle-fill"></i></button></div>
+                                <?php } else if($row["menu_availability"] == 0) { ?>
+                                    <div class="p-2"><button type="submit" class="btn btn-danger btn-xs" name="deactivate_btn" value="<?php echo $row["menu_id"]; ?>">DEACTIVATE <i class="bi bi-x-circle-fill"></i></button></div>
+                                <?php } ?>
+                            </td>
+                        </tr>
+                    </form>
+                    <?php } } else {?>
+                        <tr>
+                            <td class="text-center" colspan="3">No record found!</td>
+                        </tr>
+                    <?php } ?>
+                </tbody>  
+            </table>
+            </div>
+
+            <div style="overflow-x:auto;">
+                <table class="table table-hover table-bordered table-dark mt-2">
                 <thead>
+                    <tr><th colspan="6"><h4><strong>Update Inventory</strong></h4></th></tr>
                     <tr>
                         <th class="text-center" scope="col">Item</th>
                         <th class="text-center" scope="col">Description</th>
@@ -234,7 +184,7 @@ include '../conn.php';
                                                     ORDER BY item_id DESC");
                         if(mysqli_num_rows($view_items) > 0) {
                         while ($row = mysqli_fetch_array($view_items)) { ?>
-                            <form method="post" action="inventory.php" enctype="multipart/form-data">
+                            <form method="post" action="menu-inventory.php" enctype="multipart/form-data">
                                 <tr>
                                     <td style="display: none"><?php echo $row["item_id"]; ?></td>
                                     <td><?php echo $row["item_name"]; ?></td>
@@ -247,12 +197,7 @@ include '../conn.php';
                                         <a class="badge badge-danger"><?php echo $row["status"];?></a>
                                         <?php }?>
                                     </td>
-                                    <td>
-                                        <div class="text-center" role="group">
-                                            <button type="button" class="btn btn-xs btn-primary update_btn" name="update_btn" id="update_btn">UPDATE <i class="bi bi-pencil-square"></i></button>
-                                            <button type="submit" class="btn btn-xs btn-warning" name="archive_btn" value="<?php echo $row["item_id"]; ?>">ARCHIVE <i class="bi bi-archive"></i></button>
-                                        </div>
-                                    </td>
+                                    <td><button type="button" class="btn btn-xs btn-primary update_btn" name="update_btn" id="update_btn">UPDATE <i class="bi bi-pencil-square"></i></button></td>
                                 </tr>
                             </form>
                         <?php } } else {?>
@@ -263,9 +208,10 @@ include '../conn.php';
                     </tbody>  
                 </table>
             </div>
+            
         </div>
     </div>
-</div>
+
     <div class="modal fade" id="editmodal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
         aria-hidden="true">
         <div class="modal-dialog" role="document">
@@ -275,18 +221,18 @@ include '../conn.php';
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
 
-                <form action="inventory.php" method="POST" enctype="multipart/form-data">
+                <form action="menu-inventory.php" method="POST" enctype="multipart/form-data">
                     <div class="modal-body">
                         <input type="hidden" name="update-id" id="update-id">
 
                         <div class="form-group">
                             <label>Item Name</label>
-                            <input type="text" class="form-control" id="update-name" name="update-name" placeholder="Enter Menu Name" required>
+                            <input type="text" class="form-control" id="update-name" name="update-name" placeholder="Enter Menu Name" required readonly>
                         </div>
 
                         <div class="form-group">
                             <label>Description</label>
-                            <select name="update-description" class="form-control" required>
+                            <select name="update-description" class="form-control" required readonly>
                                 <option value="Meats">Meats</option>
                                 <option value="Ingredients">Ingredients</option>
                                 <option value="Beverages">Beverages</option>
@@ -296,7 +242,7 @@ include '../conn.php';
                         
                         <div class="form-group">
                             <label>UOM</label>
-                            <select name="update-measure" class="form-control" required>
+                            <select name="update-measure" class="form-control" required readonly>
                                 <option value="kg">kg</option>
                                 <option value="can">can</option>
                                 <option value="pack">pack</option>
@@ -323,7 +269,7 @@ include '../conn.php';
 
                         <div class="form-group">
                             <label>Status</label>
-                            <select name="update-status" class="form-control" required>
+                            <select name="update-status" class="form-control" required readonly>
                                 <option value="0">activate</option>
                                 <option value="1">deactivate</option>
                             </select>
@@ -405,13 +351,5 @@ include '../conn.php';
             stocksInput.value = '0.1';
         }
     });
-
-    // Add event listener for Item Stock input
-    itemStockInput.addEventListener('input', function() {
-        const itemStock = parseFloat(itemStockInput.value);
-
-        if (isNaN(itemStock) || itemStock < 0 || itemStock === 0) {
-            itemStockInput.value = '0.1';
-        }
-    });
+     
 </script>
