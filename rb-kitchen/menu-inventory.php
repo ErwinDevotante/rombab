@@ -135,7 +135,7 @@ include '../conn.php';
                     $view_menus = mysqli_query($connection, "SELECT * FROM menus ORDER BY menu_id DESC");
                     if(mysqli_num_rows($view_menus) > 0) {
                     while ($row = mysqli_fetch_array($view_menus)) { ?>
-                    <form method="post" action="menu-inventory.php" enctype="multipart/form-data">
+                    <form method="post" action="menu-inventory.php" enctype="multipart/form-data" onsubmit="rememberScrollPosition()">
                         <tr id="<?php echo $row["menu_id"]; ?>">
                             <td style="display: none"><?php echo $row["menu_id"]; ?></td> <!--hidden-->
                             <td class="text-center w-25"><img src ='../rb-admin/menu-images/<?php echo $row["menu_image"]; ?>' class="img-fluid img-thumbnail custom-image">
@@ -184,7 +184,7 @@ include '../conn.php';
                                                     ORDER BY item_id DESC");
                         if(mysqli_num_rows($view_items) > 0) {
                         while ($row = mysqli_fetch_array($view_items)) { ?>
-                            <form method="post" action="menu-inventory.php" enctype="multipart/form-data">
+                            <form method="post" action="menu-inventory.php" enctype="multipart/form-data" onsubmit="rememberScrollPosition()">
                                 <tr>
                                     <td style="display: none"><?php echo $row["item_id"]; ?></td>
                                     <td><?php echo $row["item_name"]; ?></td>
@@ -221,7 +221,7 @@ include '../conn.php';
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
 
-                <form action="menu-inventory.php" method="POST" enctype="multipart/form-data">
+                <form action="menu-inventory.php" method="POST" enctype="multipart/form-data" onsubmit="rememberScrollPosition()">
                     <div class="modal-body">
                         <input type="hidden" name="update-id" id="update-id">
 
@@ -351,5 +351,24 @@ include '../conn.php';
             stocksInput.value = '0.1';
         }
     });
-     
+    
+    function rememberScrollPosition() {
+        // Store the current scroll position in session storage
+        sessionStorage.setItem('scrollPosition', window.scrollY);
+    }
+
+    function restoreScrollPosition() {
+        // Retrieve the stored scroll position from session storage
+        const scrollPosition = sessionStorage.getItem('scrollPosition');
+
+        // If there is a stored scroll position, scroll to that position
+        if (scrollPosition !== null) {
+            window.scrollTo(0, parseInt(scrollPosition));
+        }
+    }
+
+    // Call restoreScrollPosition when the document is ready
+    $(document).ready(function () {
+        restoreScrollPosition();
+    });
 </script>

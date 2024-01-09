@@ -187,9 +187,9 @@
                         </div>   
                     </div>
                     <?php if (mysqli_num_rows($select_cart) > 0) { ?>
-                        <div class="done-btn text-center">
+                        <div class="done-btn text-center mb-5">
                         <h6 class="text-white"><em>*Note: Please look for the crew to settle the bill and log-out the table.</em></h6>
-                         <a href="#" onclick="showSurveyModal()" class="btn btn-primary">Bill-out <i class="ion-arrow-right-c"></i></a>
+                         <a href="#" onclick="showSurveyModal()" class="btn btn-primary">Call for Bill-out <i class="ion-arrow-right-c"></i></a>
                         <!--<button id="surveyButton" class="btn btn-primary" onclick="showSurveyModal()">Bill-out <i class="ion-arrow-right-c"></i></button> -->
                         </div>
                     <?php } ?>
@@ -210,11 +210,11 @@
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title">Logout</h5>
+                    <h5 class="modal-title">The crew is on the way to log out your table.</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <input type="password" id="passwordInput" class="form-control" placeholder="Password">
+                    <input type="password" id="passwordInput" class="form-control" placeholder="Enter Password">
                 </div>
                 <div class="modal-footer">
                     <button type="submit" class="btn btn-primary" onclick="checkPassword()">SUBMIT</button>
@@ -232,7 +232,7 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body text-center">
-                    <p>Please rate your dining experience:</p>
+                    <p>But first, please rate your dining experience:</p>
                     <div>
                         <?php for ($i = 1; $i <= 10; $i++) { ?>
                             <button type="button" class="btn btn-primary" onclick="submitSurvey(<?php echo $i; ?>)"><?php echo $i; ?></button>

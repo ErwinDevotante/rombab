@@ -88,7 +88,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && (isset($_POST['to_pay']) && isset($
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && (isset($_POST['check_tableNo']) && isset($_POST['check_userId']))) {
     $check_tableNo = $_POST['check_tableNo'];
     $check_userId = $_POST['check_userId'];
-
+    
     // Query the database to check if a survey record exists
     $check_query = "SELECT * FROM survey WHERE survey_table_no = $check_tableNo AND survey_user_id = $check_userId";
     $check_result = mysqli_query($connection, $check_query);
@@ -113,17 +113,31 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && (isset($_POST['submit_tableNo']) &&
     $rating = $_POST['rating'];
     date_default_timezone_set('Asia/Manila');
     $currentDate = date('Y-m-d');
+    $currentDateTime = date('Y-m-d H:i:s');
 
-    // Insert the user's rating into the database
+    // Insert the user's rating into the survey table
     $submit_query = "INSERT INTO survey (survey_table_no, survey_user_id, date, survey_answer) VALUES ($submit_tableNo, $submit_userId, '$currentDate', $rating)";
     $submit_result = mysqli_query($connection, $submit_query);
 
-    if ($submit_result) {
-        // If the insertion is successful, send a success response
-        echo 'success';
-    } else {
-        // If there's an error, send an error response
+    // Check the first query result
+    if (!$submit_result) {
+        // If the first query fails, send an error response
         echo 'error';
+    } else {
+        // Insert a notification into the billing_notif table
+        $insert_query = "INSERT INTO billing_notif (user_id, table_id, marked_as_read, time_date) VALUES ('$submit_userId', '$submit_tableNo', '0', '$currentDateTime')";
+        $insert_result = mysqli_query($connection, $insert_query);
+
+        // Check the second query result
+        if ($insert_result) {
+            // If both insertions are successful, send a success response
+            echo 'success';
+        } else {
+            // If there's an error in the second query, send an error response
+            echo 'error';
+        }
     }
 }
+
+
 ?>

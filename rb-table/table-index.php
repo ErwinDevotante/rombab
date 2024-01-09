@@ -50,10 +50,10 @@ if($_SESSION['user_id']==''){
             <div class="lead text-center">
                 <?php 
                 if ($row['session_tb'] == '3'){
-                    echo '<a href="menus/activated-table.php" class="btn btn-lg btn-primary fw-bold border-white">Tap to start</a>';
+                    echo '<a href="menus/activated-table.php" class="btn btn-lg btn-primary fw-bold border-white mb-5">Tap to start</a>';
                 }
                 else if($row['session_tb'] == '2') {
-                    echo '<a href="deactivated-table.php" class="btn btn-lg btn-primary fw-bold border-white">Tap to start</a>';
+                    echo '<a href="deactivated-table.php" class="btn btn-lg btn-primary fw-bold border-white mb-5">Tap to start</a>';
                 }
                 ?>
             </div>

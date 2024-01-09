@@ -169,7 +169,7 @@ include 'admin-auth.php';
         <?php
         date_default_timezone_set('Asia/Manila');
         $todayDate = date('Y-m-d');
-        $query_inventory_reports = "SELECT inventory.item_name, users.name, users.user_role, log_reports.report_qty, log_reports.date_time, inventory.unit_of_measure
+        $query_inventory_reports = "SELECT inventory.item_name, users.name, users.user_role, log_reports.report_qty, log_reports.date_time, log_reports.action, inventory.unit_of_measure
                                     FROM log_reports
                                     LEFT JOIN inventory ON inventory.item_id = log_reports.report_item_id
                                     LEFT JOIN users ON users.user_id = log_reports.report_user_id
@@ -199,7 +199,7 @@ include 'admin-auth.php';
                         echo "<tr>";
                         echo "<td>{$row_reports['item_name']}</td>";
                         echo "<td>{$row_reports['name']}</td>";
-                        if ($row_reports['user_role'] == 3) {
+                        if ($row_reports['action'] == 0) {
                           echo "<td>- {$row_reports['report_qty']}{$row_reports['unit_of_measure']}</td>";
                         } else {
                           echo "<td>+ {$row_reports['report_qty']}{$row_reports['unit_of_measure']}</td>";

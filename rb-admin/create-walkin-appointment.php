@@ -273,6 +273,14 @@ function checkForAvailableTable() {
         customerInput.value = sanitizedValue;
     });
 
+    const noteInput = document.getElementById('note');
+    noteInput.addEventListener('input', function() {
+        const inputValue = noteInput.value;
+        // Keep only letters, spaces, and "-"
+        const sanitizedValue = inputValue.replace(/[^a-zA-Z\s-]/g, '');
+        noteInput.value = sanitizedValue;
+    });
+
     // Add event listener for No of people input
     const paxInput = document.getElementById('pax');
     paxInput.addEventListener('input', function() {
@@ -347,6 +355,16 @@ function checkForAvailableTable() {
         // Truncate the input value to 100 characters
         if (inputValue.length > 100) {
             noteTextarea.value = inputValue.slice(0, 100);
+        }
+    });
+    
+    const customerName = document.getElementById('customer');
+    customerName.addEventListener('input', function() {
+        const inputValue = customerName.value;
+
+        // Truncate the input value to 100 characters
+        if (inputValue.length > 100) {
+            customerName.value = inputValue.slice(0, 100);
         }
     });
 

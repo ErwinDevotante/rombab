@@ -17,7 +17,9 @@ if (isset($_POST["submit"])) {
           $user_log = $_SESSION["user_id"];
           $action = "Log-In";
           $dateTime = date('Y-m-d H:i:s');
+          if ($row['user_role'] != 4) {
           mysqli_query($connection, "INSERT INTO activity_log (log_user_id, action, date_time) VALUES ('$user_log', '$action', '$dateTime')");
+          }
           $_SESSION['success'] = true;
       } else {
           $_SESSION['unsuccess'] = true;
@@ -32,6 +34,9 @@ $deleteThreshold = date('Y-m-d H:i:s', strtotime('-30 days'));
 
 // Deleting data from summary_orders
 //mysqli_query($connection, "DELETE FROM summary_orders WHERE inserted_at <= '$deleteThreshold'");
+
+// Deleting data from billing_notif
+mysqli_query($connection, "DELETE FROM billing_notif WHERE time_date <= '$deleteThreshold'");
 
 // Deleting data from inventory_archive
 mysqli_query($connection, "DELETE FROM inventory_archive WHERE archived_at <= '$deleteThreshold'");
