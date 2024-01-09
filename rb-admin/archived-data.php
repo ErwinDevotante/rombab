@@ -236,7 +236,7 @@ include '../conn.php';
                                     <td><?php echo $row["unit_of_measure"]; ?></td>
                                     <td><?php echo $row["stock"]; ?></td>
                                     <td>
-                                    <form method="POST" enctype="multipart/form-data">
+                                    <form method="POST" enctype="multipart/form-data" onclick="rememberScrollPosition()">
                                         <div class="text-center">
                                             <button type="submit" class="btn btn-xs btn-info" name="retrive_btn_inventory" value="<?php echo $row["item_id_archive"]; ?>">RETRIEVE <i class="bi bi-download"></i></button>
                                         </div>
@@ -276,7 +276,7 @@ include '../conn.php';
                                     <td><?php echo $row["report_qty"]; ?><?php echo $row["unit_of_measure"]; ?></td>
                                     <td><?php echo $row["date_time"]; ?></td>
                                     <td>
-                                        <form method="POST" enctype="multipart/form-data">
+                                        <form method="POST" enctype="multipart/form-data" onclick="rememberScrollPosition()">
                                             <button type="submit" class="btn btn-xs btn-info" name="retrive_btn_kitchen" value="<?php echo $row["report_id"]; ?>">RETRIEVE <i class="bi bi-download"></i></button>
                                         </form>
                                     </td>
@@ -310,7 +310,7 @@ include '../conn.php';
                                         echo $formattedDate;
                                     ?></td>
                                     <td>
-                                        <form method="post" enctype="multipart/form-data">
+                                        <form method="post" enctype="multipart/form-data" onclick="rememberScrollPosition()">
                                         <button type="submit" class="btn btn-xs btn-info" name="retrive_btn_reports" value="<?php echo $row["report_id"]; ?>">RETRIEVE <i class="bi bi-download"></i></button>
                                         </form>
                                     </td>
@@ -343,7 +343,7 @@ include '../conn.php';
                             <td class="text-center"><?php echo $row["menu_price"]; ?></td>
                             <td class="text-center"><?php echo $row["menu_category"]; ?></td>
                             <td class="text-center">
-                            <form method="post" enctype="multipart/form-data">
+                            <form method="post" enctype="multipart/form-data" onclick="rememberScrollPosition()">
                                <button type="submit" class="btn btn-info btn-xs" name="retrieve_btn_menu" value="<?php echo $row["menu_id_archive"]; ?>">RETRIEVE <i class="bi bi-download"></i></button>
                             </form>
                             </td>
@@ -388,7 +388,7 @@ include '../conn.php';
                               <td class="text-center"><?php $formattedDateTimeout = date('g:i A', strtotime($row["time-out"])); 
                                                       echo $formattedDateTimeout;?></td>
                               <td>
-                                <form method="POST" enctype="multipart/form-data">
+                                <form method="POST" enctype="multipart/form-data" onclick="rememberScrollPosition()">
                                   <button type="submit" class="btn btn-xs btn-info" name="retrieve_btn_history" value="<?php echo $row["history_id"]; ?>">RETRIEVE <i class="bi bi-download"></i></button>
                                 </form>
                               </td>
@@ -443,5 +443,25 @@ include '../conn.php';
         lengthChange: false
     }); 
     } );
+
+    function rememberScrollPosition() {
+        // Store the current scroll position in session storage
+        sessionStorage.setItem('scrollPosition', window.scrollY);
+    }
+
+    function restoreScrollPosition() {
+        // Retrieve the stored scroll position from session storage
+        const scrollPosition = sessionStorage.getItem('scrollPosition');
+
+        // If there is a stored scroll position, scroll to that position
+        if (scrollPosition !== null) {
+            window.scrollTo(0, parseInt(scrollPosition));
+        }
+    }
+
+    // Call restoreScrollPosition when the document is ready
+    $(document).ready(function () {
+        restoreScrollPosition();
+    });
     
 </script>

@@ -57,7 +57,7 @@ include '../conn.php';
 
     <section class="home-section">
 
-    <form action="" method="post">
+    <form action="manage-appointment.php" method="post" enctype="multipart/form-data" onsubmit="rememberScrollPosition()">
     <div style="overflow-x:auto;">
         <table class="table table-hover table-bordered table-dark mt-5">
             <thead>
@@ -151,3 +151,24 @@ include '../conn.php';
  &copy; <?php echo date("Y"); ?>
 </footer>
 </html>
+<script>
+    function rememberScrollPosition() {
+        // Store the current scroll position in session storage
+        sessionStorage.setItem('scrollPosition', window.scrollY);
+    }
+
+    function restoreScrollPosition() {
+        // Retrieve the stored scroll position from session storage
+        const scrollPosition = sessionStorage.getItem('scrollPosition');
+
+        // If there is a stored scroll position, scroll to that position
+        if (scrollPosition !== null) {
+            window.scrollTo(0, parseInt(scrollPosition));
+        }
+    }
+
+    // Call restoreScrollPosition when the document is ready
+    $(document).ready(function () {
+        restoreScrollPosition();
+    });
+</script>

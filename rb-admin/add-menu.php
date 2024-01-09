@@ -184,7 +184,7 @@ if (isset($_POST["archive_btn"])) {
                 <h1>Add Menu</h1>
             </div>
 
-            <form method="post" action="add-menu.php" enctype="multipart/form-data">
+            <form method="post" action="add-menu.php" enctype="multipart/form-data" onsubmit="rememberScrollPosition()">
                 <input type="hidden" name="size" value="1000000">
                 <div class="form-row">
                     <div class="form-group col">
@@ -245,7 +245,7 @@ if (isset($_POST["archive_btn"])) {
                     $view_menus = mysqli_query($connection, "SELECT * FROM menus ORDER BY menu_id DESC");
                     if(mysqli_num_rows($view_menus) > 0) {
                     while ($row = mysqli_fetch_array($view_menus)) { ?>
-                    <form method="post" action="add-menu.php" enctype="multipart/form-data">
+                    <form method="post" action="add-menu.php" enctype="multipart/form-data" onsubmit="rememberScrollPosition()">
                         <tr id="<?php echo $row["menu_id"]; ?>">
                             <td style="display: none"><?php echo $row["menu_id"]; ?></td> <!--hidden-->
                             <td class="text-center w-25"><img src ='menu-images/<?php echo $row["menu_image"]; ?>' class="img-fluid img-thumbnail custom-image">
@@ -433,4 +433,26 @@ if (isset($_POST["archive_btn"])) {
             itemStockInput.value = '0';
         }
     });
+
+    <!-- Add this script after your existing JavaScript code -->
+    function rememberScrollPosition() {
+        // Store the current scroll position in session storage
+        sessionStorage.setItem('scrollPosition', window.scrollY);
+    }
+
+    function restoreScrollPosition() {
+        // Retrieve the stored scroll position from session storage
+        const scrollPosition = sessionStorage.getItem('scrollPosition');
+
+        // If there is a stored scroll position, scroll to that position
+        if (scrollPosition !== null) {
+            window.scrollTo(0, parseInt(scrollPosition));
+        }
+    }
+
+    // Call restoreScrollPosition when the document is ready
+    $(document).ready(function () {
+        restoreScrollPosition();
+    });
+
 </script>

@@ -167,7 +167,7 @@ include '../conn.php';
                                                       echo $formattedDateTimeout;?></td>
                               <td><?php echo $row["note"]; ?></td>
                               <td>
-                                <form method="POST" action="appointment-history.php" enctype="multipart/form-data">
+                                <form method="POST" action="appointment-history.php" enctype="multipart/form-data" onsubmit="rememberScrollPosition()">
                                   <button type="submit" class="btn btn-xs btn-warning" name="archive_btn_history" value="<?php echo $row["history_id"]; ?>">ARCHIVE <i class="bi bi-archive"></i></button>
                                 </form>
                               </td>
@@ -202,6 +202,26 @@ include '../conn.php';
     $('#sortTable').DataTable({
       order: [[5, 'desc']]
     });
+    });
+
+    function rememberScrollPosition() {
+        // Store the current scroll position in session storage
+        sessionStorage.setItem('scrollPosition', window.scrollY);
+    }
+
+    function restoreScrollPosition() {
+        // Retrieve the stored scroll position from session storage
+        const scrollPosition = sessionStorage.getItem('scrollPosition');
+
+        // If there is a stored scroll position, scroll to that position
+        if (scrollPosition !== null) {
+            window.scrollTo(0, parseInt(scrollPosition));
+        }
+    }
+
+    // Call restoreScrollPosition when the document is ready
+    $(document).ready(function () {
+        restoreScrollPosition();
     });
 </script>
 

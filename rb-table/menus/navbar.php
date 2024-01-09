@@ -95,7 +95,6 @@
   }
 
   $(document).ready(function() {
-
     // Function to fetch count from the server
     function fetchCount() {
         // Fetch notif_num
@@ -152,7 +151,7 @@
     // Set up an interval to call fetchCount every second (1000 milliseconds)
     setInterval(fetchCount, 5000);
 
-});
+    });
 
 </script>
 

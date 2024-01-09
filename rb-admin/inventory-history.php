@@ -233,7 +233,7 @@ include '../conn.php';
                                     <?php } ?>
                                     <td><?php echo date('F j, Y | g:i A', strtotime($row["date_time"])) ?></td>
                                     <td>
-                                        <form method="POST" enctype="multipart/form-data">
+                                        <form method="POST" enctype="multipart/form-data" onsubmit="rememberScrollPosition()">
                                             <button type="submit" class="btn btn-xs btn-warning" name="archive_btn_kitchen" value="<?php echo $row["report_id"]; ?>">ARCHIVE <i class="bi bi-archive"></i></button>
                                         </form>
                                     </td>
@@ -271,7 +271,7 @@ include '../conn.php';
                                         echo $formattedDate;
                                     ?></td>
                                     <td>
-                                        <form method="post" enctype="multipart/form-data">
+                                        <form method="post" enctype="multipart/form-data" onclick="rememberScrollPosition()">
                                         <button type="submit" class="btn btn-xs btn-warning" name="archive_btn_reports" value="<?php echo $row["report_id"]; ?>">ARCHIVE <i class="bi bi-archive"></i></button>
                                         </form>
                                     </td>
@@ -324,4 +324,24 @@ include '../conn.php';
         searching: false,
         lengthChange: false
     } );
+
+    function rememberScrollPosition() {
+        // Store the current scroll position in session storage
+        sessionStorage.setItem('scrollPosition', window.scrollY);
+    }
+
+    function restoreScrollPosition() {
+        // Retrieve the stored scroll position from session storage
+        const scrollPosition = sessionStorage.getItem('scrollPosition');
+
+        // If there is a stored scroll position, scroll to that position
+        if (scrollPosition !== null) {
+            window.scrollTo(0, parseInt(scrollPosition));
+        }
+    }
+
+    // Call restoreScrollPosition when the document is ready
+    $(document).ready(function () {
+        restoreScrollPosition();
+    });
 </script>

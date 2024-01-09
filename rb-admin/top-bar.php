@@ -3,7 +3,11 @@ if($_SESSION['user_id'] == ''){
 	header('location:../index.php');
 }
 ?>
-
+<style>
+    .large-icon {
+        font-size: 20px; /* Adjust the size as needed */
+    }
+</style>
 <nav class="main-header navbar navbar-expand navbar-white navbar-light fixed-top" style="background: #8b0000; overflow-x:auto;">
     <!-- Left navbar links -->
     <ul class="navbar-nav">
@@ -24,6 +28,12 @@ if($_SESSION['user_id'] == ''){
     <!-- Right navbar links -->
     <ul class="navbar-nav ml-auto">
         <li class="nav-item">
+            <a class="nav-link active text-white" id="openModalButton">
+                <i class="bi bi-bell-fill large-icon"></i>
+                <span class="position-absolute translate-middle badge rounded-pill bg-red" id="notif_num">0</span>
+            </a>
+        </li>
+        <li class="nav-item">
             <!-- Add the onclick event to trigger the password prompt -->
             <a class="nav-link text-white" href="#" onclick="confirmLogout()">
                 Logout
@@ -31,6 +41,23 @@ if($_SESSION['user_id'] == ''){
         </li>
     </ul>
 </nav>
+
+<!-- Your modal code -->
+    <div id="statusModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="statusModalLabel">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title text-black" id="statusModalLabel"><?php echo $row["name"]; ?> Notification</h5>
+            </div>
+            <div class="modal-body" id="notification_desc">
+                    
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-danger" data-bs-dismiss="modal" aria-label="Close">Close</button>
+            </div>
+            </div>
+        </div>
+    </div>
 
 <!-- Password input dialog (hidden by default) -->
     <div id="passwordDialog" class="modal fade" tabindex="-1" role="dialog">
@@ -89,6 +116,58 @@ if($_SESSION['user_id'] == ''){
             // Hide the password input dialog
             $('#passwordDialog').modal('hide');
         }
+
+        $(document).ready(function() {
+            // Define a click event handler for the button
+            $('#openModalButton').click(function() {
+            // Use jQuery to show the modal
+            $('#statusModal').modal('show');
+            });
+        });
+
+        $(document).ready(function() {
+        // Function to fetch count from the server
+        function fetchCount() {
+            // Fetch notif_num
+            $.ajax({
+            url: 'get-billing-notif.php',
+            method: 'POST',
+            data: {
+                action: 'getCount'
+            },
+            success: function(response) {
+                $('#notif_num').html(response);
+
+            },
+            error: function(error) {
+                console.error('Error:', error);
+            }
+            });
+
+            // Fetch and update modal content
+            $.ajax({
+                url: 'get-billing-content.php', // Replace with the actual PHP file to fetch updated modal content
+                method: 'POST',
+                data: {
+                action: 'billing_notif'
+                },
+                success: function(response) {
+                    // Update modal content
+                    $('#notification_desc').html(response);
+                },
+                error: function(error) {
+                    console.error('Error:', error);
+                }
+            });
+        }
+
+        // Call the fetchCount function initially
+        fetchCount();
+
+        // Set up an interval to call fetchCount every second (1000 milliseconds)
+        setInterval(fetchCount, 5000);
+
+        });
     </script>
 
 
