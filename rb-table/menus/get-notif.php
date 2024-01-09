@@ -6,12 +6,20 @@
   $table = $row["user_id"];
   $customer_result = mysqli_query($connection, "SELECT * FROM appointment WHERE table_id = '$table' AND appointment_session = '1'");
 	$customer = mysqli_fetch_array($customer_result);
+  date_default_timezone_set('Asia/Manila');
+  $currentDate = date('Y-m-d');
 
   $user_id = $customer["appointment_id"];
 
     if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['action'] === 'getCount') { 
       $select_notif = mysqli_query($connection, "SELECT * FROM orders WHERE user_table_id = '$user_id' AND read_notif_session = '0' AND user_table = '$table' AND status = '1'");
       $count = mysqli_num_rows($select_notif);
+
+      //$deactivated_menu = mysqli_query($connection, "SELECT * FROM menu_notif 
+                          //INNER JOIN menus ON menus.menu_id = menu_notif.menu_id
+                          //WHERE menus.menu_availability = '1' AND DATE(menu_notif.date_time) = '$currentDate'");
+      //$menu_count = mysqli_num_rows($deactivated_menu);
+      //$count = $notif_count + $menu_count;
         
       echo $count;
     }

@@ -93,10 +93,14 @@ if (isset($_POST["activate_btn"])) {
 
 if (isset($_POST["deactivate_btn"])) {
     $status_menu = $_POST["deactivate_btn"];
+    $currentDateTime = date('Y-m-d H:i:s');
 
     // Perform the update query
     $update_query = "UPDATE `menus` SET menu_availability = '1' WHERE menu_id = '$status_menu'";
     mysqli_query($connection, $update_query);
+
+    $insert_query = "INSERT INTO menu_notif(menu_id, date_time) VALUES ('$status_menu', '$currentDateTime')";
+    mysqli_query($connection, $insert_query);
 
     // Redirect back to the add-menu.php page after deleting
     header('Location: add-menu.php');
