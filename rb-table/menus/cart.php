@@ -75,14 +75,14 @@
                 <?php echo number_format($fetch_cart['cart_menuprice'] * $fetch_cart['cart_quantity'], 2); ?>
             </td>
             <td>
-                <div class="btn-group" role="group">
-                    <button type="button" class="btn btn-primary btn-sm quantity-btn" onclick="decrementQuantity(<?php echo $fetch_cart['cart_id']; ?>)"><i class="bi bi-dash-lg"></i></button>
+                <div class="btn-group w-100" role="group">
+                    <button type="button" class="btn btn-primary  quantity-btn" onclick="decrementQuantity(<?php echo $fetch_cart['cart_id']; ?>)"><i class="bi bi-dash-lg"></i></button>
                     <input type="hidden" name="update_quantity_id"  value="<?php echo $fetch_cart['cart_id']; ?>" >
                     <input type="number" name="update_quantity" id="update_quantity_<?php echo $fetch_cart['cart_id']; ?>" min="1" max="<?php echo $customer["count"] + 2; ?>" class="btn text-center bg-black text-white" value="<?php echo $fetch_cart['cart_quantity']; ?>" onchange="updateDatabase(this)" disabled>
-                    <button type="button" class="btn btn-primary btn-sm quantity-btn" onclick="incrementQuantity(<?php echo $fetch_cart['cart_id']; ?>)"><i class="bi bi-plus-lg"></i></button>
+                    <button type="button" class="btn btn-primary quantity-btn" onclick="incrementQuantity(<?php echo $fetch_cart['cart_id']; ?>)"><i class="bi bi-plus-lg"></i></button>
                 </div>
             </td>
-            <td><a href="cart.php?remove=<?php echo $fetch_cart['cart_id']; ?>" class="delete-btn btn btn-primary">Remove <i class="bi bi-cart-dash-fill"></i></a></td>
+            <td><a href="cart.php?remove=<?php echo $fetch_cart['cart_id']; ?>" class="delete-btn btn btn-primary" onsubmit="rememberScrollPosition()">Remove <i class="bi bi-cart-dash-fill"></i></a></td>
         </tr>
         <?php
             };
@@ -182,6 +182,27 @@
             }
         });
     });
+
+    function rememberScrollPosition() {
+        // Store the current scroll position in session storage
+        sessionStorage.setItem('scrollPosition', window.scrollY);
+    }
+
+    function restoreScrollPosition() {
+        // Retrieve the stored scroll position from session storage
+        const scrollPosition = sessionStorage.getItem('scrollPosition');
+
+        // If there is a stored scroll position, scroll to that position
+        if (scrollPosition !== null) {
+            window.scrollTo(0, parseInt(scrollPosition));
+        }
+    }
+
+    // Call restoreScrollPosition when the document is ready
+    $(document).ready(function () {
+        restoreScrollPosition();
+    });
+
 
 </script>
 

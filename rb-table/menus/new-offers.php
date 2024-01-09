@@ -63,7 +63,7 @@
           if(mysqli_num_rows($result_tb) > 0){
             while ($row = mysqli_fetch_array($result_tb)) {
         ?> 
-          <form action="" method="post">
+          <form action="" method="post" onsubmit="rememberScrollPosition()">
             <div class="card p-2 mb-2 card-red text-center position-relative">
               <?php if($row["menu_availability"] == 1) { ?>
                 <div class="ribbon">
@@ -166,3 +166,24 @@
   exit();
   }
 ?>
+<script>
+    function rememberScrollPosition() {
+        // Store the current scroll position in session storage
+        sessionStorage.setItem('scrollPosition', window.scrollY);
+    }
+
+    function restoreScrollPosition() {
+        // Retrieve the stored scroll position from session storage
+        const scrollPosition = sessionStorage.getItem('scrollPosition');
+
+        // If there is a stored scroll position, scroll to that position
+        if (scrollPosition !== null) {
+            window.scrollTo(0, parseInt(scrollPosition));
+        }
+    }
+
+    // Call restoreScrollPosition when the document is ready
+    $(document).ready(function () {
+        restoreScrollPosition();
+    });
+</script>
