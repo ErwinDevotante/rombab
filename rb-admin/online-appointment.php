@@ -27,39 +27,60 @@ include '../conn.php';
         $date = date('Y-m-d');
         $time = date('H:i:s');
         $description = "Online";
+        $timeInput = $_POST["timeInput"];
+        $dateInput = $_POST["dateInput"];
+
+        $senior = isset($_POST["senior"]) ? $_POST["senior"] : 0;
+        $pwd = isset($_POST["pwd"]) ? $_POST["pwd"] : 0;
+        $bday_no = isset($_POST["bday"]) ? $_POST["bday"] : 0;
 
         if (empty($note)) {
             $note = "No note";
         }
+
+        if (!empty($dateInput) && !empty($timeInput)) {
+            // Calculate the time difference
+            $appointmentDateTime = strtotime("$dateInput $timeInput");
+            $currentDateTime = strtotime("$date $time");
+            $timeDifference = ($appointmentDateTime - $currentDateTime) / 60; // in minutes
     
-        // Check if there is an activated table in the users table
-        $activated_table_query = "SELECT * FROM users WHERE session_tb = '1'";
-        $activated_table_result = mysqli_query($connection, $activated_table_query);
-        $activated_table_row = mysqli_fetch_array($activated_table_result);
-    
-        if (mysqli_num_rows($activated_table_result) > 0) {
-            // An activated table is available, assign the table to the appointment
-            $table_id = $activated_table_row['user_id'];
-    
-            // Update the appointment table with the assigned table_id
-            $query = "INSERT INTO appointment VALUES('', '$name', '$description', '$table_id', '$pax', '$date', '$time', '$note', '1')";
-            $result_add = mysqli_query($connection, $query);
-    
-            // Deactivate the assigned table in the users table
-            $update_table_query = "UPDATE users SET session_tb = '3' WHERE user_id = '$table_id' ";
-            $result_update_table = mysqli_query($connection, $update_table_query);
+            // Check if the time difference is less than 30 minutes
+            if ($timeDifference < 30) {
+                // Check if there is an activated table in the users table
+                $activated_table_query = "SELECT * FROM users WHERE session_tb = '1'";
+                $activated_table_result = mysqli_query($connection, $activated_table_query);
+                $activated_table_row = mysqli_fetch_array($activated_table_result);
             
-            if ($result_add && $result_update_table) {
-                echo "<script> alert('Registration Successful'); </script>";
+                if (mysqli_num_rows($activated_table_result) > 0) {
+                    // An activated table is available, assign the table to the appointment
+                    $table_id = $activated_table_row['user_id'];
+            
+                    // Update the appointment table with the assigned table_id
+                    $query = "INSERT INTO appointment (appointment_id, appointment_name, appointment_desc, table_id, count, date, time, senior_no, pwd_no, bday_no, timeInput, dateInput, note, appointment_session) VALUES('', '$name', '$description', '$table_id', '$pax', '$date', '$time', '$senior', '$pwd', '$bday_no', '$timeInput', '$dateInput', '$note', '1')";
+                    $result_add = mysqli_query($connection, $query);
+            
+                    // Deactivate the assigned table in the users table
+                    $update_table_query = "UPDATE users SET session_tb = '3' WHERE user_id = '$table_id'";
+                    $result_update_table = mysqli_query($connection, $update_table_query);
+                    
+                    if ($result_add && $result_update_table) {
+                        echo "<script> alert('Registration Successful'); </script>";
+                    } else {
+                        echo "<script> alert('Failed to assign table.'); </script>";
+                    }
+                } else {
+                    $query_add = "INSERT INTO appointment(appointment_id, appointment_name, appointment_desc, table_id, count, date, time, senior_no, pwd_no, bday_no, timeInput, dateInput, note, appointment_session) VALUES('', '$name', '$description', NULL , '$pax', '$date', '$time', '$senior', '$pwd', '$bday_no', '$timeInput', '$dateInput', '$note', '1')";
+                    $result_query_add = mysqli_query($connection, $query_add);
+                    // No activated table is available, you can add further logic to handle this case, e.g., wait and display a message
+                    echo "<script> alert('No available activated table. Please wait for a table to become available.'); </script>";
+                }
             } else {
-                echo "<script> alert('Failed to assign table.'); </script>";
+                echo "<script> alert('Appointment time should be less than 30 minutes from now.'); </script>";
             }
         } else {
-            $query_add = "INSERT INTO appointment VALUES('', '$name', '$description' , NULL , '$pax', '$date', '$time', '$note', '1')";
-            $result_query_add = mysqli_query($connection, $query_add);
-            // No activated table is available, you can add further logic to handle this case, e.g., wait and display a message
-            echo "<script> alert('No available activated table. Please wait for a table to become available.'); </script>";
+            echo "<script> alert('Please provide both date and time.'); </script>";
         }
+
         
         unset($_POST);
         header('Location: online-appointment.php');
@@ -132,7 +153,7 @@ include '../conn.php';
             echo $available_table_id;
         } else { ?>
             <span class="null-text text-black">NULL</span>
-    <?php    }
+    <?php }
     } else { ?>
         <span class="null-text text-black">NULL</span>
     <?php }
@@ -145,63 +166,94 @@ include '../conn.php';
     </div>
 
     <section class="home-section">
-
     <form action="" method="post">
-    <div class="form-group">
-        <label>Customer's Name</label>
-        <input type="text" class="form-control" id="customer" name="customer" placeholder="Enter name" required>
-    </div>
-    <div class="form-group">
-        <label>No of people on the table</label>
-        <input type="number" class="form-control" id="pax" name="pax" min="1" max="10" placeholder="Enter no of people" required>
-    </div>
-    <div class="form-group">
-        <label>Note</label>
-        <textarea type="text" class="form-control" id="note" name="note" placeholder="Enter note" rows="2"></textarea>
-    </div>
-    <button type="submit" name="submit" class="btn btn-danger">Submit <i class="bi bi-send-check-fill"></i></button>
-
-    <div style="overflow-x:auto;">
-        <table class="table table-hover table-bordered table-dark mt-5">
-            <thead>
-                <tr>
-                    <th class="text-center" scope="col">Name</th>
-                    <th class="text-center" scope="col">Table No</th>
-                    <th class="text-center" scope="col"># of People</th>
-                    <th class="text-center" scope="col">Date</th>
-                    <th class="text-center" scope="col">Time</th>
-                    <th class="text-center" scope="col">Note</th>
-                </tr>
-            </thead>
-                <tbody>
-                <?php 
-                    $result_tb = mysqli_query($connection, "SELECT * FROM appointment
-                    LEFT JOIN users ON users.user_id=appointment.table_id
-                    WHERE table_id is NULL 
-                    AND appointment_session = '1' AND appointment_desc != 'Walk-In'");
-                    if(mysqli_num_rows($result_tb) > 0) {
-                    while ($row = mysqli_fetch_array($result_tb)) { ?> 
-                        <tr>
-                            <td class="text-center"><?php echo $row["appointment_name"]; ?></td>
-                            <td class="text-center" style="display: none;" id="table_id"><?php echo $row["table_id"]; ?></td>
-                            <td class="text-center"><?php echo $row["name"]; ?></td>
-                            <td class="text-center"><?php echo $row["count"]; ?></td>
-                            <td class="text-center"><?php echo $row["date"]; ?></td>
-                            <td class="text-center"><?php echo $row["time"]; ?></td>
-                            <td><?php echo $row["note"]; ?></td>
-                        </tr>
-                        <?php 
-                    } 
-                    } else { ?>
-                        <tr>
-                            <td class="text-center" colspan="7">No record found!</td>
-                        </tr>
-                    <?php }
+        <div class="card-body">
+            <div class="form-group row">
+                <div class="col-6">
+                    <label class="form-label">Customer's Name</label>
+                    <input type="text" class="form-control" id="customer" name="customer" placeholder="Enter name" required>
+                </div>
+                <div class="col-6">
+                <label>Count</label>
+                        <input type="number" class="form-control" id="pax" name="pax" min="1" placeholder="Enter no of people" required>
+                </div>
+            </div>
+            <div class="form-group row">
+                <div class="col-4">
+                    <label>No of Senior</label>
+                    <input type="number" class="form-control" id="senior" name="senior" min="0" value="0" placeholder="Enter no of senior" required>
+                </div>
+                <div class="col-4">
+                    <label>No of PWD</label>
+                    <input type="number" class="form-control" id="pwd" name="pwd" min="0" value="0" placeholder="Enter no of pwd" required>
+                </div>
+                <div class="col-4">
+                    <label>Bday Promo</label>
+                    <input type="number" class="form-control" id="bday" name="bday" min="0" value="0" placeholder="Enter no of bday promo"  required>
+                </div>
+            </div>
+            <div id="reminder"></div>
+            <div class="form-group row mt-5">
+                <div class="col-6">
+                    <label for="timeInput">Appointment Time</label>
+                    <input type="time" class="form-control" id="timeInput" name="timeInput" value="<?php echo date("H:i"); ?>" min="09:00" max="22:00" required>
+                </div>
+                <div class="col-6">
+                    <label for="dateInput">Appointment Date</label>
+                    <?php 
+                    $dateNow = date("Y-m-d");
+                    $futureDate = date("Y-m-d", strtotime($dateNow . " +1 years"));
                     ?>
-                </tbody>  
-        </table>
-    </div>
-    
+                    <input type="date" class="form-control" id="dateInput" name="dateInput" value="<?php echo date("Y-m-d"); ?>" max="<?php echo $futureDate; ?>" min="<?php echo date("Y-m-d"); ?>" required>
+                </div>
+            </div>
+            <div class="form-group">
+                <label>Note</label>
+                <textarea type="text" class="form-control" id="note" name="note" placeholder="Enter note" rows="2"></textarea>
+            </div>
+            <button type="submit" name="submit" class="btn btn-danger">Submit <i class="bi bi-arrow-right"></i></button>
+        </div>
+
+        <div style="overflow-x:auto;">
+            <table class="table table-hover table-bordered table-dark mt-5">
+                <thead>
+                    <tr>
+                        <th class="text-center" scope="col">Name</th>
+                        <th class="text-center" scope="col">Table No</th>
+                        <th class="text-center" scope="col"># of People</th>
+                        <th class="text-center" scope="col">Date</th>
+                        <th class="text-center" scope="col">Time</th>
+                        <th class="text-center" scope="col">Note</th>
+                    </tr>
+                </thead>
+                    <tbody>
+                    <?php 
+                        $result_tb = mysqli_query($connection, "SELECT * FROM appointment
+                        LEFT JOIN users ON users.user_id=appointment.table_id
+                        WHERE table_id is NULL 
+                        AND appointment_session = '1' AND appointment_desc = 'Online'");
+                        if(mysqli_num_rows($result_tb) > 0) {
+                        while ($row = mysqli_fetch_array($result_tb)) { ?> 
+                            <tr>
+                                <td class="text-center"><?php echo $row["appointment_name"]; ?></td>
+                                <td class="text-center" style="display: none;" id="table_id"><?php echo $row["table_id"]; ?></td>
+                                <td class="text-center">Waiting for available table...</td>
+                                <td class="text-center"><?php echo $row["count"]; ?></td>
+                                <td class="text-center"><?php echo $row["date"]; ?></td>
+                                <td class="text-center"><?php echo $row["time"]; ?></td>
+                                <td><?php echo $row["note"]; ?></td>
+                            </tr>
+                            <?php 
+                        } 
+                        } else { ?>
+                            <tr>
+                                <td class="text-center" colspan="7">No record found!</td>
+                            </tr>
+                        <?php }
+                        ?>
+                    </tbody>  
+            </table>
+        </div>
     </form>
     </section>
     </div>
@@ -252,6 +304,14 @@ function checkForAvailableTable() {
         customerInput.value = sanitizedValue;
     });
 
+    const noteInput = document.getElementById('note');
+    noteInput.addEventListener('input', function() {
+        const inputValue = noteInput.value;
+        // Keep only letters, spaces, and "-"
+        const sanitizedValue = inputValue.replace(/[^a-zA-Z\s-]/g, '');
+        noteInput.value = sanitizedValue;
+    });
+
     // Add event listener for No of people input
     const paxInput = document.getElementById('pax');
     paxInput.addEventListener('input', function() {
@@ -277,6 +337,47 @@ function checkForAvailableTable() {
         }
     });
 
+    // Function for input validation
+    function validateInput(inputElement, minValue, maxValue) {
+        const inputValue = inputElement.value;
+        
+        // Remove any non-digit characters (including decimal points)
+        const sanitizedValue = inputValue.replace(/[^0-9]/g, '');
+        
+        // Ensure the value is not empty
+        if (sanitizedValue === '') {
+            inputElement.value = minValue.toString(); // Set a default value if the input is empty
+        } else {
+            const value = parseInt(sanitizedValue, 10);
+            
+            // Ensure the value is within the specified range
+            if (value < minValue) {
+                inputElement.value = minValue.toString(); // Set the minimum value
+            } else if (value > maxValue) {
+                inputElement.value = maxValue.toString(); // Set the maximum value
+            } else {
+                inputElement.value = value; // Update the input value with the sanitized integer value
+            }
+        }
+    }
+
+    // Add event listeners for senior, pwd, and bday inputs
+    const seniorInput = document.getElementById('senior');
+    seniorInput.addEventListener('input', function() {
+        validateInput(seniorInput, 0, 10);
+    });
+
+    const pwdInput = document.getElementById('pwd');
+    pwdInput.addEventListener('input', function() {
+        validateInput(pwdInput, 0, 10);
+    });
+
+    const bdayInput = document.getElementById('bday');
+    bdayInput.addEventListener('input', function() {
+        validateInput(bdayInput, 0, 3);
+    });
+
+
     // Add event listener for Note textarea
     const noteTextarea = document.getElementById('note');
     noteTextarea.addEventListener('input', function() {
@@ -286,5 +387,96 @@ function checkForAvailableTable() {
         if (inputValue.length > 100) {
             noteTextarea.value = inputValue.slice(0, 100);
         }
+    });
+    
+    const customerName = document.getElementById('customer');
+    customerName.addEventListener('input', function() {
+        const inputValue = customerName.value;
+
+        // Truncate the input value to 100 characters
+        if (inputValue.length > 100) {
+            customerName.value = inputValue.slice(0, 100);
+        }
+    });
+
+    document.addEventListener('DOMContentLoaded', function () {
+        var seniorInput = document.getElementById('senior');
+        var pwdInput = document.getElementById('pwd');
+        var bdayInput = document.getElementById('bday');
+        var paxInput = document.getElementById('pax');
+        var reminderDiv = document.getElementById('reminder');
+
+        seniorInput.addEventListener('input', checkCombination);
+        pwdInput.addEventListener('input', checkCombination);
+        paxInput.addEventListener('input', checkCombination);
+        bdayInput.addEventListener('input', checkBdayPromo);
+
+        function checkCombination() {
+            var seniorValue = parseInt(seniorInput.value);
+            var pwdValue = parseInt(pwdInput.value);
+            var paxValue = parseInt(paxInput.value);
+
+            if (seniorValue + pwdValue > paxValue) {
+                reminderDiv.innerHTML = '<p class="text-red">Reminder: The combination of Senior and PWD should not exceed the total number of people on the table.</p>';
+                // Reset the values to 0
+                seniorInput.value = 0;
+                pwdInput.value = 0;
+            } else {
+                reminderDiv.innerHTML = '';
+            }
+            //checkBdayPromo(); // Check Bday Promo when any of the input fields change
+        }
+
+        function checkBdayPromo() {
+            var paxValue = parseInt(paxInput.value);
+
+            if (paxValue >= 15) {
+                bdayInput.max = 3;
+            } else if (paxValue >= 10) {
+                bdayInput.max = 2;
+            } else if (paxValue >= 5) {
+                bdayInput.max = 1;
+            } else {
+                bdayInput.max = 0;
+                bdayInput.value = 0;
+            }
+
+            if (parseInt(bdayInput.value) > bdayInput.max) {
+                reminderDiv.innerHTML = 'Reminder: The number of birthday promos should not exceed the allowed limit based on the number of people on the table.';
+                bdayInput.value = 0;
+            } else {
+                reminderDiv.innerHTML = '';
+            }
+        }
+
+        seniorInput.addEventListener('input', function () {
+            if (parseInt(seniorInput.value) > 0 || parseInt(pwdInput.value) > 0) {
+                bdayInput.value = 0;
+                bdayInput.disabled = true;
+            } else {
+                bdayInput.disabled = false;
+            }
+        });
+
+        pwdInput.addEventListener('input', function () {
+            if (parseInt(seniorInput.value) > 0 || parseInt(pwdInput.value) > 0) {
+                bdayInput.value = 0;
+                bdayInput.disabled = true;
+            } else {
+                bdayInput.disabled = false;
+            }
+        });
+
+        bdayInput.addEventListener('input', function () {
+            if (parseInt(bdayInput.value) > 0) {
+                seniorInput.value = 0;
+                pwdInput.value = 0;
+                seniorInput.disabled = true;
+                pwdInput.disabled = true;
+            } else {
+                seniorInput.disabled = false;
+                pwdInput.disabled = false;
+            }
+        });
     });
 </script>
