@@ -61,11 +61,13 @@ include '../conn.php';
         <!-- /.card-tools -->
     </div>
     <!-- /.card-header -->
+    <div style="overflow-x:auto;">
       <div class="card-body" id="see_orders">
         <div class="card-columns-container" id="ordersContainer">
           
         </div>
       </div>
+    </div>
     <!-- /.card-body -->
     </div>
     <!-- /.card -->

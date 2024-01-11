@@ -40,6 +40,23 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['orderID'])) {
     echo 'Invalid Request';
 }
 
+if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['okayOrderID'])) {
+    $okayOrderID = $_POST['okayOrderID'];
+
+    // Update the read_notif_session in the orders table
+    $updateQuery = "UPDATE deact_menu_notif SET marked_as_read = '1' WHERE deact_menu_id = '$okayOrderID'";
+    if (mysqli_query($connection, $updateQuery)) {
+        // Return a success response
+        echo json_encode(['success' => true]);
+    } else {
+        // Handle the error if the update fails
+        echo json_encode(['error' => true]);
+    }
+} else {
+    // Handle invalid or missing POST data
+    echo 'Invalid Request';
+}
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && (isset($_POST['to_pay']) && isset($_POST['userId']) && isset($_POST['tableNo']))) {
     // Get the totalBill, userId, and tableNo from the POST request
     $bill = $_POST['to_pay'];

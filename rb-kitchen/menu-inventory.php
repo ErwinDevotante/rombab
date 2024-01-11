@@ -47,6 +47,12 @@ include '../conn.php';
         // Perform the update query
         $update_query = "UPDATE `menus` SET menu_availability = '0' WHERE menu_id = '$status_menu'";
         mysqli_query($connection, $update_query);
+
+        $delete_query = "DELETE FROM menu_notif WHERE menu_id = '$status_menu'";
+        mysqli_query($connection, $delete_query);
+
+        $another_delete_query = "DELETE FROM deact_menu_notif WHERE menu_id = '$status_menu'";
+        mysqli_query($connection, $another_delete_query);
     
         // Redirect back to the add-menu.php page after deleting
         header('Location: menu-inventory.php');
