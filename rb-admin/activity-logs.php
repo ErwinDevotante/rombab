@@ -67,7 +67,7 @@ if($_SESSION['user_id']==''){
                     <div class="form-row">
                         <div class="form-group col-md-4">
                             <label for="chosen_date">Select Date:</label>
-                            <input type="date" class="form-control" id="chosen_date" name="chosen_date" max="<?php echo date("Y-m-d"); ?>" min="1900-01">
+                            <input type="date" class="form-control" id="chosen_date" name="chosen_date" max="<?php echo date("Y-m-d"); ?>" min="2022-11-09">
                         </div>
                     </div>  
 

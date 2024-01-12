@@ -72,7 +72,7 @@ include '../conn.php';
                 <tbody>
                     
                     <?php 
-                    $result_tb = mysqli_query($connection, "SELECT appointment.table_id, appointment.appointment_name, appointment.appointment_session, appointment_id,
+                    $result_tb = mysqli_query($connection, "SELECT appointment.table_id, appointment.count, appointment.appointment_name, appointment.appointment_desc, appointment.appointment_session, appointment.pwd_no, appointment.senior_no, appointment.bday_no, appointment.time, appointment.date, appointment_id,
                                                             users.user_id, users.name, users.session_tb, users.user_role 
                                                             FROM appointment RIGHT JOIN users 
                                                             ON users.user_id=appointment.table_id
@@ -107,9 +107,9 @@ include '../conn.php';
                                      <a name="save" type="submit" class="btn btn-primary mt-2" href="activate-table-edit.php?id_save=<?php echo $row["appointment_id"]; ?>&save=1&table_save=<?php echo $row["user_id"]; ?>">SAVE</a> -->
                                 <?php //} 
                                     if ($row['session_tb'] == '3' && ($row['appointment_session'] == '1' && $row['table_id'] !== null)){ ?>
-                                        <select class="form-control" name="appointment" id="appointment" disabled>
-                                                <option> [OCCUPIED] <?php echo $row['appointment_name']; ?> </option>
-                                        </select>
+                                            <select class="form-control" name="appointment" id="appointment" data-toggle="tooltip" data-placement="top" data-bs-html="true" title="<?php echo $row["appointment_desc"]; ?>, <b>Count</b>: <?php echo $row["count"]; ?> <br><b>Date</b>: <?php echo date("F j, Y", strtotime($row["date"])); ?>, <b>Time</b>: <?php echo date("h:i A", strtotime($row["time"])); ?> <br><b>PWD</b>: <?php echo $row["pwd_no"]; ?>, <b>Senior</b>: <?php echo $row["senior_no"]; ?>, <b>Bday</b>: <?php echo $row["bday_no"]; ?>" disabled>
+                                                    <option> [OCCUPIED] <?php echo $row['appointment_name']; ?> </option>
+                                            </select>
                                         <a name="reset" type="submit" class="btn btn-info mt-2" href="activate-table-edit.php?id_reset=<?php echo $row["appointment_id"]; ?>&reset=2&table_reset=<?php echo $row["user_id"]; ?>">RESET <i class="bi bi-arrow-clockwise"></i></a>
                                     <?php }
                                     else {?>
@@ -170,5 +170,9 @@ include '../conn.php';
     // Call restoreScrollPosition when the document is ready
     $(document).ready(function () {
         restoreScrollPosition();
+    });
+
+    $(document).ready(function(){
+        $('[data-toggle="tooltip"]').tooltip();
     });
 </script>

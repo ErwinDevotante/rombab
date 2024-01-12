@@ -8,7 +8,12 @@ include '../conn.php';
     $row = mysqli_fetch_array($result);
 
     function updateSessionTb($connection) {
-        $query_check_available_tables = "SELECT * FROM appointment WHERE table_id IS NULL LIMIT 1";
+        $currentDateTime = date('Y-m-d H:i:s');
+        $thirtyMinutesAgo = date('Y-m-d H:i:s', strtotime('-30 minutes', strtotime($currentDateTime)));
+
+        $query_check_available_tables = "SELECT * FROM appointment 
+                                        WHERE table_id IS NULL 
+                                        AND CONCAT(dateInput, ' ', timeInput) >= '$thirtyMinutesAgo' LIMIT 1";
         $result_check_available_tables = mysqli_query($connection, $query_check_available_tables);
     
         if (mysqli_num_rows($result_check_available_tables) > 0) {
@@ -24,11 +29,11 @@ include '../conn.php';
         $name = $_POST["customer"];
         $pax = $_POST["pax"];
         $note = $_POST["note"];
-        $date = date('Y-m-d');
-        $time = date('H:i:s');
+        //$date = date('Y-m-d');
+        //$time = date('H:i:s');
         $description = "Online";
-        $timeInput = $_POST["timeInput"];
-        $dateInput = $_POST["dateInput"];
+        $time = $_POST["timeInput"];
+        $date = $_POST["dateInput"];
 
         $senior = isset($_POST["senior"]) ? $_POST["senior"] : 0;
         $pwd = isset($_POST["pwd"]) ? $_POST["pwd"] : 0;
@@ -38,49 +43,51 @@ include '../conn.php';
             $note = "No note";
         }
 
-        if (!empty($dateInput) && !empty($timeInput)) {
-            // Calculate the time difference
-            $appointmentDateTime = strtotime("$dateInput $timeInput");
-            $currentDateTime = strtotime("$date $time");
-            $timeDifference = ($appointmentDateTime - $currentDateTime) / 60; // in minutes
+        // Convert dateInput and timeInput to a datetime format
+        $currentDateTime = date('Y-m-d H:i:s');
+        $datetimeInput = $dateInput . ' ' . $timeInput;
+        $datetimeInput = strtotime($datetimeInput);
+        // Calculate the datetime for 30 minutes from now
+        $thirtyMinutesFromNow = date('Y-m-d H:i:s', strtotime('-30 minutes', strtotime($currentDateTime)));
+
+        // Check if there is an activated table in the users table
+        $activated_table_query = "SELECT * FROM users WHERE session_tb = '1'";
+        $activated_table_result = mysqli_query($connection, $activated_table_query);
+        $activated_table_row = mysqli_fetch_array($activated_table_result);
+
+        // Check if there is an activated table in the users table
+        $activated_table_query = "SELECT * FROM users WHERE session_tb = '1'";
+        $activated_table_result = mysqli_query($connection, $activated_table_query);
+        $activated_table_row = mysqli_fetch_array($activated_table_result);
     
-            // Check if the time difference is less than 30 minutes
-            if ($timeDifference < 30) {
-                // Check if there is an activated table in the users table
-                $activated_table_query = "SELECT * FROM users WHERE session_tb = '1'";
-                $activated_table_result = mysqli_query($connection, $activated_table_query);
-                $activated_table_row = mysqli_fetch_array($activated_table_result);
-            
-                if (mysqli_num_rows($activated_table_result) > 0) {
-                    // An activated table is available, assign the table to the appointment
-                    $table_id = $activated_table_row['user_id'];
-            
-                    // Update the appointment table with the assigned table_id
-                    $query = "INSERT INTO appointment (appointment_id, appointment_name, appointment_desc, table_id, count, date, time, senior_no, pwd_no, bday_no, timeInput, dateInput, note, appointment_session) VALUES('', '$name', '$description', '$table_id', '$pax', '$date', '$time', '$senior', '$pwd', '$bday_no', '$timeInput', '$dateInput', '$note', '1')";
-                    $result_add = mysqli_query($connection, $query);
-            
-                    // Deactivate the assigned table in the users table
-                    $update_table_query = "UPDATE users SET session_tb = '3' WHERE user_id = '$table_id'";
-                    $result_update_table = mysqli_query($connection, $update_table_query);
-                    
-                    if ($result_add && $result_update_table) {
-                        echo "<script> alert('Registration Successful'); </script>";
-                    } else {
-                        echo "<script> alert('Failed to assign table.'); </script>";
-                    }
+        if (strtotime($datetimeInput) >= strtotime($thirtyMinutesFromNow) && strtotime($datetimeInput) <= strtotime($currentDateTime)) {
+            if (mysqli_num_rows($activated_table_result) > 0) {
+                // An activated table is available, assign the table to the appointment
+                $table_id = $activated_table_row['user_id'];
+        
+                // Update the appointment table with the assigned table_id
+                $query = "INSERT INTO appointment (appointment_id, appointment_name, appointment_desc, table_id, count, date, time, senior_no, pwd_no, bday_no, timeInput, dateInput, note, appointment_session) VALUES('', '$name', '$description', '$table_id', '$pax', '$date', '$time', '$senior', '$pwd', '$bday_no', '$timeInput', '$dateInput', '$note', '1')";
+                $result_add = mysqli_query($connection, $query);
+        
+                // Deactivate the assigned table in the users table
+                $update_table_query = "UPDATE users SET session_tb = '3' WHERE user_id = '$table_id'";
+                $result_update_table = mysqli_query($connection, $update_table_query);
+                
+                if ($result_add && $result_update_table) {
+                    echo "<script> alert('Registration Successful'); </script>";
                 } else {
-                    $query_add = "INSERT INTO appointment(appointment_id, appointment_name, appointment_desc, table_id, count, date, time, senior_no, pwd_no, bday_no, timeInput, dateInput, note, appointment_session) VALUES('', '$name', '$description', NULL , '$pax', '$date', '$time', '$senior', '$pwd', '$bday_no', '$timeInput', '$dateInput', '$note', '1')";
-                    $result_query_add = mysqli_query($connection, $query_add);
-                    // No activated table is available, you can add further logic to handle this case, e.g., wait and display a message
-                    echo "<script> alert('No available activated table. Please wait for a table to become available.'); </script>";
+                    echo "<script> alert('Failed to assign table.'); </script>";
                 }
             } else {
-                echo "<script> alert('Appointment time should be less than 30 minutes from now.'); </script>";
+                $query_add = "INSERT INTO appointment(appointment_id, appointment_name, appointment_desc, table_id, count, date, time, senior_no, pwd_no, bday_no, timeInput, dateInput, note, appointment_session) VALUES('', '$name', '$description', NULL, '$pax', '$date', '$time', '$senior', '$pwd', '$bday_no', '$timeInput', '$dateInput', '$note', '1')";
+                $result_query_add = mysqli_query($connection, $query_add);
             }
         } else {
-            echo "<script> alert('Please provide both date and time.'); </script>";
+            $query_add = "INSERT INTO appointment(appointment_id, appointment_name, appointment_desc, table_id, count, date, time, senior_no, pwd_no, bday_no, timeInput, dateInput, note, appointment_session) VALUES('', '$name', '$description', NULL, '$pax', '$date', '$time', '$senior', '$pwd', '$bday_no', '$timeInput', '$dateInput', '$note', '1')";
+            $result_query_add = mysqli_query($connection, $query_add);
+            // No activated table is available, you can add further logic to handle this case, e.g., wait and display a message
+            echo "<script> alert('No available activated table. Please wait for a table to become available.'); </script>";
         }
-
         
         unset($_POST);
         header('Location: online-appointment.php');
@@ -129,11 +136,14 @@ include '../conn.php';
     ?>
 
     <div class="content-wrapper bg-black mt-5">
-    <?php 
+    <?php
+    $currentDateTime = date('Y-m-d H:i:s');
+    $thirtyMinutesAgo = date('Y-m-d H:i:s', strtotime('-30 minutes', strtotime($currentDateTime)));
+
     $query_search = "SELECT user_id FROM users WHERE session_tb = '1'";
     $result_search = mysqli_query($connection, $query_search);
 
-    $query_search_tblNULL = mysqli_query($connection, "SELECT * FROM appointment WHERE table_id is NULL");
+    $query_search_tblNULL = mysqli_query($connection, "SELECT * FROM appointment WHERE table_id is NULL AND CONCAT(dateInput, ' ', timeInput) >= '$thirtyMinutesAgo'");
 
     if (mysqli_num_rows($result_search) > 0 && mysqli_num_rows($query_search_tblNULL) > 0) {
         // An available table is found, fetch the first row and return its user_id
@@ -221,8 +231,8 @@ include '../conn.php';
                         <th class="text-center" scope="col">Name</th>
                         <th class="text-center" scope="col">Table No</th>
                         <th class="text-center" scope="col"># of People</th>
-                        <th class="text-center" scope="col">Date</th>
-                        <th class="text-center" scope="col">Time</th>
+                        <th class="text-center" scope="col">Appointed Date</th>
+                        <th class="text-center" scope="col">Appointed Time</th>
                         <th class="text-center" scope="col">Note</th>
                     </tr>
                 </thead>
@@ -239,8 +249,8 @@ include '../conn.php';
                                 <td class="text-center" style="display: none;" id="table_id"><?php echo $row["table_id"]; ?></td>
                                 <td class="text-center">Waiting for available table...</td>
                                 <td class="text-center"><?php echo $row["count"]; ?></td>
-                                <td class="text-center"><?php echo $row["date"]; ?></td>
-                                <td class="text-center"><?php echo $row["time"]; ?></td>
+                                <td class="text-center"><?php echo $row["dateInput"]; ?></td>
+                                <td class="text-center"><?php echo $row["timeInput"]; ?></td>
                                 <td><?php echo $row["note"]; ?></td>
                             </tr>
                             <?php 

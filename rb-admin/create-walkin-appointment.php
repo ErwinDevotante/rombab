@@ -149,80 +149,79 @@ include '../conn.php';
     </div>
 
     <section class="home-section">
-
     <form action="" method="post">
-    <div class="form-group row">
-    <div class="col-6">
-        <label>Customer's Name</label>
-        <input type="text" class="form-control" id="customer" name="customer" placeholder="Enter name" required>
-    </div>
-    <div class="col-6">
-    <label>No of people on the table</label>
-            <input type="number" class="form-control" id="pax" name="pax" min="1" placeholder="Enter no of people" required>
-    </div>
-    </div>
-    <div class="form-group row">
-        <div class="col-4">
-            <label>No of Senior</label>
-            <input type="number" class="form-control" id="senior" name="senior" min="0" value="0" placeholder="Enter no of senior" required>
+        <div class="card-body">
+            <div class="form-group row">
+                <div class="col-6">
+                    <label>Customer's Name</label>
+                    <input type="text" class="form-control" id="customer" name="customer" placeholder="Enter name" required>
+                </div>
+                <div class="col-6">
+                <label>No of people on the table</label>
+                        <input type="number" class="form-control" id="pax" name="pax" min="1" placeholder="Enter no of people" required>
+                </div>
+            </div>
+            <div class="form-group row">
+                <div class="col-4">
+                    <label>No of Senior</label>
+                    <input type="number" class="form-control" id="senior" name="senior" min="0" value="0" placeholder="Enter no of senior" required>
+                </div>
+                <div class="col-4">
+                    <label>No of PWD</label>
+                    <input type="number" class="form-control" id="pwd" name="pwd" min="0" value="0" placeholder="Enter no of pwd" required>
+                </div>
+                <div class="col-4">
+                    <label>Bday Promo</label>
+                    <input type="number" class="form-control" id="bday" name="bday" min="0" value="0" placeholder="Enter no of bday promo"  required>
+                </div>
+            </div>
+            <div id="reminder"></div>
+            <div class="form-group">
+                <label>Note</label>
+                <textarea type="text" class="form-control" id="note" name="note" placeholder="Enter note" rows="2"></textarea>
+            </div>
+            <button type="submit" name="submit" class="btn btn-danger">Submit <i class="bi bi-arrow-right"></i></button>
         </div>
-        <div class="col-4">
-            <label>No of PWD</label>
-            <input type="number" class="form-control" id="pwd" name="pwd" min="0" value="0" placeholder="Enter no of pwd" required>
+        <div style="overflow-x:auto;">
+            <table class="table table-hover table-bordered table-dark mt-5">
+                <thead>
+                    <tr>
+                        <th class="text-center" scope="col">Name</th>
+                        <th class="text-center" scope="col">Table No</th>
+                        <th class="text-center" scope="col"># of People</th>
+                        <th class="text-center" scope="col">Date</th>
+                        <th class="text-center" scope="col">Time</th>
+                        <th class="text-center" scope="col">Note</th>
+                    </tr>
+                </thead>
+                    <tbody>
+                    <?php 
+                        $result_tb = mysqli_query($connection, "SELECT * FROM appointment
+                        LEFT JOIN users ON users.user_id=appointment.table_id
+                        WHERE table_id is NULL 
+                        AND appointment_session = '1' AND appointment_desc = 'Walk-In'");
+                        if(mysqli_num_rows($result_tb) > 0) {
+                        while ($row = mysqli_fetch_array($result_tb)) { ?> 
+                            <tr>
+                                <td class="text-center"><?php echo $row["appointment_name"]; ?></td>
+                                <td class="text-center" style="display: none;" id="table_id"><?php echo $row["table_id"]; ?></td>
+                                <td class="text-center">Waiting for available table...</td>
+                                <td class="text-center"><?php echo $row["count"]; ?></td>
+                                <td class="text-center"><?php echo $row["date"]; ?></td>
+                                <td class="text-center"><?php echo $row["time"]; ?></td>
+                                <td><?php echo $row["note"]; ?></td>
+                            </tr>
+                            <?php 
+                        } 
+                        } else { ?>
+                            <tr>
+                                <td class="text-center" colspan="7">No record found!</td>
+                            </tr>
+                        <?php }
+                        ?>
+                    </tbody>  
+            </table>
         </div>
-        <div class="col-4">
-            <label>Bday Promo</label>
-            <input type="number" class="form-control" id="bday" name="bday" min="0" value="0" placeholder="Enter no of bday promo"  required>
-        </div>
-    </div>
-    <div id="reminder"></div>
-    <div class="form-group">
-        <label>Note</label>
-        <textarea type="text" class="form-control" id="note" name="note" placeholder="Enter note" rows="2"></textarea>
-    </div>
-    <button type="submit" name="submit" class="btn btn-danger">Submit <i class="bi bi-arrow-right"></i></button>
-
-    <div style="overflow-x:auto;">
-        <table class="table table-hover table-bordered table-dark mt-5">
-            <thead>
-                <tr>
-                    <th class="text-center" scope="col">Name</th>
-                    <th class="text-center" scope="col">Table No</th>
-                    <th class="text-center" scope="col"># of People</th>
-                    <th class="text-center" scope="col">Date</th>
-                    <th class="text-center" scope="col">Time</th>
-                    <th class="text-center" scope="col">Note</th>
-                </tr>
-            </thead>
-                <tbody>
-                <?php 
-                    $result_tb = mysqli_query($connection, "SELECT * FROM appointment
-                    LEFT JOIN users ON users.user_id=appointment.table_id
-                    WHERE table_id is NULL 
-                    AND appointment_session = '1' AND appointment_desc = 'Walk-In'");
-                    if(mysqli_num_rows($result_tb) > 0) {
-                    while ($row = mysqli_fetch_array($result_tb)) { ?> 
-                        <tr>
-                            <td class="text-center"><?php echo $row["appointment_name"]; ?></td>
-                            <td class="text-center" style="display: none;" id="table_id"><?php echo $row["table_id"]; ?></td>
-                            <td class="text-center">Waiting for available table...</td>
-                            <td class="text-center"><?php echo $row["count"]; ?></td>
-                            <td class="text-center"><?php echo $row["date"]; ?></td>
-                            <td class="text-center"><?php echo $row["time"]; ?></td>
-                            <td><?php echo $row["note"]; ?></td>
-                        </tr>
-                        <?php 
-                    } 
-                    } else { ?>
-                        <tr>
-                            <td class="text-center" colspan="7">No record found!</td>
-                        </tr>
-                    <?php }
-                    ?>
-                </tbody>  
-        </table>
-    </div>
-    
     </form>
     </section>
     </div>

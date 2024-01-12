@@ -175,7 +175,7 @@ include '../conn.php';
                           <?php 
                       } } else { ?>
                           <tr>
-                              <td class="text-center" colspan="9">No record found!</td>
+                              <td class="text-center" colspan="10">No record found!</td>
                           </tr>
                       <?php } ?>
                   </tbody>  
