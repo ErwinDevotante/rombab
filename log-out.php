@@ -1,13 +1,10 @@
 <?php
 session_start();
-
-$_SESSION['success'] = true;
 unset($_SESSION["user_id"]);
+session_unset();
 session_destroy();
+$_SESSION['success'] = true;
 
-//echo '<script type="text/javascript">'; 
-        //echo 'alert("Logged-out Sucessfully!");'; echo 'window.location.href = "index.php";';
-        //echo '</script>';
 ?>
 <!DOCTYPE html>
 <html lang="en">
