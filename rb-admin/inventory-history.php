@@ -148,8 +148,8 @@ include '../conn.php';
 
             <div class="container-fluid text-center p-4">
                 <h1>Inventory Reports</h1>
-                <p class="m-0">Start Time: <?php echo date("F d, Y", strtotime($currentDate)) ?></p>
-                <p>End Time: <?php echo date("F d, Y", strtotime($currentDate)) ?></p>
+                <!-- <p class="m-0">Start Time: <?php echo date("F d, Y", strtotime($currentDate)) ?></p>
+                <p>End Time: <?php echo date("F d, Y", strtotime($currentDate)) ?></p> -->
                 <div style="overflow-x:auto;">
                     <div class="btn-group" role="group">
                         <form method="POST" action="generate_reports/generate_daily_inventory_report.php" target="_blank">
