@@ -12,7 +12,7 @@
 
     date_default_timezone_set('Asia/Manila');
     // Detect inactivity and trigger logout
-    $inactivityTimeout = 5 * 60; // 5 minutes
+    $inactivityTimeout = 60 * 60; // 1 hour
     if (isset($_SESSION['last_activity']) && (time() - $_SESSION['last_activity'] > $inactivityTimeout)) {
         // Log out the user due to inactivity
         session_destroy();
