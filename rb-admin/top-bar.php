@@ -165,7 +165,7 @@ if($_SESSION['user_id'] == ''){
         fetchCount();
 
         // Set up an interval to call fetchCount every second (1000 milliseconds)
-        setInterval(fetchCount, 5000);
+        // setInterval(fetchCount, 5000);
 
         });
     </script>

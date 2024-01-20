@@ -8,29 +8,46 @@ include '../conn.php';
     $row = mysqli_fetch_array($result);
 
     function updateSessionTb($connection) {
-        $currentDateTime = date('Y-m-d H:i:s');
-        $thirtyMinutesAgo = date('Y-m-d H:i:s', strtotime('-30 minutes', strtotime($currentDateTime)));
 
+        $current_date_time = date('Y-m-d H:i:s');
         $query_check_available_tables = "SELECT * FROM appointment 
-                                        WHERE table_id IS NULL 
-                                        AND CONCAT(dateInput, ' ', timeInput) >= '$thirtyMinutesAgo' LIMIT 1";
+                                WHERE table_id IS NULL 
+                                AND appointment_desc = 'Online' AND
+                                TIMESTAMPDIFF(SECOND, '$current_date_time', CONCAT(date,' ',time)) <= 1800
+                                LIMIT 1";
         $result_check_available_tables = mysqli_query($connection, $query_check_available_tables);
+
+        $query_search = "SELECT user_id FROM users WHERE session_tb = '1'";
+        $result_search = mysqli_query($connection, $query_search);
+
     
-        if (mysqli_num_rows($result_check_available_tables) > 0) {
-            // There is an available table, update session_tb to 3
+        if (mysqli_num_rows($result_check_available_tables) > 0 && mysqli_num_rows($result_search) > 0) {
+            
+            $row_available_table = mysqli_fetch_array($result_search);
+            $available_table_id = $row_available_table['user_id'];
+    
+            // Update session_tb to 3
             $update_session_tb_query = "UPDATE users SET session_tb = '3' WHERE user_id = '{$_SESSION['user_id']}'";
             mysqli_query($connection, $update_session_tb_query);
+    
+            // Return the available table_id
+            return $available_table_id;
         } else {
-            // No available table, keep session_tb as it is (no changes needed)
+            return NULL;
         }
+    }
+    
+    if (isset($_POST["delete_appointment"])) {
+        $appointment_id = $_POST["appointment_id"];
+
+        $delete_appointment = "DELETE FROM appointment WHERE appointment_id = $appointment_id";
+        $delete_result = mysqli_query($connection, $delete_appointment);
     }
 
     if (isset($_POST["submit"])) {
         $name = $_POST["customer"];
         $pax = $_POST["pax"];
         $note = $_POST["note"];
-        //$date = date('Y-m-d');
-        //$time = date('H:i:s');
         $description = "Online";
         $time = $_POST["timeInput"];
         $date = $_POST["dateInput"];
@@ -43,50 +60,38 @@ include '../conn.php';
             $note = "No note";
         }
 
-        // Convert dateInput and timeInput to a datetime format
-        $currentDateTime = date('Y-m-d H:i:s');
-        $datetimeInput = $dateInput . ' ' . $timeInput;
-        $datetimeInput = strtotime($datetimeInput);
-        // Calculate the datetime for 30 minutes from now
-        $thirtyMinutesFromNow = date('Y-m-d H:i:s', strtotime('-30 minutes', strtotime($currentDateTime)));
+        $date_time_combined = $date . ' ' . $time;
+        $current_date_time = date('Y-m-d H:i:s');
+    
+        // Check if the provided date and time are within 30 minutes of the current date and time
+        $diff = strtotime($date_time_combined) - strtotime($current_date_time);
+        $minutes_difference = floor($diff / 60);
 
-        // Check if there is an activated table in the users table
-        $activated_table_query = "SELECT * FROM users WHERE session_tb = '1'";
-        $activated_table_result = mysqli_query($connection, $activated_table_query);
-        $activated_table_row = mysqli_fetch_array($activated_table_result);
-
+        if ($minutes_difference <= 30) {
         // Check if there is an activated table in the users table
         $activated_table_query = "SELECT * FROM users WHERE session_tb = '1'";
         $activated_table_result = mysqli_query($connection, $activated_table_query);
         $activated_table_row = mysqli_fetch_array($activated_table_result);
     
-        if (strtotime($datetimeInput) >= strtotime($thirtyMinutesFromNow) && strtotime($datetimeInput) <= strtotime($currentDateTime)) {
             if (mysqli_num_rows($activated_table_result) > 0) {
                 // An activated table is available, assign the table to the appointment
                 $table_id = $activated_table_row['user_id'];
         
                 // Update the appointment table with the assigned table_id
-                $query = "INSERT INTO appointment (appointment_id, appointment_name, appointment_desc, table_id, count, date, time, senior_no, pwd_no, bday_no, timeInput, dateInput, note, appointment_session) VALUES('', '$name', '$description', '$table_id', '$pax', '$date', '$time', '$senior', '$pwd', '$bday_no', '$timeInput', '$dateInput', '$note', '1')";
+                $query = "INSERT INTO appointment (appointment_id, appointment_name, appointment_desc, table_id, count, date, time, senior_no, pwd_no, bday_no, note, appointment_session) VALUES('', '$name', '$description', '$table_id', '$pax', '$date', '$time', '$senior', '$pwd', '$bday_no', '$note', '1')";
                 $result_add = mysqli_query($connection, $query);
         
                 // Deactivate the assigned table in the users table
                 $update_table_query = "UPDATE users SET session_tb = '3' WHERE user_id = '$table_id'";
                 $result_update_table = mysqli_query($connection, $update_table_query);
                 
-                if ($result_add && $result_update_table) {
-                    echo "<script> alert('Registration Successful'); </script>";
-                } else {
-                    echo "<script> alert('Failed to assign table.'); </script>";
-                }
             } else {
-                $query_add = "INSERT INTO appointment(appointment_id, appointment_name, appointment_desc, table_id, count, date, time, senior_no, pwd_no, bday_no, timeInput, dateInput, note, appointment_session) VALUES('', '$name', '$description', NULL, '$pax', '$date', '$time', '$senior', '$pwd', '$bday_no', '$timeInput', '$dateInput', '$note', '1')";
+                $query_add = "INSERT INTO appointment(appointment_id, appointment_name, appointment_desc, table_id, count, date, time, senior_no, pwd_no, bday_no, note, appointment_session) VALUES('', '$name', '$description', NULL, '$pax', '$date', '$time', '$senior', '$pwd', '$bday_no', '$note', '1')";
                 $result_query_add = mysqli_query($connection, $query_add);
             }
         } else {
-            $query_add = "INSERT INTO appointment(appointment_id, appointment_name, appointment_desc, table_id, count, date, time, senior_no, pwd_no, bday_no, timeInput, dateInput, note, appointment_session) VALUES('', '$name', '$description', NULL, '$pax', '$date', '$time', '$senior', '$pwd', '$bday_no', '$timeInput', '$dateInput', '$note', '1')";
+            $query_add = "INSERT INTO appointment(appointment_id, appointment_name, appointment_desc, table_id, count, date, time, senior_no, pwd_no, bday_no, note, appointment_session) VALUES('', '$name', '$description', NULL, '$pax', '$date', '$time', '$senior', '$pwd', '$bday_no', '$note', '4')";
             $result_query_add = mysqli_query($connection, $query_add);
-            // No activated table is available, you can add further logic to handle this case, e.g., wait and display a message
-            echo "<script> alert('No available activated table. Please wait for a table to become available.'); </script>";
         }
         
         unset($_POST);
@@ -137,38 +142,27 @@ include '../conn.php';
 
     <div class="content-wrapper bg-black mt-5">
     <?php
-    $currentDateTime = date('Y-m-d H:i:s');
-    $thirtyMinutesAgo = date('Y-m-d H:i:s', strtotime('-30 minutes', strtotime($currentDateTime)));
+    $available_table_id = updateSessionTb($connection);
 
-    $query_search = "SELECT user_id FROM users WHERE session_tb = '1'";
-    $result_search = mysqli_query($connection, $query_search);
-
-    $query_search_tblNULL = mysqli_query($connection, "SELECT * FROM appointment WHERE table_id is NULL AND CONCAT(dateInput, ' ', timeInput) >= '$thirtyMinutesAgo'");
-
-    if (mysqli_num_rows($result_search) > 0 && mysqli_num_rows($query_search_tblNULL) > 0) {
-        // An available table is found, fetch the first row and return its user_id
-        $row = mysqli_fetch_array($result_search);
-        $available_table_id = $row['user_id'];
-
+    if ($available_table_id !== NULL) {
         // Update the appointment table with the assigned table_id
-        $new_appointment_query = "UPDATE appointment SET table_id = '$available_table_id', appointment_session = '1' WHERE table_id IS NULL LIMIT 1";
+        $new_appointment_query = "UPDATE appointment SET table_id = '$available_table_id', appointment_session = '1' WHERE appointment_desc = 'Online' AND table_id IS NULL LIMIT 1";
         $result_new_appointment = mysqli_query($connection, $new_appointment_query);
-
+    
         // Deactivate the assigned table in the users table
         $deactivate_table_query = "UPDATE users SET session_tb = '3' WHERE user_id = '$available_table_id'";
         $result_deactivate_table = mysqli_query($connection, $deactivate_table_query);
-
+    
         if ($result_new_appointment && $result_deactivate_table) {
             // Return the assigned table_id to update the appointment table
             echo $available_table_id;
         } else { ?>
             <span class="null-text text-black">NULL</span>
-    <?php }
+        <?php }
     } else { ?>
         <span class="null-text text-black">NULL</span>
-    <?php }
+    <?php } ?>
 
-    ?>
     <div class="content p-4">
 
     <div class="container-fluid text-center p-4">
@@ -176,53 +170,54 @@ include '../conn.php';
     </div>
 
     <section class="home-section">
-    <form action="" method="post">
-        <div class="card-body">
-            <div class="form-group row">
-                <div class="col-6">
-                    <label class="form-label">Customer's Name</label>
-                    <input type="text" class="form-control" id="customer" name="customer" placeholder="Enter name" required>
+        <form action="" method="post">
+            <div class="card-body">
+                <div class="form-group row">
+                    <div class="col-6">
+                        <label class="form-label">Customer's Name</label>
+                        <input type="text" class="form-control" id="customer" name="customer" placeholder="Enter name" required>
+                    </div>
+                    <div class="col-6">
+                    <label>Count</label>
+                            <input type="number" class="form-control" id="pax" name="pax" min="1" placeholder="Enter no of people" required>
+                    </div>
                 </div>
-                <div class="col-6">
-                <label>Count</label>
-                        <input type="number" class="form-control" id="pax" name="pax" min="1" placeholder="Enter no of people" required>
+                <div class="form-group row">
+                    <div class="col-4">
+                        <label>No of Senior</label>
+                        <input type="number" class="form-control" id="senior" name="senior" min="0" value="0" placeholder="Enter no of senior" required>
+                    </div>
+                    <div class="col-4">
+                        <label>No of PWD</label>
+                        <input type="number" class="form-control" id="pwd" name="pwd" min="0" value="0" placeholder="Enter no of pwd" required>
+                    </div>
+                    <div class="col-4">
+                        <label>Bday Promo</label>
+                        <input type="number" class="form-control" id="bday" name="bday" min="0" value="0" placeholder="Enter no of bday promo"  required>
+                    </div>
                 </div>
+                <div id="reminder"></div>
+                <div class="form-group row mt-5">
+                    <div class="col-6">
+                        <label for="timeInput">Appointment Time</label>
+                        <input type="time" class="form-control" id="timeInput" name="timeInput" value="<?php echo date("H:i"); ?>" min="10:00" max="21:00" required>
+                    </div>
+                    <div class="col-6">
+                        <label for="dateInput">Appointment Date</label>
+                        <?php 
+                        $dateNow = date("Y-m-d");
+                        $futureDate = date("Y-m-d", strtotime($dateNow . " +1 day"));
+                        ?>
+                        <input type="date" class="form-control" id="dateInput" name="dateInput" value="<?php echo date("Y-m-d"); ?>" max="<?php echo $futureDate; ?>" min="<?php echo date("Y-m-d"); ?>" required>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Note</label>
+                    <textarea type="text" class="form-control" id="note" name="note" placeholder="Enter note" rows="2"></textarea>
+                </div>
+                <button type="submit" name="submit" class="btn btn-danger">Submit <i class="bi bi-arrow-right"></i></button>
             </div>
-            <div class="form-group row">
-                <div class="col-4">
-                    <label>No of Senior</label>
-                    <input type="number" class="form-control" id="senior" name="senior" min="0" value="0" placeholder="Enter no of senior" required>
-                </div>
-                <div class="col-4">
-                    <label>No of PWD</label>
-                    <input type="number" class="form-control" id="pwd" name="pwd" min="0" value="0" placeholder="Enter no of pwd" required>
-                </div>
-                <div class="col-4">
-                    <label>Bday Promo</label>
-                    <input type="number" class="form-control" id="bday" name="bday" min="0" value="0" placeholder="Enter no of bday promo"  required>
-                </div>
-            </div>
-            <div id="reminder"></div>
-            <div class="form-group row mt-5">
-                <div class="col-6">
-                    <label for="timeInput">Appointment Time</label>
-                    <input type="time" class="form-control" id="timeInput" name="timeInput" value="<?php echo date("H:i"); ?>" min="09:00" max="22:00" required>
-                </div>
-                <div class="col-6">
-                    <label for="dateInput">Appointment Date</label>
-                    <?php 
-                    $dateNow = date("Y-m-d");
-                    $futureDate = date("Y-m-d", strtotime($dateNow . " +1 years"));
-                    ?>
-                    <input type="date" class="form-control" id="dateInput" name="dateInput" value="<?php echo date("Y-m-d"); ?>" max="<?php echo $futureDate; ?>" min="<?php echo date("Y-m-d"); ?>" required>
-                </div>
-            </div>
-            <div class="form-group">
-                <label>Note</label>
-                <textarea type="text" class="form-control" id="note" name="note" placeholder="Enter note" rows="2"></textarea>
-            </div>
-            <button type="submit" name="submit" class="btn btn-danger">Submit <i class="bi bi-arrow-right"></i></button>
-        </div>
+        </form>
 
         <div style="overflow-x:auto;">
             <table class="table table-hover table-bordered table-dark mt-5">
@@ -230,41 +225,49 @@ include '../conn.php';
                     <tr>
                         <th class="text-center" scope="col">Name</th>
                         <th class="text-center" scope="col">Table No</th>
-                        <th class="text-center" scope="col"># of People</th>
+                        <th class="text-center" scope="col">Count</th>
                         <th class="text-center" scope="col">Appointed Date</th>
                         <th class="text-center" scope="col">Appointed Time</th>
                         <th class="text-center" scope="col">Note</th>
+                        <th class="text-center" scope="col">Action</th>
+
                     </tr>
                 </thead>
                     <tbody>
                     <?php 
                         $result_tb = mysqli_query($connection, "SELECT * FROM appointment
-                        LEFT JOIN users ON users.user_id=appointment.table_id
                         WHERE table_id is NULL 
-                        AND appointment_session = '1' AND appointment_desc = 'Online'");
+                        AND (appointment_session = '4' OR appointment_session = '1') AND appointment_desc = 'Online'");
                         if(mysqli_num_rows($result_tb) > 0) {
                         while ($row = mysqli_fetch_array($result_tb)) { ?> 
                             <tr>
                                 <td class="text-center"><?php echo $row["appointment_name"]; ?></td>
                                 <td class="text-center" style="display: none;" id="table_id"><?php echo $row["table_id"]; ?></td>
-                                <td class="text-center">Waiting for available table...</td>
-                                <td class="text-center"><?php echo $row["count"]; ?></td>
-                                <td class="text-center"><?php echo $row["dateInput"]; ?></td>
-                                <td class="text-center"><?php echo $row["timeInput"]; ?></td>
+                                <?php if($row["appointment_session"] == 1) { ?>
+                                    <td class="text-center">Waiting for available table</td>
+                                <?php } else { ?>
+                                    <td class="text-center">For queuing (Online Appointment)</td>
+                                <?php }?>
+                                <td class="text-center"><?php echo $row["count"];  ?></td>
+                                <td class="text-center"><?php echo date('F j, Y', strtotime($row["date"])); ?></td>
+                                <td class="text-center"><?php echo date('g:i A', strtotime($row["time"])); ?></td>
                                 <td><?php echo $row["note"]; ?></td>
+                                <form action="" method="post">
+                                    <input type="hidden" name="appointment_id" value="<?php echo $row['appointment_id']; ?>">
+                                    <td><button type="submit" name="delete_appointment" class="btn btn-danger btn-xs">DELETE <i class="bi bi-trash"></i></button></td>
+                                </form>
                             </tr>
                             <?php 
                         } 
                         } else { ?>
                             <tr>
-                                <td class="text-center" colspan="7">No record found!</td>
+                                <td class="text-center" colspan="8">No record found!</td>
                             </tr>
                         <?php }
                         ?>
                     </tbody>  
             </table>
         </div>
-    </form>
     </section>
     </div>
     </div>

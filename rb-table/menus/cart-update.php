@@ -84,7 +84,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && (isset($_POST['to_pay']) && isset($
             $query_history = "INSERT INTO `appointment_history` VALUES('', '$user', '$time', '$table', '0', NULL)";
             $result_query_history = mysqli_query($connection, $query_history);
 
-            $ctivate_table_query = "UPDATE users SET session_tb = '1' WHERE user_id = '$table'";
+            $ctivate_table_query = "UPDATE users SET session_tb = '2' WHERE user_id = '$table'";
             $result_activate_table = mysqli_query($connection, $ctivate_table_query);
 
             if (mysqli_query($connection, $updateSummaryOrders)) {

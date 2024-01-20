@@ -8,7 +8,7 @@ include '../conn.php';
     $row = mysqli_fetch_array($result);
 
     function updateSessionTb($connection) {
-        $query_check_available_tables = "SELECT * FROM appointment WHERE table_id IS NULL LIMIT 1";
+        $query_check_available_tables = "SELECT * FROM appointment WHERE appointment_desc = 'Walk-In' AND table_id IS NULL LIMIT 1";
         $result_check_available_tables = mysqli_query($connection, $query_check_available_tables);
     
         if (mysqli_num_rows($result_check_available_tables) > 0) {
@@ -18,6 +18,13 @@ include '../conn.php';
         } else {
             // No available table, keep session_tb as it is (no changes needed)
         }
+    }
+
+    if (isset($_POST["delete_appointment"])) {
+        $appointment_id = $_POST["appointment_id"];
+
+        $delete_appointment = "DELETE FROM appointment WHERE appointment_id = $appointment_id";
+        $delete_result = mysqli_query($connection, $delete_appointment);
     }
 
     if (isset($_POST["submit"])) {
@@ -116,7 +123,7 @@ include '../conn.php';
     $query_search = "SELECT user_id FROM users WHERE session_tb = '1'";
     $result_search = mysqli_query($connection, $query_search);
 
-    $query_search_tblNULL = mysqli_query($connection, "SELECT * FROM appointment WHERE table_id is NULL");
+    $query_search_tblNULL = mysqli_query($connection, "SELECT * FROM appointment WHERE appointment_desc = 'Walk-In' AND table_id is NULL");
 
     if (mysqli_num_rows($result_search) > 0 && mysqli_num_rows($query_search_tblNULL) > 0) {
         // An available table is found, fetch the first row and return its user_id
@@ -124,7 +131,7 @@ include '../conn.php';
         $available_table_id = $row['user_id'];
 
         // Update the appointment table with the assigned table_id
-        $new_appointment_query = "UPDATE appointment SET table_id = '$available_table_id', appointment_session = '1' WHERE table_id IS NULL LIMIT 1";
+        $new_appointment_query = "UPDATE appointment SET table_id = '$available_table_id', appointment_session = '1' WHERE appointment_desc = 'Walk-In' AND table_id IS NULL LIMIT 1";
         $result_new_appointment = mysqli_query($connection, $new_appointment_query);
 
         // Deactivate the assigned table in the users table
@@ -149,55 +156,56 @@ include '../conn.php';
     </div>
 
     <section class="home-section">
-    <form action="" method="post">
-        <div class="card-body">
-            <div class="form-group row">
-                <div class="col-6">
-                    <label>Customer's Name</label>
-                    <input type="text" class="form-control" id="customer" name="customer" placeholder="Enter name" required>
+        <form action="" method="post">
+            <div class="card-body">
+                <div class="form-group row">
+                    <div class="col-6">
+                        <label>Customer's Name</label>
+                        <input type="text" class="form-control" id="customer" name="customer" placeholder="Enter name" required>
+                    </div>
+                    <div class="col-6">
+                    <label>No of people on the table</label>
+                            <input type="number" class="form-control" id="pax" name="pax" min="1" placeholder="Enter no of people" required>
+                    </div>
                 </div>
-                <div class="col-6">
-                <label>No of people on the table</label>
-                        <input type="number" class="form-control" id="pax" name="pax" min="1" placeholder="Enter no of people" required>
+                <div class="form-group row">
+                    <div class="col-4">
+                        <label>No of Senior</label>
+                        <input type="number" class="form-control" id="senior" name="senior" min="0" value="0" placeholder="Enter no of senior" required>
+                    </div>
+                    <div class="col-4">
+                        <label>No of PWD</label>
+                        <input type="number" class="form-control" id="pwd" name="pwd" min="0" value="0" placeholder="Enter no of pwd" required>
+                    </div>
+                    <div class="col-4">
+                        <label>Bday Promo</label>
+                        <input type="number" class="form-control" id="bday" name="bday" min="0" value="0" placeholder="Enter no of bday promo"  required>
+                    </div>
                 </div>
+                <div id="reminder"></div>
+                <div class="form-group">
+                    <label>Note</label>
+                    <textarea type="text" class="form-control" id="note" name="note" placeholder="Enter note" rows="2"></textarea>
+                </div>
+                <button type="submit" name="submit" class="btn btn-danger">Submit <i class="bi bi-arrow-right"></i></button>
             </div>
-            <div class="form-group row">
-                <div class="col-4">
-                    <label>No of Senior</label>
-                    <input type="number" class="form-control" id="senior" name="senior" min="0" value="0" placeholder="Enter no of senior" required>
-                </div>
-                <div class="col-4">
-                    <label>No of PWD</label>
-                    <input type="number" class="form-control" id="pwd" name="pwd" min="0" value="0" placeholder="Enter no of pwd" required>
-                </div>
-                <div class="col-4">
-                    <label>Bday Promo</label>
-                    <input type="number" class="form-control" id="bday" name="bday" min="0" value="0" placeholder="Enter no of bday promo"  required>
-                </div>
-            </div>
-            <div id="reminder"></div>
-            <div class="form-group">
-                <label>Note</label>
-                <textarea type="text" class="form-control" id="note" name="note" placeholder="Enter note" rows="2"></textarea>
-            </div>
-            <button type="submit" name="submit" class="btn btn-danger">Submit <i class="bi bi-arrow-right"></i></button>
-        </div>
+        </form>
         <div style="overflow-x:auto;">
             <table class="table table-hover table-bordered table-dark mt-5">
                 <thead>
                     <tr>
                         <th class="text-center" scope="col">Name</th>
                         <th class="text-center" scope="col">Table No</th>
-                        <th class="text-center" scope="col"># of People</th>
+                        <th class="text-center" scope="col">Count</th>
                         <th class="text-center" scope="col">Date</th>
                         <th class="text-center" scope="col">Time</th>
                         <th class="text-center" scope="col">Note</th>
+                        <th class="text-center" scope="col">Action</th>
                     </tr>
                 </thead>
                     <tbody>
                     <?php 
                         $result_tb = mysqli_query($connection, "SELECT * FROM appointment
-                        LEFT JOIN users ON users.user_id=appointment.table_id
                         WHERE table_id is NULL 
                         AND appointment_session = '1' AND appointment_desc = 'Walk-In'");
                         if(mysqli_num_rows($result_tb) > 0) {
@@ -207,22 +215,25 @@ include '../conn.php';
                                 <td class="text-center" style="display: none;" id="table_id"><?php echo $row["table_id"]; ?></td>
                                 <td class="text-center">Waiting for available table...</td>
                                 <td class="text-center"><?php echo $row["count"]; ?></td>
-                                <td class="text-center"><?php echo $row["date"]; ?></td>
-                                <td class="text-center"><?php echo $row["time"]; ?></td>
+                                <td class="text-center"><?php echo date('F j, Y', strtotime($row["date"])); ?></td>
+                                <td class="text-center"><?php echo date('g:i A', strtotime($row["time"])); ?></td>
                                 <td><?php echo $row["note"]; ?></td>
+                                <form action="create-walkin-appointment.php" method="post">
+                                    <input type="hidden" name="appointment_id" value="<?php echo $row['appointment_id']; ?>">
+                                    <td><button type="submit" name="delete_appointment" class="btn btn-danger btn-xs">DELETE <i class="bi bi-trash"></i></button></td>
+                                </form>
                             </tr>
                             <?php 
                         } 
                         } else { ?>
                             <tr>
-                                <td class="text-center" colspan="7">No record found!</td>
+                                <td class="text-center" colspan="8">No record found!</td>
                             </tr>
                         <?php }
                         ?>
                     </tbody>  
             </table>
         </div>
-    </form>
     </section>
     </div>
     </div>
