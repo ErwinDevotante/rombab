@@ -52,7 +52,7 @@
         <h1>Order Cart</h1>
     </div>
 
-    <div class="container py-5 text-white">
+    <div class="container py-5 text-white" style="overflow-x:auto;">
     <table class="table table-hover table-bordered table-dark mt-5">
         <thead>
         <th>Image</th>
@@ -110,7 +110,7 @@
         <?php 
         if($scan_result) {
             if ($rowCount > 0) { ?>
-                <div class="checkout-btn text-center">
+                <div class="checkout-btn mt-5 mb-5 text-center">
                     <a href="checkout.php" class="btn btn-primary">Proceed to Checkout <i class="bi bi-cart-check-fill"></i></a>
                 </div>
         <?php }

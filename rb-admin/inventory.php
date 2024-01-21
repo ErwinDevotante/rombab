@@ -348,6 +348,23 @@ include '../conn.php';
 </footer>
 </html>
 <script>
+    function validateInput(inputElement) {
+        const inputValue = inputElement.value;
+        const sanitizedValue = inputValue.replace(/[^\w\s\-\/%]/g, '');
+        inputElement.value = sanitizedValue; // Update the input value
+    }
+    // Add event listeners to both Menu Name input fields
+    const menuTextInput = document.querySelector('input[name="item-name"]');
+    const updateNameInput = document.getElementById('update-name');
+
+    menuTextInput.addEventListener('input', function() {
+        validateInput(menuTextInput);
+    });
+
+    updateNameInput.addEventListener('input', function() {
+        validateInput(updateNameInput);
+    });
+
     $(document).ready(function () {
     $('.update_btn').on('click', function () {
         $('#editmodal').modal('show');
