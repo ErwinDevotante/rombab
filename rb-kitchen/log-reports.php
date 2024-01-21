@@ -16,28 +16,28 @@ if (isset($_POST['log_item'])) {
     $datetimeValue = $currentDateTime->format('Y-m-d H:i:s'); 
 
     // Check if the item is available in the inventory
-    $inventory_query = "SELECT * FROM inventory WHERE item_id = '$item_id' AND stock >= $item_qty";
-    $inventory_result = mysqli_query($connection, $inventory_query);
-    if (mysqli_num_rows($inventory_result) > 0) {
-        // Item is available, so proceed to log it
-        $insert_query = "INSERT INTO log_reports (user_roles, report_item_id, report_qty, report_user_id, date_time, as_archived) VALUES ('3', '$item_id', '$item_qty', '$id', '$datetimeValue', '0')";
-        $insert_result = mysqli_query($connection, $insert_query);
+    $inventory_check_query = "SELECT * FROM inventory WHERE item_id = '$item_id'";
+    $inventory_check_result = mysqli_query($connection, $inventory_check_query);
+    if (mysqli_num_rows($inventory_check_result) > 0) {
 
-        if ($insert_result) {
+        $inventory_row = mysqli_fetch_array($inventory_check_result);
+        $existing_stock = $inventory_row['stock'];
+
+        if ($item_qty <= $existing_stock) {
+            // Item is available, so proceed to log it
+            $insert_query = "INSERT INTO log_reports (user_roles, report_item_id, report_qty, report_user_id, date_time, as_archived) VALUES ('3', '$item_id', '$item_qty', '$id', '$datetimeValue', '0')";
+            mysqli_query($connection, $insert_query);
             // Log entry successfully inserted
-            // Update the inventory stock
             $update_stock_query = "UPDATE inventory SET stock = stock - '$item_qty' WHERE item_id = '$item_id'";
-            $update_stock_result = mysqli_query($connection, $update_stock_query);
-        
-            if ($update_stock_result) {
-                echo '<script>alert("Item successfully logged!");</script>';
-            } else {
-                echo '<script>alert("Error updating stock. Please try again.");</script>';
-            }
-        } 
+            mysqli_query($connection, $update_stock_query);
+    
+        } else {
+            $_SESSION['unavailable'] = true;
+            //echo '<script>document.getElementById("reminder").innerHTML = "<p class=\'text-red\'>Item is not available in the desired quantity.</p>";</script>';
+        }
     } else {
-        // Item is not available in sufficient quantity
-        echo '<script>alert("Item is not available in the desired quantity.");</script>';
+        $_SESSION['not_exist'] = true;
+        //echo '<script>document.getElementById("reminder").innerHTML = "<p class=\'text-red\'>Item does not exist in the inventory.</p>";</script>';
     }
     unset($_POST);
     header('Location: log-reports.php');
@@ -188,6 +188,7 @@ if (isset($_POST['log_item'])) {
                             <input type="number" class="form-control" name="item-qty" step="any" placeholder="Enter Number of Stock" min="0.1" required>
                         </div>
                     </div>
+                    <div id="reminder"></div>
                     <div class="form-group">
                         <input class="btn btn-primary" type="submit" name="log_item" value="LOG ITEM">
                     </div>
@@ -230,6 +231,66 @@ if (isset($_POST['log_item'])) {
             
         </div>
     </div>
+
+    <!-- unavailableModal -->
+    <div id="unavailableModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="unavailableModalLabel"
+    aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
+      <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+              <h6 class="modal-title" id="unavailableModalLabel">Not Available</h6>
+            </div>
+          <div class="modal-body">
+            <p>Item is not available in the desired quantity.</p>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Close</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- End of unavailableModal -->
+    <!-- notexistModal -->
+    <div id="notexistModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="notexistModalLabel"
+    aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
+      <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+              <h6 class="modal-title" id="notexistModalLabel">Not Exist</h6>
+            </div>
+          <div class="modal-body">
+            <p>Item does not exist in the inventory.</p>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-xs btn-primary" data-bs-dismiss="modal">Close</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- End of notexistModal-->
+
+    <?php if (isset($_SESSION['unavailable'])) { ?>
+    <script>
+    $(document).ready(function() {
+    $("#unavailableModal").modal("show");
+    })
+    </script>
+    <?php
+    unset($_SESSION['unavailable']);
+    exit();
+    } else if (isset($_SESSION['not_exist'])) {
+    ?>
+    <script>
+    $(document).ready(function() {
+    $("#notexistModal").modal("show");
+    })
+    </script>
+    <?php
+    unset($_SESSION['not_exist']);
+    exit();
+    }
+    ?>
+
 </body>
 <!-- Footer -->
 <footer class="main-footer bg-black text-center">
@@ -242,6 +303,7 @@ if (isset($_POST['log_item'])) {
 </html>
 <script>
     document.addEventListener("DOMContentLoaded", function() {
+        
         // Initialize DataTable for the table element with id "sortTable"
         $('#sortTable').DataTable({
             order: [[0, 'asc']]
