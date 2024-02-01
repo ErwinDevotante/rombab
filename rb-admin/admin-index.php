@@ -41,7 +41,7 @@ include 'admin-auth.php';
 </head>
     
 </head>
-<body class="hold-transition sidebar-mini layout-fixed">
+<body class="hold-transition sidebar-mini layout-fixed bg-black">
 <div class="wrapper">
 
     <?php 

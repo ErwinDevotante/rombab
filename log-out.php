@@ -1,6 +1,7 @@
 <?php
 session_start();
 unset($_SESSION["user_id"]);
+unset($_SESSION["online_user_id"]);
 session_unset();
 session_destroy();
 $_SESSION['success'] = true;
@@ -37,7 +38,7 @@ $_SESSION['success'] = true;
             <p>Logged-out Successfully!</p>
           </div>
           <div class="modal-footer">
-              <a href="index.php" class="btn btn-primary">Okay</a>   
+            <a href="index.php" class="btn btn-primary">Okay</a>
           </div>
         </div>
       </div>

@@ -5,8 +5,8 @@ if(!empty($_SESSION["user_id"])){
   header("Location: index.php");
 }
 if (isset($_POST["submit"])) {
-  $username = $_POST["username"];
-  $password = $_POST["password"];
+  $username = sanitizeInput($_POST["username"]);
+  $password = sanitizeInput($_POST["password"]);
   $result = mysqli_query($connection, "SELECT * FROM users WHERE username = '$username'");
   $row = mysqli_fetch_assoc($result);
   if (mysqli_num_rows($result) > 0) {
@@ -30,6 +30,7 @@ if (isset($_POST["submit"])) {
 }
 
 // Delete section for archives
+date_default_timezone_set('Asia/Manila');
 $deleteThreshold = date('Y-m-d H:i:s', strtotime('-30 days'));
 
 // Deleting data from summary_orders
@@ -61,6 +62,10 @@ mysqli_query($connection, "DELETE appointment, appointment_history, billing_hist
 
 // Delete data from orders
 mysqli_query($connection, "DELETE FROM orders WHERE time_date <= '$deleteThreshold'");
+
+function sanitizeInput($input) {
+  return htmlspecialchars(strip_tags(trim($input)), ENT_QUOTES, 'UTF-8');
+}
 ?>
 
 <!DOCTYPE html>
@@ -80,6 +85,8 @@ mysqli_query($connection, "DELETE FROM orders WHERE time_date <= '$deleteThresho
     <link rel="stylesheet" href="node_modules/ionicons/css/ionicons.min.css">
     <script src="node_modules/jquery/dist/jquery.min.js"></script>
     <script src="node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Bootstrap Icons CSS -->
+    <link href="node_modules/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
 </head>
 <body class="d-flex align-items-center justify-content-center bg-grill">
     <div class="login">
@@ -106,7 +113,7 @@ mysqli_query($connection, "DELETE FROM orders WHERE time_date <= '$deleteThresho
             <label class="form-label text-white" for="username">Username</label>
             <input class="form-control" type="text" id="username" name="username" placeholder="Enter username" pattern=".{4,}" required>
               <div class="invalid-feedback">
-                <h6>Username consist of at least 4 characters long.</h6>
+                <small style="font-size: 12px;"> Username consist of at least 4 characters long.</small>
               </div> 
           </div>
           
@@ -115,13 +122,19 @@ mysqli_query($connection, "DELETE FROM orders WHERE time_date <= '$deleteThresho
             <label class="form-label text-white" for="password">Password</label>
             <input class="form-control" type="password" id="password" name="password" placeholder="Enter password" pattern=".{8,}" required>
               <div class="invalid-feedback">
-                <h6>Password consist of at least 8 characters long.</h6>
+                <small style="font-size: 12px;"> Password consist of at least 8 characters long.</small>
               </div>
           </div>
         
-          <input class="btn btn-primary w-100" name="submit" type="submit" value="SIGN IN">
+          <button class="btn btn-primary w-100 mt-2 mb-2" name="submit" type="submit">LOG IN <i class="bi bi-arrow-right"></i></button>
         </form>
+
+        <div class="text-center">
+          <!-- <a href="online-appointment.php" class="text-white" style="font-size: 12px;">Create an online appointment</a>-->
+          <a href="create-online-appointment.php" class="text-white" style="font-size: 12px;">Create an online appointment</a>
+        </div>
     </div>
+    
 
     <!-- Success alert modal -->
     <div id="successModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="successModalLabel"
@@ -194,3 +207,21 @@ mysqli_query($connection, "DELETE FROM orders WHERE time_date <= '$deleteThresho
   exit();
   }
 ?>
+<script>
+  function validateAccountInput(inputElement) {
+    let inputValue = inputElement.value;
+    let sanitizedValue = inputValue.replace(/[^a-zA-Z0-9\s\-_@]/g, ''); // Allow letters, numbers, spaces, hyphen, underscore, and at symbol
+    inputElement.value = sanitizedValue; // Update the input value
+    }
+
+    const usernameInput = document.getElementById('username');
+    const passwordInput = document.getElementById('password');
+
+    usernameInput.addEventListener('input', function() {
+        validateAccountInput(usernameInput);
+    });
+
+    //passwordInput.addEventListener('input', function() {
+        //validateAccountInput(passwordInput);
+    //});
+</script>
