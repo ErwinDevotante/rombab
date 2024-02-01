@@ -123,7 +123,7 @@ updateSessionTb($connection);
     <link href="node_modules/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
 </head>
 <body class="bg-black">
-<nav class="navbar navbar-expand-lg navbar-dark">
+<nav class="navbar navbar-expand-lg navbar-black">
     <div class="container-fluid bg-black">
         <a href="index.php"><img class="p-2" src="assets/rombab-logo.png" alt="Romantic Baboy Logo" width="130"> </a>
         <a class="navbar-brand" href="index.php">
@@ -166,10 +166,10 @@ updateSessionTb($connection);
             // Return the assigned table_id to update the appointment table
             echo $available_table_id;
         } else { ?>
-            <span class="null-text text-black">NULL</span>
+            <span class="text-dark">NULL</span>
         <?php }
     } else { ?>
-        <span class="null-text text-black">NULL</span>
+        <span class="text-black">NULL</span>
     <?php } ?>
 
     <div class="content p-5">
@@ -183,7 +183,7 @@ updateSessionTb($connection);
             <div class="card-body">
                 <div class="form-group row">
                     <div class="col-6">
-                        <label class="form-label">Customer's Name</label>
+                        <label class="form-label">Name</label>
                         <input type="text" class="form-control" id="customer" name="customer" placeholder="Enter name" required>
                     </div>
                     <div class="col-6">
@@ -374,10 +374,10 @@ function checkForAvailableTable() {
 }
 
     // Call the checkForAvailableTable function and updateSessionTb function every 5 seconds (adjust the interval as needed)
-    //setInterval(function() {
-    //    checkForAvailableTable();
-    //    updateSessionTb();
-    //}, 5000); // 5000 milliseconds = 5 seconds
+    setInterval(function() {
+        checkForAvailableTable();
+        updateSessionTb();
+    }, 5000); // 5000 milliseconds = 5 seconds
 
     // Add event listener for Customer's Name input
     const customerInput = document.getElementById('customer');
