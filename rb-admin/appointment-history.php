@@ -133,16 +133,16 @@ include '../conn.php';
               <table class="table table-hover table-striped table-dark mt-5 text-white" id="sortTable">
               <thead>
                   <tr>
-                      <th class="text-center" scope="col">Name</th>
-                      <th class="text-center" scope="col">Description</th>
-                      <th class="text-center" scope="col">Table No</th>
-                      <th class="text-center" scope="col">Count</th>
-                      <th class="text-center" scope="col">SN / PWD / Bday</th>
-                      <th class="text-center" scope="col">Date</th>
-                      <th class="text-center" scope="col">In</th>
-                      <th class="text-center" scope="col">Out</th>
-                      <th class="text-center" scope="col">Note</th>
-                      <th class="text-center" scope="col">Action</th>
+                      <th class="text-center align-top" scope="col">Name</th>
+                      <th class="text-center align-top" scope="col">Description</th>
+                      <th class="text-center align-top" scope="col">Table</th>
+                      <th class="text-center align-top" scope="col">Count</th>
+                      <th class="text-center align-top" scope="col">MOP</th>
+                      <th class="text-center align-top" scope="col">Date</th>
+                      <th class="text-center align-top" scope="col">In</th>
+                      <th class="text-center align-top" scope="col">Out</th>
+                      <th class="text-center align-top" scope="col">Note</th>
+                      <th class="text-center align-top" scope="col">Action</th>
                   </tr>
               </thead>
                   <tbody>
@@ -150,15 +150,16 @@ include '../conn.php';
                       $result_tb = mysqli_query($connection, "SELECT * FROM appointment_history
                       INNER JOIN users ON users.user_id=appointment_history.table_history_id
                       INNER JOIN appointment ON appointment.appointment_id=appointment_history.appointment_user_id
+                      INNER JOIN billing_history ON billing_history.user_id = appointment_history.appointment_user_id
                       WHERE appointment.appointment_session = '2' AND as_archived = '0'");
                       if(mysqli_num_rows($result_tb) > 0) {
                       while ($row = mysqli_fetch_array($result_tb)) { ?> 
                           <tr>
-                              <td class="text-center"><?php echo $row["appointment_name"]; ?></td>
+                              <td class="text-center" data-toggle="tooltip" data-placement="top" data-bs-html="true" title="Senior: <?php echo $row["senior_no"]; ?>, PWD: <?php echo $row["pwd_no"]; ?>, Bday Promo: <?php echo $row["bday_no"]; ?>"> <?php echo $row["appointment_name"]; ?></td>
                               <td class="text-center"><?php echo $row["appointment_desc"]; ?></td>
                               <td class="text-center"><?php echo $row["name"]; ?></td>
                               <td class="text-center"><?php echo $row["count"]; ?></td>
-                              <td class="text-center"><?php echo $row["senior_no"]; ?> / <?php echo $row["pwd_no"]; ?> / <?php echo $row["bday_no"]; ?></td>
+                              <td class="text-center" data-placement="top" data-bs-html="true" title="Reference No: <?php echo $row['reference_no']?>"><?php echo $row["mode_of_payment"]; ?></td>
                               <td class="text-center"><?php $formattedDate = date('F j, Y', strtotime($row["date"])); 
                                                       echo $formattedDate;?></td>
                               <td class="text-center"><?php $formattedDateTime = date('g:i A', strtotime($row["time"])); 

@@ -175,11 +175,11 @@ include '../conn.php';
                 <div class="form-group row">
                     <div class="col-6">
                         <label class="form-label">Customer's Name</label>
-                        <input type="text" class="form-control" id="customer" name="customer" placeholder="Enter name" required>
+                        <input type="text" class="form-control text-uppercase" id="customer" name="customer" placeholder="Enter name" required>
                     </div>
                     <div class="col-6">
                     <label>Count</label>
-                            <input type="number" class="form-control" id="pax" name="pax" min="1" placeholder="Enter no of people" required>
+                            <input type="number" class="form-control" id="pax" name="pax" min="1" placeholder="ENTER NO OF PEOPLE" required>
                     </div>
                 </div>
                 <div class="form-group row">
@@ -213,7 +213,7 @@ include '../conn.php';
                 </div>
                 <div class="form-group">
                     <label>Note</label>
-                    <textarea type="text" class="form-control" id="note" name="note" placeholder="Enter note" rows="2"></textarea>
+                    <textarea type="text" class="form-control" id="note" name="note" placeholder="ENTER NOTE" rows="2"></textarea>
                 </div>
                 <button type="submit" name="submit" class="btn btn-danger">Submit <i class="bi bi-arrow-right"></i></button>
             </div>
@@ -308,13 +308,13 @@ function checkForAvailableTable() {
         updateSessionTb();
     }, 5000); // 5000 milliseconds = 5 seconds
 
-    // Add event listener for Customer's Name input
     const customerInput = document.getElementById('customer');
     customerInput.addEventListener('input', function() {
-        const inputValue = customerInput.value;
+        let inputValue = customerInput.value;
         // Keep only letters, spaces, and "-"
         const sanitizedValue = inputValue.replace(/[^a-zA-Z\s-]/g, '');
-        customerInput.value = sanitizedValue;
+        const uppercasedValue = sanitizedValue.toUpperCase();
+        customerInput.value = uppercasedValue;
     });
 
     const noteInput = document.getElementById('note');

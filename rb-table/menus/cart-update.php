@@ -66,13 +66,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && (isset($_POST['to_pay']) && isset($
     $seniorDisc = $_POST['seniorDiscount'];
     $bdayDisc = $_POST['bdayPromoDiscount'];
 
+    $payment = $_POST['modeOfPayment'];
+    $reference = $_POST['referenceNo'];
+
     date_default_timezone_set('Asia/Manila');
     $time = date('H:i:s');
     $currentDate = date('Y-m-d');
     $currentDateTime = date('Y-m-d H:i:s');
 
     // Perform the SQL query to insert data into the billing_history table
-    $insertBillingQuery = "INSERT INTO billing_history (user_id, table_no, total_bill, pwddisc, seniordisc, bdaydisc, date_time) VALUES ('$user', '$table', '$bill', '$pwdDisc', '$seniorDisc', '$bdayDisc', '$currentDateTime')";
+    $insertBillingQuery = "INSERT INTO billing_history (user_id, table_no, total_bill, pwddisc, seniordisc, bdaydisc, date_time, mode_of_payment, reference_no) VALUES ('$user', '$table', '$bill', '$pwdDisc', '$seniorDisc', '$bdayDisc', '$currentDateTime', '$payment', '$reference')";
 
         if (mysqli_query($connection, $insertBillingQuery)) {
             // Now, perform the SQL query to update summary_orders
@@ -97,7 +100,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && (isset($_POST['to_pay']) && isset($
         } else {
             // Insertion into billing_history failed
             echo 'Error inserting data into billing history: ' . mysqli_error($connection);
-        }
+        } 
 } else {
     echo 'Error: Invalid Request';
 }

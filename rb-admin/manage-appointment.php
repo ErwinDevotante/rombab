@@ -96,21 +96,15 @@ include '../conn.php';
                                 <?php } ?>
                             </td>
                             <td>
-                                <!-- <?php //if(($row['session_tb'] == '1' && $row['appointment_session'] == '2') || ($row['session_tb'] == '1' && ($row['table_id'] === null && $row['appointment_session'] === null))){  ?>
-                                <select class="form-control" name="appointment_id" id="appointment" required>
-                                        <option hidden value="">Select customer here</option>
-                                        <?//php $result_dropdown = mysqli_query($connection, "SELECT * FROM appointment WHERE appointment_session IS NULL ");
-                                       // while ($dropdown = mysqli_fetch_assoc($result_dropdown)){
-                                            //echo '<option value="' . $dropdown['appointment_id'] . '">' . $dropdown['appointment_name'] . '</option>';
-                                        //}?>
-                                </select>
-                                     <a name="save" type="submit" class="btn btn-primary mt-2" href="activate-table-edit.php?id_save=<?php echo $row["appointment_id"]; ?>&save=1&table_save=<?php echo $row["user_id"]; ?>">SAVE</a> -->
-                                <?php //} 
+                                <?php
                                     if ($row['session_tb'] == '3' && ($row['appointment_session'] == '1' && $row['table_id'] !== null)){ ?>
                                             <select class="form-control" name="appointment" id="appointment" data-toggle="tooltip" data-placement="top" data-bs-html="true" title="<?php echo $row["appointment_desc"]; ?>, <b>Count</b>: <?php echo $row["count"]; ?> <br><b>Date</b>: <?php echo date("F j, Y", strtotime($row["date"])); ?>, <b>Time</b>: <?php echo date("h:i A", strtotime($row["time"])); ?> <br><b>PWD</b>: <?php echo $row["pwd_no"]; ?>, <b>Senior</b>: <?php echo $row["senior_no"]; ?>, <b>Bday</b>: <?php echo $row["bday_no"]; ?>" disabled>
                                                     <option> [OCCUPIED] <?php echo $row['appointment_name']; ?> </option>
                                             </select>
-                                        <a name="reset" type="submit" class="btn btn-info mt-2" href="activate-table-edit.php?id_reset=<?php echo $row["appointment_id"]; ?>&reset=2&table_reset=<?php echo $row["user_id"]; ?>">RESET <i class="bi bi-arrow-clockwise"></i></a>
+                                            <div class="d-flex flex-column flex-sm-row">
+                                                <a name="reset" type="submit" class="btn btn-info mt-2 mr-3 btn-xs" href="activate-table-edit.php?id_reset=<?php echo $row["appointment_id"]; ?>&reset=2&table_reset=<?php echo $row["user_id"]; ?>">RESET <i class="bi bi-arrow-clockwise"></i></a>
+                                                <a name="show" type="submit" value="<?php $row['appointment_id']; ?>" class="btn btn-danger mt-2 btn-xs">ORDERS <i class="bi bi-eye"></i></a>
+                                            </div>
                                     <?php }
                                     else {?>
                                         <select class="form-control" name="appointment" id="appointment" disabled>

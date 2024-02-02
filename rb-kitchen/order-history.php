@@ -111,12 +111,13 @@ include '../conn.php';
                   <?php 
                       $result_tb = mysqli_query($connection, "SELECT * FROM `orders`
                       LEFT JOIN `users` ON orders.user_table = users.user_id
+                      LEFT JOIN `appointment` ON orders.user_table_id = appointment.appointment_id
                       WHERE status = 1");
                       while ($row = mysqli_fetch_array($result_tb)) { ?> 
                           <tr>
-                              <td class="text-center w-25"><?php echo $row["name"]; ?></td>
+                              <td class="text-center w-25"><?php echo $row["name"];?> - <?php echo $row["appointment_name"];?></td>
                               <td class="w-50"><?php echo $row["total_products"]; ?></td>
-                              <td class="text-center w-25"><?php echo $row["time_date"]; ?></td>
+                              <td class="text-center w-25"><?php echo date("F j, Y h:ia", strtotime($row["time_date"])); ?></td>
                           </tr>
                           <?php 
                       } 

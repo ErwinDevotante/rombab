@@ -214,6 +214,16 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
+                <label for="modeOfPayment">Select mode of payment:</label>
+                <select id="modeOfPayment" class="form-control" onchange="handleSelection()">
+                    <option value="CASH">CASH</option>
+                    <option value="MOBILE PAYMENT">MOBILE PAYMENT (GCASH/MAYA)</option>
+                    <option value="CARD">DEBIT/CREDIT CARD</option>
+                </select>
+                <div id="referenceNo" style="display:none;">
+                    <input type="text" id="referenceNoID" class="form-control mt-1" placeholder="ENTER REFERNCE NUMBER">
+                </div>
+                    <label for="passwordInput" class="mt-3">Enter password:</label>
                     <input type="password" id="passwordInput" class="form-control" placeholder="Enter Password">
                 </div>
                 <div class="modal-footer">
@@ -244,6 +254,18 @@
     </div>
 
     <script>
+
+        function handleSelection() {
+            var selection = document.getElementById("modeOfPayment").value;
+            var additionalInput = document.getElementById("referenceNo");
+
+            if (selection == "MOBILE PAYMENT") {
+                    additionalInput.style.display = "block";
+            } else {
+                    additionalInput.style.display = "none";
+            }
+        }
+
         // Function to show the survey modal
         function showSurveyModal() {
             // Check if a survey record exists in the database
@@ -288,6 +310,7 @@
                     //window.location = "check-bill.php";
                     // Proceed to logout
                     confirmLogout();
+                    //window.location.href = 'samgyupsal.php';
                 }
             });
         }
@@ -305,13 +328,16 @@
         // Check if the entered password is correct
         if (enteredPassword === "<?php echo $row['password'];?>") {
             // Send an AJAX request to insert data into billing_history
-                var to_pay = <?php echo $to_pay; ?>;
-                var tableNo = <?php echo $row['user_id']; ?>;
-                var userId = <?php echo $customer['appointment_id']; ?>;
+            var to_pay = <?php echo $to_pay; ?>;
+            var tableNo = <?php echo $row['user_id']; ?>;
+            var userId = <?php echo $customer['appointment_id']; ?>;
+            var modeOfPayment = document.getElementById('modeOfPayment').value;
+            //var referenceNo = document.getElementById('referenceNoID').value;
+            var referenceNo = (modeOfPayment === "CASH" || modeOfPayment === "CARD") ? "N/A" : document.getElementById('referenceNoID').value;
 
-                var seniorDiscount = <?php echo $seniorCount * $afterDiscount; ?>;
-                var pwdDiscount = <?php echo $pwdCount * $afterDiscount; ?>;
-                var bdayPromoDiscount = <?php echo $bdayPromoDiscount; ?>;
+            var seniorDiscount = <?php echo $seniorCount * $afterDiscount; ?>;
+            var pwdDiscount = <?php echo $pwdCount * $afterDiscount; ?>;
+            var bdayPromoDiscount = <?php echo $bdayPromoDiscount; ?>;
             $.ajax({
                 type: "POST",
                 url: "cart-update.php", // Create this PHP file to handle the database operation
@@ -321,20 +347,25 @@
                     tableNo: tableNo,
                     seniorDiscount: seniorDiscount,
                     pwdDiscount: pwdDiscount,
-                    bdayPromoDiscount: bdayPromoDiscount
+                    bdayPromoDiscount: bdayPromoDiscount,
+                    modeOfPayment: modeOfPayment,
+                    referenceNo: referenceNo
                 },
                 success: function(response) {
-                    window.location.href = "activated-table.php";
+                        window.location.href = "activated-table.php";
                 }
             });
         } else {
             // Show an alert if the password is incorrect
             alert("Incorrect password. Logout action canceled.");
+            // Hide the modal and then show it again
+            $('#passwordDialog').modal('hide').on('hidden.bs.modal', function (e) {
+                $('#passwordDialog').modal('show');
+            });
         }
-
-        // Hide the password input dialog
-        $('#passwordDialog').modal('hide');
     }
+
+
         // Add an event listener to the link
         document.getElementById('disabled_click').addEventListener('click', function(event) {
             event.preventDefault(); // Prevent the link from being followed
