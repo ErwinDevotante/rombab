@@ -13,13 +13,21 @@
     $row_count = mysqli_num_rows($select_rows);
 
     $customer_result = mysqli_query($connection, "SELECT * FROM appointment WHERE table_id = '$table' AND appointment_session = '1'");
-	$customer = mysqli_fetch_array($customer_result);
+	  $customer = mysqli_fetch_array($customer_result);
 
     $user_id = $customer["appointment_id"];
-    //$select_notif = mysqli_query($connection, "SELECT * FROM orders WHERE user_table_id = '$user_id' AND read_notif_session = '0' 
-        //AND user_table = '$table' AND status = '1'");
-    //$notif_count = mysqli_num_rows($select_notif);
 
+    $select_orders = mysqli_query($connection, "SELECT * FROM `orders` WHERE user_table_id = '$user_id'");
+    $orders_count = mysqli_num_rows($select_orders);
+
+    if ($row_count == 5 && $orders_count == 0) {
+        $_SESSION['stop'] = true;
+        if ($select_rows && mysqli_num_rows($select_rows) > 0) {
+            $cart = mysqli_fetch_assoc($select_rows);
+            $cart_id_to_delete = $cart['cart_id'];
+        }
+        $delete_query = mysqli_query($connection, "DELETE FROM `cart` WHERE cart_id = '$cart_id_to_delete'");
+    }
 ?>
 <style>
     .large-icon {
@@ -74,11 +82,40 @@
             
       </div>
       <div class="modal-footer">
-        <button class="btn btn-primary" onclick="closeModal()">Close</button>
+        <button class="btn btn-primary" data-bs-dismiss="modal">Close</button>
       </div>
     </div>
   </div>
 </div>
+
+<!-- Your modal code -->
+<div id="stopModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="stopModalLabel">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="stopModalLabel">STOP</h5>
+      </div>
+      <div class="modal-body">
+        <p>Customers are limited to selecting a maximum of four products for their first order.</p>
+      </div>
+      <div class="modal-footer">
+        <a class="btn btn-primary" href="cart.php">Close</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<?php if (isset($_SESSION['stop'])) { ?>
+<script>
+  $(document).ready(function() {
+  $("#stopModal").modal("show");
+})
+</script>
+<?php
+  unset($_SESSION['stop']);
+  exit();
+  }
+?>
 
 <script>
   $(document).ready(function() {
@@ -88,11 +125,6 @@
       $('#statusModal').modal('show');
     });
   });
-
-  // Close the modal when needed
-  function closeModal() {
-    $('#statusModal').modal('hide');
-  }
 
   $(document).ready(function() {
     // Function to fetch count from the server

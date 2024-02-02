@@ -78,7 +78,7 @@
                 <div class="btn-group w-100" role="group">
                     <button type="button" class="btn btn-primary  quantity-btn" onclick="decrementQuantity(<?php echo $fetch_cart['cart_id']; ?>)"><i class="bi bi-dash-lg"></i></button>
                     <input type="hidden" name="update_quantity_id"  value="<?php echo $fetch_cart['cart_id']; ?>" >
-                    <input type="number" name="update_quantity" id="update_quantity_<?php echo $fetch_cart['cart_id']; ?>" min="1" max="<?php echo $customer["count"] + 2; ?>" class="btn text-center bg-black text-white" value="<?php echo $fetch_cart['cart_quantity']; ?>" onchange="updateDatabase(this)" disabled>
+                    <input type="number" name="update_quantity" id="update_quantity_<?php echo $fetch_cart['cart_id']; ?>" min="1" max="<?php echo ($row_count <= 4 && $orders_count == 0) ? 1 : ($customer["count"] + 2); ?>"  class="btn text-center bg-black text-white" value="<?php echo $fetch_cart['cart_quantity']; ?>" onchange="updateDatabase(this)" disabled>
                     <button type="button" class="btn btn-primary quantity-btn" onclick="incrementQuantity(<?php echo $fetch_cart['cart_id']; ?>)"><i class="bi bi-plus-lg"></i></button>
                 </div>
             </td>

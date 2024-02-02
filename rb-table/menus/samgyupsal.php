@@ -32,20 +32,35 @@
     if (isset($_POST['add_to_cart'])) {
         $product_name = $_POST['product_name'];
         $product_image = $_POST['product_image'];
-        $product_quantity = 1;
+        $product_quantity = $_POST['product_quantity'];
         $product_table = $table;
         $user_cart_id = $customer["appointment_id"];
     
         $select_cart = mysqli_query($connection, "SELECT * FROM `cart` WHERE cart_name = '$product_name' AND cart_table = '$table'");
     
-        if(mysqli_num_rows($select_cart) > 0) {
-            $_SESSION['exist'] = true;
-            unset($_POST);
+        if (mysqli_num_rows($select_cart) > 0 && $orders_count == 0) {
+          // Product has reached its limit, prevent further changes
+          $update_product = mysqli_query($connection, "UPDATE `cart` SET cart_quantity = '1' WHERE user_cart_id = '$user_cart_id' AND cart_name = '$product_name'");
         } else {
-            $insert_product = mysqli_query($connection, "INSERT INTO `cart`(user_cart_id, cart_table, cart_name, cart_image, cart_quantity) VALUES ('$user_cart_id', '$product_table', '$product_name', '$product_image', '$product_quantity')");
-            //$_SESSION['added'] = true;
-            unset($_POST);
-        }
+            // Check if the product is already in the cart
+            if (mysqli_num_rows($select_cart) > 0) {
+                $cart_data = mysqli_fetch_assoc($select_cart);
+                $existing_quantity = $cart_data['cart_quantity'];
+        
+                // Check if cart_quantity is equal to $customer["count"] + 2
+                if ($existing_quantity == $customer["count"] + 2) {
+                    $_SESSION['exist'] = true;
+                } else {
+                    // Increment cart_quantity by 1
+                    $update_product = mysqli_query($connection, "UPDATE `cart` SET cart_quantity = cart_quantity + 1 WHERE user_cart_id = '$user_cart_id' AND cart_name = '$product_name'");
+                }
+                unset($_POST);
+            } else {
+                // Insert a new row into the cart table
+                $insert_product = mysqli_query($connection, "INSERT INTO `cart`(user_cart_id, cart_table, cart_name, cart_image, cart_quantity) VALUES ('$user_cart_id', '$product_table', '$product_name', '$product_image', '$product_quantity')");
+                unset($_POST);
+            }
+        }  
     }
     ?>
 
@@ -75,6 +90,7 @@
               </div>
               <input type="hidden" name="product_image" value="<?php echo $row["menu_image"]; ?>">
               <input type="hidden" name="product_name" value="<?php echo $row["menu_name"]; ?>">
+              <input type="hidden" name="product_quantity" value="1">
               <?php if($row["menu_availability"] == 1) { ?>
                 <button type="submit" class="btn btn-md btn-outline-danger text-white w-100 mt-1 bg-dark" disabled>
                   NOT AVAILABLE <i class="bi bi-ban"></i>
@@ -112,16 +128,16 @@
       </div>
     </div>
     <!-- End of added alert modal -->
-    <!-- Exist alert modal -->
+    <!-- Limit alert modal -->
     <div id="existModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="existModalLabel"
     aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
       <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
           <div class="modal-header">
-              <h5 class="modal-title" id="existModalLabel">Existed</h5>
+              <h5 class="modal-title" id="existModalLabel">Limit Reached</h5>
           </div>
           <div class="modal-body">
-            <p>Product Already Added!</p>
+            <p>Product has already reached its limit!</p>
           </div>
           <div class="modal-footer">
             <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Close</button>
@@ -129,7 +145,7 @@
         </div>
       </div>
     </div>
-    <!-- End of success exist -->
+    <!-- End of limit exist -->
     
 <!-- Footer -->
 <footer class="main-footer bg-black text-center">

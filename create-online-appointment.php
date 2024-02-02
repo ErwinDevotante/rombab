@@ -166,7 +166,7 @@ updateSessionTb($connection);
             // Return the assigned table_id to update the appointment table
             echo $available_table_id;
         } else { ?>
-            <span class="text-dark">NULL</span>
+            <span class="text-black">NULL</span>
         <?php }
     } else { ?>
         <span class="text-black">NULL</span>
@@ -393,8 +393,8 @@ function checkForAvailableTable() {
     const noteInput = document.getElementById('note');
     noteInput.addEventListener('input', function() {
         const inputValue = noteInput.value;
-        // Keep only letters, spaces, and "-"
-        const sanitizedValue = inputValue.replace(/[^a-zA-Z\s-]/g, '');
+        // Keep only letters, numbers, spaces, and "-"
+        const sanitizedValue = inputValue.replace(/[^a-zA-Z0-9\s-]/g, '');
         noteInput.value = sanitizedValue;
     });
 
