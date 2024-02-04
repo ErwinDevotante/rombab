@@ -33,12 +33,25 @@ if(isset($_POST["export_excel"])) {
         background-color: #8b0000;
         color: white;
     }
+    .center {
+        text-align: center;
+    }
+    .header {
+        height: 60px; /* Set your preferred height */
+    }
     </style>
     <table>
     <thead>
-        <tr><th colspan="5">Generated on: ' . date('F j, Y | g:i A') . '</tr>
+        <tr><th colspan="5" class="center header"><img src="romantic-baboy-excel-header.png"></tr>
         <tr><th colspan="5"></tr>
-        <tr><th colspan="5">Daily Inventory Report</th></tr>
+        <tr><th colspan="5"></tr>
+        <tr><th colspan="5"></tr>
+        <tr><th colspan="5"></tr>
+        <tr><th colspan="5"></tr>
+        <tr><th colspan="5"></tr>
+        <tr><th colspan="5" class="center"><h4><b>Romantic Baboy Daily Report</b></h4></th></tr>
+        <tr><th colspan="5" class="center">Generated on: ' . date('F j, Y | g:i A') . '</tr>
+        <tr><th colspan="5"></tr>
         <tr>
             <th>No</th>
             <th>Item</th>

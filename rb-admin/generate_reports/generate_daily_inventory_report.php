@@ -30,23 +30,26 @@ $html = '
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Romantic Baboy | Generate Reports</title>
-    <p>Generated on: ' . date('F j, Y | g:i A'). '</p>
-    <!--Google Fonts-->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap" rel="stylesheet">
     <!--Icon-->
     <link rel="icon" type="image/x-icon" href="../../assets/rombab-logo.png">
     <style>
-    body {
-            font-family: Poppins, sans-serif;
+        img {
+            width: 100%;
+            margin: 0px;
+        }
+        body {
+            font-family: Arial, sans-serif;
+            margin-top: 130px;
+            margin-bottom: 100px;
         }
         h2 {
             text-align: center;
-            margin-top: 20px;
+            margin-top: 0px;
+            margin-bottom: 0px;
         }
         p {
             text-align: center;
+            margin: 0px;
         }
         table {
             width: 100%;
@@ -55,16 +58,63 @@ $html = '
         }
         th, td {
             border: 1px solid #4444;
-            padding: 8px;
+            padding: 4px;
             text-align: left;
         }
         th {
-            background-color: #8b0000;
-            color: white;
+            background-color: #f2f2f2;
         }
-</style>
+        h5 {
+            margin-top: 50;
+            margin-bottom: 50;
+            text-align: center;
+        }
+        h4 {
+            margin: 0;
+            font-weight: 400;
+        }
+        .center {
+            text-align: center;
+        }
+        .invisible {
+            border: none;
+            background: none;
+        }
+
+        @page {
+            margin-top: 10px; /* Adjust as needed */
+            margin-bottom: 10px; /* Adjust as needed */
+        }
+
+        .header-letter,
+        .footer-letter {
+            position: fixed;
+            left: 0;
+            right: 0;
+        }
+
+        .header-letter {
+            top: 0;
+        }
+
+        .footer-letter {
+            bottom: 0;
+        }
+
+        img {
+            width: 100%;
+            margin: 0px;
+        }
+    </style>
+    <div class="header-letter">
+        <img src="romantic-baboy-header.png" alt="Example Image" class="img-fluid">
+        </div>
+        <div class="footer-letter">
+        <img src="romantic-baboy-footer.png" alt="Example Image" class="img-fluid">
+    </div>
 <body>
     <h2>Romantic Baboy '.$title.' Report</h2>
+    <p style="margin-bottom: 10px;">Generated on: ' . date('F j, Y | g:i A') . '</p>
     
     <table>
         <thead>
@@ -136,6 +186,7 @@ $html = '
         </tr>';
         }
         $html .= '</tbody>
+        <tr><th class="invisible" colspan="5"><h5>--- NOTHING FOLLOWS ---</h5></tr>
     </table>';
 
 $options = new Options();
