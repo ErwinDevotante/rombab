@@ -38,7 +38,7 @@ include '../conn.php';
     <!-- AdminLTE App -->
     <script src="../node_modules/admin-lte/js/adminlte.js"></script>
 </head>
-<body class="hold-transition sidebar-mini layout-fixed">
+<body class="hold-transition sidebar-mini layout-fixed" style="background: #191919;">
 <div class="wrapper">
 
     <?php 
@@ -47,12 +47,12 @@ include '../conn.php';
     ?>
 
   <!-- Content Wrapper. Contains page content -->
-  <div class="content-wrapper bg-black">
+  <div class="content-wrapper" style="background: #191919;">
     <div class="content-header">
       <div class="container-fluid">
         <div class="row mb-2">
           <div class="col-sm-6">
-            <h1 class="m-0 text-white">Kitchen System</h1>
+            <h1 class="highlight header-colorize text-white mt-4">Kitchen System</h1>
           </div>
         </div>
       </div>
@@ -254,7 +254,7 @@ include '../conn.php';
 </div>
 </body>
 <!-- Footer -->
-<footer class="main-footer bg-black text-center">
+<footer class="main-footer text-center" style="background: #191919;">
     <div class="float-right d-none d-sm-block">
         <!-- Additional footer content or links can go here -->
     </div>

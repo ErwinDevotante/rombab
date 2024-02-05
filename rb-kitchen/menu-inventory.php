@@ -108,16 +108,16 @@ include '../conn.php';
     <!-- Bootstrap Icons CSS -->
     <link href="../../node_modules/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
 </head>
-<body class="hold-transition sidebar-mini layout-fixed">
+<body class="hold-transition sidebar-mini layout-fixed text-white" style="background: #191919;">
 <div class="wrapper">
     <?php 
     include "top-bar.php";
     include "side-bar.php"; 
     ?>
-    <div class="content-wrapper bg-black">
+    <div class="content-wrapper" style="background: #191919;">
         <div class="content p-4">
             <div class="container-fluid text-center p-4">
-                <h1>Menu and Inventory</h1>
+                <h1 class="highlight header-colorize text-white">Menu and Inventory</h1>
             </div>
 
             <!-- Search -->
@@ -131,9 +131,9 @@ include '../conn.php';
             </div>
 
             <div style="overflow-x:auto;">
-            <table class="table table-hover table-bordered table-dark mt-2">
+            <table class="table mt-2">
             <thead>
-                <tr><th colspan="3"><h4><strong>Activate/Deactivate Menu</strong></h4></th></tr>
+                <tr class="bg-dark"><th colspan="3"><h4><strong>Activate/Deactivate Menu</strong></h4></th></tr>
                 <tr>
                     <th class="text-center" scope="col">Image</th>
                     <th class="text-center" scope="col">Name</th>
@@ -175,9 +175,9 @@ include '../conn.php';
             </div>
 
             <div style="overflow-x:auto;">
-                <table class="table table-hover table-bordered table-dark mt-2">
+                <table class="table mt-2">
                 <thead>
-                    <tr><th colspan="6"><h4><strong>Update Inventory</strong></h4></th></tr>
+                    <tr class="bg-dark"><th colspan="6"><h4><strong>Update Inventory</strong></h4></th></tr>
                     <tr>
                         <th class="text-center" scope="col">Item</th>
                         <th class="text-center" scope="col">Description</th>
@@ -295,7 +295,7 @@ include '../conn.php';
     </div>
 </body>
 <!-- Footer -->
-<footer class="main-footer bg-black text-center">
+<footer class="main-footer text-center" style="background: #191919;">
     <div class="float-right d-none d-sm-block">
         <!-- Additional footer content or links can go here -->
     </div>

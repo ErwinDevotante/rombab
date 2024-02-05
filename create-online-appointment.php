@@ -158,7 +158,7 @@ updateSessionTb($connection);
                     <div class="header-title">
                         <p class="highlight text-white font-weight-bold size-16 text-uppercase header-small-title title mb-3 ml-1">Tabletop Ordering Kiosk</p>
                         <h1 class="font-weight-bold main-title mb-4 text-white">Online Appointment</h1>
-                        <p class="text-sub ml-2 mb-4 pb-2 text-white">Online appointment systems empower users to effortlessly schedule appointments. Users can efficiently manage their schedules, enhancing the overall efficiency of the appointment process. </p>
+                        <p class="text-sub ml-2 mb-4 pb-2 text-white">Online appointment empowers users to effortlessly schedule appointments. Users can efficiently manage their schedules, enhancing the overall efficiency of the appointment process. </p>
                         <a href="#create-appointment" class="btn btn-primary-red ml-2">Create Appointment <span class="ml-2 right-icon"><i class="bi bi-arrow-right"></i></span></a>
                     </div>
                 </div>
@@ -172,7 +172,7 @@ updateSessionTb($connection);
     </section>
     <!-- Header End -->
     <!-- Appointment Start -->
-    <section class="section" id="create-appointment">
+    <section class="section" id="create-appointment" style="background: #191919;">
         <div class="container">
             <div class="row justify-content-center">
                 <div class="col-lg-6 col-md-8">

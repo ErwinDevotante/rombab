@@ -45,7 +45,7 @@ include '../conn.php';
     <!-- Bootstrap Icons CSS -->
     <link href="../../node_modules/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
 </head>
-<body class="hold-transition sidebar-mini layout-fixed bg-black">
+<body class="hold-transition sidebar-mini layout-fixed text-white" style="background: #191919;">
     <div class="wrapper" >
 
         <?php 
@@ -53,7 +53,7 @@ include '../conn.php';
         include "side-bar.php";
         ?>
 
-        <div class="content-wrapper bg-black mt-5">
+        <div class="content-wrapper mt-5" style="background: #191919;">
             <div class="content p-4">
                 <div class="container-fluid text-center p-4">
                     <h1>Generate Reports</h1>
@@ -258,9 +258,9 @@ include '../conn.php';
                                         <a class="btn btn-success mb-1" onclick="printEXCELReport()"><i class="bi bi-file-earmark-excel"></i></a>
                                         <a class="btn btn-info mb-1" onclick="printCSVReport()"><i class="bi bi-filetype-csv"></i></a>       
                                     </div>
-                                    <table class="table table-hover table-bordered table-dark  mb-5">
+                                    <table class="table mb-5">
                                         <thead>
-                                            <tr><th colspan="6"><?php echo $title?> Inventory Report</th></tr>
+                                            <tr class="bg-dark"><th colspan="6"><?php echo $title?> Inventory Report</th></tr>
                                             <tr>
                                                 <th>No</th>
                                                 <th>Item</th>
@@ -299,9 +299,9 @@ include '../conn.php';
                                         </tbody>
                                     </table>
                                     
-                                    <table class="table table-hover table-bordered table-dark mt-5 mb-5">
+                                    <table class="table mt-5 mb-5">
                                         <thead>
-                                            <tr><th colspan="4"><?php echo $title;?> Menu Report</th></tr>
+                                            <tr class="bg-dark"><th colspan="4"><?php echo $title;?> Menu Report</th></tr>
                                             <tr>
                                                 <th>No</th>
                                                 <th>Item</th>
@@ -361,7 +361,7 @@ include '../conn.php';
                                         </tbody>
                                     </table>
 
-                                    <table class="table table-hover table-bordered table-dark mt-5 mb-5">
+                                    <table class="table mt-5 mb-5">
                                     <?php
                                     $totalBill = 0;
                                     $seniorDisc = 0;
@@ -425,7 +425,7 @@ include '../conn.php';
                                         echo "<td><small><strong>₱ ".number_format($bdayDisc, 2)."</small></strong></td>";
                                         echo "</tr>";
                                 
-                                        echo "<tr>";
+                                        echo "<tr class='bg-dark'>";
                                         echo "<td colspan='3' class='text-left'><strong>".$title." Total Revenue:</strong></td>";
                                         echo "<td><strong>₱ ".number_format($totalBill, 2)."</strong></td>";
                                         echo "</tr>";       
@@ -445,7 +445,7 @@ include '../conn.php';
     </div>
 </body>
 <!-- Footer -->
-<footer class="main-footer bg-black text-center">
+<footer class="main-footer text-center" style="background: #191919;">
     <div class="float-right d-none d-sm-block">
         <!-- Additional footer content or links can go here -->
     </div>

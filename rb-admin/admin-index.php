@@ -41,7 +41,7 @@ include 'admin-auth.php';
 </head>
     
 </head>
-<body class="hold-transition sidebar-mini layout-fixed bg-black">
+<body class="hold-transition sidebar-mini layout-fixed" style="background: #191919;">
 <div class="wrapper">
 
     <?php 
@@ -50,7 +50,7 @@ include 'admin-auth.php';
     ?>
   
   <!-- Content Wrapper. Contains page content -->
-  <div class="content-wrapper bg-black mt-5">
+  <div class="content-wrapper mt-5" style="background: #191919;">
 
   <!--<div class="mt-5 d-flex justify-content-end fixed-top fixed-right" role="group">
     <div style="overflow-x:auto;">
@@ -595,7 +595,7 @@ include 'admin-auth.php';
 </div>
 </body>
 <!-- Footer -->
-<footer class="main-footer bg-black text-center">
+<footer class="main-footer text-center" style="background: #191919;">
     <div class="float-right d-none d-sm-block">
         <!-- Additional footer content or links can go here -->
     </div>

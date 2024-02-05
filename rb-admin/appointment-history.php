@@ -116,7 +116,7 @@ include '../conn.php';
     height: 30px;
     }
 </style>
-<body class="hold-transition sidebar-mini layout-fixed bg-black">
+<body class="hold-transition sidebar-mini layout-fixed" style="background: #191919;">
     <div class="wrapper" >
 
     <?php 
@@ -124,7 +124,7 @@ include '../conn.php';
     include "side-bar.php"; 
     ?>
 
-    <div class="content-wrapper bg-black mt-5">
+    <div class="content-wrapper mt-5" style="background: #191919;">
         <div class="content p-4">
             <div class="container-fluid text-center p-4">
               <h1 class="highlight header-colorize text-white">Appointment History</h1>
@@ -188,7 +188,7 @@ include '../conn.php';
     </div>
 </body>
 <!-- Footer -->
-<footer class="main-footer bg-black text-center">
+<footer class="main-footer text-center" style="background: #191919;">
     <div class="float-right d-none d-sm-block">
         <!-- Additional footer content or links can go here -->
     </div>

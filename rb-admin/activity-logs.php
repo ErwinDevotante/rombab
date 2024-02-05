@@ -48,7 +48,7 @@ if($_SESSION['user_id']==''){
     <!-- Bootstrap Icons CSS -->
     <link href="../../node_modules/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
 </head>
-<body class="hold-transition sidebar-mini layout-fixed bg-black">
+<body class="hold-transition sidebar-mini layout-fixed text-white" style="background: #191919;">
     <div class="wrapper" >
 
         <?php 
@@ -56,7 +56,7 @@ if($_SESSION['user_id']==''){
         include "side-bar.php";
         ?>
 
-        <div class="content-wrapper bg-black mt-5">
+        <div class="content-wrapper mt-5" style="background: #191919;">
             <div class="content p-4">
                 <div class="container-fluid text-center p-4">
                     <h1>Activity Log</h1>
@@ -91,9 +91,9 @@ if($_SESSION['user_id']==''){
                             echo '<p class="text-danger">Error executing the query: ' . mysqli_error($connection) . '</p>';
                         } else { ?>
                                 <div>
-                                    <table class="table table-hover table-bordered table-dark mb-5">
+                                    <table class="table mb-5">
                                         <thead>
-                                            <tr>
+                                            <tr class="bg-dark">
                                                 <th>No</th>
                                                 <th>User</th>
                                                 <th>Role</th>
@@ -138,7 +138,7 @@ if($_SESSION['user_id']==''){
     </div>
 </body>
 <!-- Footer -->
-<footer class="main-footer bg-black text-center">
+<footer class="main-footer text-center" style="background: #191919;">
     <div class="float-right d-none d-sm-block">
         <!-- Additional footer content or links can go here -->
     </div>

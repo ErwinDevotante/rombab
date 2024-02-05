@@ -222,17 +222,17 @@ html, body {
   }
 
   .text-sub {
-    color: #9b9bae !important;
+    color: #ae9b9b !important;
   }
   .bg-grey {
-    background-color: #F8F6FA !important;
+    background-color: #faf6f6 !important;
   }
   .title {
-    color: #343a40;
+    color: #403434;
   }
   .header-colorize {
     font-weight: 700;
-    color: #6C55A3;
+    color: #a35555;
   }
   .section {
     padding: 120px 0px 120px 0px;
@@ -255,7 +255,7 @@ html, body {
     font-size: 19px;
   }
   .learn-more {
-    color: #6C55A3;
+    color: #a35555;
     font-weight: 700;
   }
   .highlight {

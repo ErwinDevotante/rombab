@@ -41,7 +41,7 @@ include '../conn.php';
     <!-- AdminLTE App -->
     <script src="../node_modules/admin-lte/js/adminlte.js"></script>
 </head>
-<body class="hold-transition sidebar-mini layout-fixed">
+<body class="hold-transition sidebar-mini layout-fixed" style="background: #191919;">
 <div class="wrapper">
 
     <?php 
@@ -50,10 +50,10 @@ include '../conn.php';
     ?>
 
   <!-- Content Wrapper. Contains page content -->
-  <div class="content-wrapper bg-black">
+  <div class="content-wrapper" style="background: #191919;">
     <div class="card bg-black">
     <div class="card-header">
-        <h3 class="card-title">See Kitchen Orders</h3>
+          <h1 class="highlight header-colorize text-white">Kitchen Orders</h1>
         <div class="card-tools">
         <!-- Maximize Button -->
         <button type="button" class="btn btn-tool" data-card-widget="maximize"><i class="ion ion-android-expand text-white"></i></button>
@@ -74,7 +74,7 @@ include '../conn.php';
   </div>
 </body>
 <!-- Footer -->
-<footer class="main-footer bg-black text-center">
+<footer class="main-footer text-center" style="background: #191919;">
     <div class="float-right d-none d-sm-block">
         <!-- Additional footer content or links can go here -->
     </div>

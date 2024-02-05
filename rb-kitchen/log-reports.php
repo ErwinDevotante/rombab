@@ -125,17 +125,17 @@ if (isset($_POST['log_item'])) {
         display: none;
     }
 </style>
-<body class="hold-transition sidebar-mini layout-fixed">
+<body class="hold-transition sidebar-mini layout-fixed text-white" style="background: #191919;">
 <div class="wrapper">
 
     <?php 
     include "top-bar.php";
     include "side-bar.php"; 
     ?>
-    <div class="content-wrapper bg-black">
+    <div class="content-wrapper" style="background: #191919;">
         <div class="content p-4">
             <div class="container-fluid text-center p-4">
-                <h1>Inventory Reports</h1>
+                <h1 class="highlight header-colorize text-white">Inventory Reports</h1>
             </div>
 
             <div style="overflow-x:auto;">
@@ -293,7 +293,7 @@ if (isset($_POST['log_item'])) {
 
 </body>
 <!-- Footer -->
-<footer class="main-footer bg-black text-center">
+<footer class="main-footer text-center" style="background: #191919;">
     <div class="float-right d-none d-sm-block">
         <!-- Additional footer content or links can go here -->
     </div>
