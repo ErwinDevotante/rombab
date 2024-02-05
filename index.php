@@ -110,8 +110,8 @@ function sanitizeInput($input) {
           </div> -->
   
           <div class="form-group was-validated">
-            <label class="form-label text-white" for="username">Username</label>
-            <input class="form-control" type="text" id="username" name="username" placeholder="Enter username" pattern=".{4,}" required>
+            <label class="form-label text-white" for="username">USERNAME</label>
+            <input class="form-control bg-black text-white" type="text" id="username" name="username" placeholder="Enter username" pattern=".{4,}" required>
               <div class="invalid-feedback">
                 <small style="font-size: 12px;"> Username consist of at least 4 characters long.</small>
               </div> 
@@ -119,19 +119,19 @@ function sanitizeInput($input) {
           
 
           <div class="form-group was-validated">
-            <label class="form-label text-white" for="password">Password</label>
-            <input class="form-control" type="password" id="password" name="password" placeholder="Enter password" pattern=".{8,}" required>
+            <label class="form-label text-white" for="password">PASSWORD</label>
+            <input class="form-control bg-black text-white" type="password" id="password" name="password" placeholder="Enter password" pattern=".{8,}" required>
               <div class="invalid-feedback">
                 <small style="font-size: 12px;"> Password consist of at least 8 characters long.</small>
               </div>
           </div>
         
-          <button class="btn btn-primary w-100 mt-2 mb-2" name="submit" type="submit">LOG IN <i class="bi bi-arrow-right"></i></button>
+          <button class="btn btn-primary w-100 mt-2 mb-2" name="submit" type="submit"><b>LOG IN <i class="bi bi-arrow-right"></i></b></button>
         </form>
 
         <div class="text-center">
           <!-- <a href="online-appointment.php" class="text-white" style="font-size: 12px;">Create an online appointment</a>-->
-          <a href="create-online-appointment.php" class="text-white" style="font-size: 12px;">Create an online appointment</a>
+          <a href="create-online-appointment.php" class="text-white" style="font-size: 12px;">Online appointment</a>
         </div>
     </div>
     

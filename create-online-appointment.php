@@ -123,114 +123,134 @@ updateSessionTb($connection);
     <link href="node_modules/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
 </head>
 <body class="bg-black">
-<nav class="navbar navbar-expand-lg navbar-black">
-    <div class="container-fluid bg-black">
-        <a href="index.php"><img class="p-2" src="assets/rombab-logo.png" alt="Romantic Baboy Logo" width="130"> </a>
-        <a class="navbar-brand" href="index.php">
-            <img src="assets/unlimited_korean_grill.png" alt="Romantic Baboy Logo" width="400">
-        </a>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarNav">
-            <ul class="navbar-nav me-auto order-2 order-lg-1">
-            </ul>
-            <ul class="navbar-nav ms-auto order-3 order-lg-3 gap-3">
-                <li class="nav-item">
-                    <a onclick="scrollToCreate()" class="nav-link active text-white">Create Appointment <i class="bi bi-plus-lg"></i></a>
-                </li>
-                <li class="nav-item">
-                    <a onclick="scrollToShow()" class="nav-link active text-white cursor-point">Show Table <i class="bi bi-list-stars"></i></a>
-                </li>
-            </ul>
-        </div>
-    </div>
-</nav>
-
-    <div id="create-appointment">
-
-    <div class="bg-black">
-    <?php
-    $available_table_id = updateSessionTb($connection);
-
-    if ($available_table_id !== NULL) {
-        // Update the appointment table with the assigned table_id
-        $new_appointment_query = "UPDATE appointment SET table_id = '$available_table_id', appointment_session = '1' WHERE appointment_desc = 'Online' AND table_id IS NULL LIMIT 1";
-        $result_new_appointment = mysqli_query($connection, $new_appointment_query);
-    
-        // Deactivate the assigned table in the users table
-        $deactivate_table_query = "UPDATE users SET session_tb = '3' WHERE user_id = '$available_table_id'";
-        $result_deactivate_table = mysqli_query($connection, $deactivate_table_query);
-    
-        if ($result_new_appointment && $result_deactivate_table) {
-            // Return the assigned table_id to update the appointment table
-            echo $available_table_id;
-        } else { ?>
-            <span class="text-black">NULL</span>
-        <?php }
-    } else { ?>
-        <span class="text-black">NULL</span>
-    <?php } ?>
-
-    <div class="content p-5">
-
-    <div class="container-fluid text-center text-white">
-        <h1>ONLINE APPOINTMENT</h1>
-    </div>
-
-    <section class="home-section text-white">
-        <form action="" method="post">
-            <div class="card-body">
-                <div class="form-group row">
-                    <div class="col-6">
-                        <label class="form-label">Name</label>
-                        <input type="text" class="form-control" id="customer" name="customer" placeholder="Enter name" required>
-                    </div>
-                    <div class="col-6">
-                    <label>Count</label>
-                            <input type="number" class="form-control" id="pax" name="pax" min="1" placeholder="Enter no of people" required>
-                    </div>
-                </div>
-                <div class="form-group row">
-                    <div class="col-4">
-                        <label>No of Senior</label>
-                        <input type="number" class="form-control" id="senior" name="senior" min="0" value="0" placeholder="Enter no of senior" required>
-                    </div>
-                    <div class="col-4">
-                        <label>No of PWD</label>
-                        <input type="number" class="form-control" id="pwd" name="pwd" min="0" value="0" placeholder="Enter no of pwd" required>
-                    </div>
-                    <div class="col-4">
-                        <label>Bday Promo</label>
-                        <input type="number" class="form-control" id="bday" name="bday" min="0" value="0" placeholder="Enter no of bday promo"  required>
-                    </div>
-                </div>
-                <div id="reminder"></div>
-                <div class="form-group row mt-5">
-                    <div class="col-6">
-                        <label for="timeInput">Appointment Time</label>
-                        <input type="time" class="form-control" id="timeInput" name="timeInput" value="<?php echo date("H:i"); ?>" min="10:00" max="21:00" required>
-                    </div>
-                    <div class="col-6">
-                        <label for="dateInput">Appointment Date</label>
-                        <?php 
-                        $dateNow = date("Y-m-d");
-                        $futureDate = date("Y-m-d", strtotime($dateNow . " +1 day"));
-                        ?>
-                        <input type="date" class="form-control" id="dateInput" name="dateInput" value="<?php echo date("Y-m-d"); ?>" max="<?php echo $futureDate; ?>" min="<?php echo date("Y-m-d"); ?>" required>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label>Note <small><i>(pls include a contact number)</i></small></label>
-                    <textarea type="text" class="form-control" id="note" name="note" placeholder="Enter note" rows="2"></textarea>
-                </div>
-                <button type="submit" name="submit" class="btn btn-danger">Submit <i class="bi bi-arrow-right"></i></button>
+    <!--Navbar Start-->
+    <nav class="navbar navbar-expand-lg fixed-top navbar-kleo normal-nav">
+        <div class="container">
+            <a class="navbar-brand logo" href="">
+                <img src="assets/rombab-logo.png" height="50">
+                <img src="assets/unlimited_korean_grill.png " height="21">
+            </a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <i class="fas fa-bars"></i>
+            </button>
+            <div class="collapse navbar-collapse text-white" id="navbarSupportedContent">
+                <ul class="navbar-nav ml-auto navbar-center" id="mySidenav">
+                    <li class="nav-item active">
+                        <a href="#top" class="nav-link text-white">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#create-appointment" class="nav-link text-white">Appointment</a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#table-availability" class="nav-link text-white">Tables</a>
+                    </li>
+                </ul>
             </div>
-        </form>
-
-        <div style="overflow-x:auto;">
-            <table class="table table-hover table-bordered table-dark mt-2">
+        </div>
+    </nav>
+    <!-- Navbar End -->
+    <!-- Header Start -->
+    <section class="header-bg align-items-center position-relative d-flex" id="top">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-lg-6">
+                    <div class="header-title">
+                        <p class="highlight text-white font-weight-bold size-16 text-uppercase header-small-title title mb-3 ml-1">Tabletop Ordering Kiosk</p>
+                        <h1 class="font-weight-bold main-title mb-4 text-white">Online Appointment</h1>
+                        <p class="text-sub ml-2 mb-4 pb-2 text-white">Online appointment systems empower users to effortlessly schedule appointments. Users can efficiently manage their schedules, enhancing the overall efficiency of the appointment process. </p>
+                        <a href="#create-appointment" class="btn btn-primary-red ml-2">Create Appointment <span class="ml-2 right-icon"><i class="bi bi-arrow-right"></i></span></a>
+                    </div>
+                </div>
+                <div class="col-lg-5 offset-lg-1">
+                    <div class="mt-5 mt-lg-0">
+                        <img src="assets/meat_photo.png" alt="" class="img-fluid mx-auto d-block">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- Header End -->
+    <!-- Appointment Start -->
+    <section class="section" id="create-appointment">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-lg-6 col-md-8">
+                    <div class="text-center mb-5">
+                         <h2 class="highlight header-colorize text-uppercase mb-3">Appointment</h2>
+                        <p class="text-sub size-10 text-white"><em>*Note: Present a senior/PWD card or birthday proof to the crew before entering. This will compute the total bill if your companion is eligible for a discount. The birthday promo is applicable with four (4) paying companions.</em></p>
+                    </div>
+                </div>
+            </div>
+ 
+            <div class="row">
+                <div class="col-lg-4">
+                    <div class="contact-info">
+                        <h4 class="title mb-4 text-white">Get Connected</h4>
+                        <p class="text-sub size-15 text-white">To get connected, feel free to reach out by calling us, visiting our store, or checking out our Facebook page for more information and updates.</p>
+                        <p class="text-sub size-15 mb-4 text-white"><i class="bi bi-telephone-fill"></i> 0968 868 5213</p>
+                        <p class="text-sub size-15 mb-4 text-white"><i class="bi bi-clock"></i> 10 AM-09 PM</p>
+                        <p class="text-sub size-15 mb-4 text-white"><i class="bi bi-geo-alt-fill"></i> Second Floor, SM City Santa Rosa Expansion Building, National Road, Santa Rosa, 4026 Laguna</p>
+                        <p class="text-sub size-15 mb-4"><a href="https://www.facebook.com/rbsmstarosa/"  target="_blank" rel="noopener noreferrer"><i class="bi bi-facebook"></i> Romantic Baboy SM Sta Rosa</a></p>
+                    </div>
+                </div>
+ 
+                <div class="col-lg-7 offset-lg-1">
+                    <div class="custom-form mt-4 mt-lg-0">
+                        <form action="" method="post">
+                            <div class="form-group row">
+                                <div class="col-6">
+                                    <label class="form-label">Name</label>
+                                    <input type="text" class="form-control" id="customer" name="customer" placeholder="Enter name" required>
+                                </div>
+                                <div class="col-6">
+                                <label>Count</label>
+                                        <input type="number" class="form-control" id="pax" name="pax" min="1" placeholder="Enter no of people" required>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <div class="col-4">
+                                    <label>No of Senior</label>
+                                    <input type="number" class="form-control" id="senior" name="senior" min="0" value="0" placeholder="Enter no of senior" required>
+                                </div>
+                                <div class="col-4">
+                                    <label>No of PWD</label>
+                                    <input type="number" class="form-control" id="pwd" name="pwd" min="0" value="0" placeholder="Enter no of pwd" required>
+                                </div>
+                                <div class="col-4">
+                                    <label>Bday Promo</label>
+                                    <input type="number" class="form-control" id="bday" name="bday" min="0" value="0" placeholder="Enter no of bday promo"  required>
+                                </div>
+                            </div>
+                            <div id="reminder"></div>
+                            <div class="form-group row mt-5">
+                                <div class="col-6">
+                                    <label for="timeInput">Appointment Time</label>
+                                    <input type="time" class="form-control" id="timeInput" name="timeInput" value="<?php echo date("H:i"); ?>" min="10:00" max="21:00" required>
+                                </div>
+                                <div class="col-6">
+                                    <label for="dateInput">Appointment Date</label>
+                                    <?php 
+                                    $dateNow = date("Y-m-d");
+                                    $futureDate = date("Y-m-d", strtotime($dateNow . " +1 day"));
+                                    ?>
+                                    <input type="date" class="form-control" id="dateInput" name="dateInput" value="<?php echo date("Y-m-d"); ?>" max="<?php echo $futureDate; ?>" min="<?php echo date("Y-m-d"); ?>" required>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label>Note <small><i>(pls include a contact number)</i></small></label>
+                                <textarea type="text" class="form-control" id="note" name="note" placeholder="Enter note" rows="2"></textarea>
+                            </div>
+                            <button type="submit" name="submit" class="btn btn-primary-red">Submit <i class="bi bi-arrow-right"></i></button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <div style="overflow-x:auto;" class="mt-5">
+            <table class="table mt-2">
                 <thead>
+                    <tr>
+                    <th colspan="4" class="bg-dark">Appointments</th>
+                    </tr>
                     <tr>
                         <th class="text-center" scope="col">Name</th>
                         <th class="text-center" scope="col">Table No</th>
@@ -238,7 +258,7 @@ updateSessionTb($connection);
                         <th class="text-center" scope="col">Type</th>
                     </tr>
                 </thead>
-                    <tbody>
+                    <tbody class="bg-dark">
                     <?php 
                         $result_tb = mysqli_query($connection, "SELECT * FROM appointment
                         WHERE table_id is NULL 
@@ -268,82 +288,102 @@ updateSessionTb($connection);
                     </tbody>  
             </table>
         </div>
+        </div>
     </section>
-    </div>
-    </div>
-
-    </div>
-
-
-    <div id="table-availability">
-
-    <div class="bg-black">
-    <div class="content p-5">
-
-    <section class="home-section">
-
-    <form action="manage-appointment.php" method="post" enctype="multipart/form-data" onsubmit="rememberScrollPosition()">
-    <div style="overflow-x:auto;">
-        <table class="table table-hover table-bordered table-dark">
-            <thead>
-                <tr>
-                    <th class="text-center w-25" scope="col">Table Number</th>
-                    <th class="text-center" scope="col">Customer</th>
-             
-                </tr>
-            </thead>
-                <tbody>
-                    
-                    <?php 
-                    $result_tb = mysqli_query($connection, "SELECT appointment.table_id, appointment.count, appointment.appointment_name, appointment.appointment_desc, appointment.appointment_session, appointment.pwd_no, appointment.senior_no, appointment.bday_no, appointment.time, appointment.date, appointment_id,
-                                                            users.user_id, users.name, users.session_tb, users.user_role 
-                                                            FROM appointment RIGHT JOIN users 
-                                                            ON users.user_id=appointment.table_id
-                                                            WHERE users.user_role = '4'
-                                                            ORDER BY users.user_id ASC");
-                    if(mysqli_num_rows($result_tb) > 0){
-                    while ($row = mysqli_fetch_array($result_tb)) { ?> 
-                        <tr>
-                            <td class="text-center"> <?php echo $row['name'];
-                                
-                                if($row['session_tb'] == '0') {  ?>
-                                    <p class="text-black font-weight-bold"><a class="badge badge-warning">[NOT AVAILABLE]</a></p>
-                                <?php }
-                                else if($row['session_tb'] == '1')  { ?>
-                                    <p class="font-weight-bold"><a class="badge badge-success">[ACTIVATED]</a></p>
-                                <?php }
-                                else if ($row['session_tb'] == '2')  {?>
-                                    <p class="font-weight-bold"><a class="badge badge-danger">[DEACTIVATED]</a></p>
-                                <?php } else { ?>
-                                    <p class="font-weight-bold"><a class="badge badge-primary">[OCCUPIED]</a></p>
-                                <?php } ?>
-                            </td>
-                            <td>
-                                    <?php if ($row['session_tb'] == '3' && ($row['appointment_session'] == '1' && $row['table_id'] !== null)){ ?>
-                                            <select class="form-control" name="appointment" id="appointment" data-toggle="tooltip" data-placement="top" data-bs-html="true" title="<?php echo $row["appointment_desc"]; ?>, Count: <?php echo $row["count"]; ?>" disabled>
-                                                    <option> [OCCUPIED] <?php echo $row['appointment_name']; ?> </option>
-                                            </select>
+    <!-- Appointment End -->
+    <!-- Appointment Start -->
+    <section class="section" id="table-availability">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-lg-6 col-md-8">
+                    <div class="text-center mb-5">
+                         <h2 class="highlight header-colorize text-uppercase mb-3">TABLES</h2>
+                        <p class="text-sub size-14 text-white"><em>*Note: Present a senior/PWD card or birthday proof to the crew before entering. This will compute the total bill if your companion is eligible for a discount. The birthday promo is applicable with four (4) paying companions.</em></p>
+                    </div>
+                </div>
+            </div>
+ 
+            <div style="overflow-x:auto;" class="mt-2">
+                <table class="table">
+                <thead class="bg-dark">
+                    <tr>
+                        <th class="text-center w-25" scope="col">Table Number</th>
+                        <th class="text-center" scope="col">Customer</th>
+                    </tr>
+                </thead>
+                    <tbody>
+                        <?php 
+                        $result_tb = mysqli_query($connection, "SELECT appointment.table_id, appointment.count, appointment.appointment_name, appointment.appointment_desc, appointment.appointment_session, appointment.pwd_no, appointment.senior_no, appointment.bday_no, appointment.time, appointment.date, appointment_id,
+                                                                users.user_id, users.name, users.session_tb, users.user_role 
+                                                                FROM appointment RIGHT JOIN users 
+                                                                ON users.user_id=appointment.table_id
+                                                                WHERE users.user_role = '4'
+                                                                ORDER BY users.user_id ASC");
+                        if(mysqli_num_rows($result_tb) > 0){
+                        while ($row = mysqli_fetch_array($result_tb)) { ?> 
+                            <tr>
+                                <td class="text-center"> <?php echo $row['name'];
+                                    
+                                    if($row['session_tb'] == '0') {  ?>
+                                        <p class="text-black font-weight-bold"><a class="badge badge-warning">[NOT AVAILABLE]</a></p>
                                     <?php }
-                                    else {?>
-                                        <select class="form-control" name="appointment" id="appointment" disabled>
-                                            <option>Not available</option>
-                                        </select>
-                                    <?php }?>                   
-                            </td>
-                            
-                        </tr>
-                    <?php 
-                    } }
-                    ?>
-                </tbody>
-        </table>
-    </div>
-    </form>
+                                    else if($row['session_tb'] == '1')  { ?>
+                                        <p class="font-weight-bold"><a class="badge badge-success">[ACTIVATED]</a></p>
+                                    <?php }
+                                    else if ($row['session_tb'] == '2')  {?>
+                                        <p class="font-weight-bold"><a class="badge badge-danger">[DEACTIVATED]</a></p>
+                                    <?php } else { ?>
+                                        <p class="font-weight-bold"><a class="badge badge-primary">[OCCUPIED]</a></p>
+                                    <?php } ?>
+                                </td>
+                                <td>
+                                        <?php if ($row['session_tb'] == '3' && ($row['appointment_session'] == '1' && $row['table_id'] !== null)){ ?>
+                                                <select class="form-control" name="appointment" id="appointment" data-toggle="tooltip" data-placement="top" data-bs-html="true" title="<?php echo $row["appointment_desc"]; ?>, Count: <?php echo $row["count"]; ?>" disabled>
+                                                        <option> [OCCUPIED] <?php echo $row['appointment_name']; ?> </option>
+                                                </select>
+                                        <?php }
+                                        else {?>
+                                            <select class="form-control" name="appointment" id="appointment" disabled>
+                                                <option>Not available</option>
+                                            </select>
+                                        <?php }?>                   
+                                </td>
+                                
+                            </tr>
+                        <?php 
+                        } }
+                        ?>
+                    </tbody>
+                </table>
+            </div>
+        </div>
     </section>
-    </div>
-    </div>
+    <!-- Appointment End -->
 
-    </div>
+    <?php
+    $available_table_id = updateSessionTb($connection);
+
+    if ($available_table_id !== NULL) {
+        // Update the appointment table with the assigned table_id
+        $new_appointment_query = "UPDATE appointment SET table_id = '$available_table_id', appointment_session = '1' WHERE appointment_desc = 'Online' AND table_id IS NULL LIMIT 1";
+        $result_new_appointment = mysqli_query($connection, $new_appointment_query);
+    
+        // Deactivate the assigned table in the users table
+        $deactivate_table_query = "UPDATE users SET session_tb = '3' WHERE user_id = '$available_table_id'";
+        $result_deactivate_table = mysqli_query($connection, $deactivate_table_query);
+    
+        if ($result_new_appointment && $result_deactivate_table) {
+            // Return the assigned table_id to update the appointment table
+            echo $available_table_id;
+        } else { ?>
+            <span class="text-black">NULL</span>
+        <?php }
+    } else { ?>
+        <span class="text-black">NULL</span>
+    <?php } ?>
+
+        
+
 </body>
 <!-- Footer -->
 <footer class="bg-black text-center">

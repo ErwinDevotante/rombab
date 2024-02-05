@@ -8,7 +8,7 @@ html, body {
 }
 
 .bg-grill {
-    background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('assets/background-pic.jpg');
+    background-image: linear-gradient(rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.2)), url('assets/background-pic.jpg');
     background-position: center;
     background-repeat: no-repeat;
     background-size: cover;
@@ -60,8 +60,9 @@ html, body {
     width: 500px;
     height: max-content;
     padding: 20px;
-    border-radius: 15px;
+    border-radius: 20px;
     background: black;
+
 }
 
 .login h1 {
@@ -81,7 +82,6 @@ html, body {
     font-size: 20px;
     margin-top: 15px;
 }
-
 
 .img-logo {
     height: auto;
@@ -178,3 +178,107 @@ html, body {
         right: -50px; /* Adjusted right position for smaller screens */
     }
 }
+
+.btn {
+    border-radius: 4px;
+    padding: 12px 30px;
+    -webkit-transition: all 0.5s;
+    transition: all 0.5s;
+    font-weight: 700;
+    font-size: 15px !important;
+  }
+  .btn:focus {
+    -webkit-box-shadow: none !important;
+    box-shadow: none !important;
+  }
+  .btn:hover {
+    -webkit-transition: all 0.5s;
+    transition: all 0.5s;
+    -webkit-transform: translateY(-2px);
+    transform: translateY(-2px);
+  }
+
+  .btn.btn-primary-red {
+    color: #ffffff;
+    background-color: #d21404 !important;
+    border: 1px solid #d21404 !important;
+    -webkit-box-shadow: 0 4px 20px rgba(255, 94, 94, 0.15);
+    box-shadow: 0 4px 20px rgba(255, 94, 94, 0.15);
+  }
+  .btn.btn-primary-red:hover, .btn.btn-primary:focus, .btn.btn-primary.focus, .btn.btn-primary:active, .btn.btn-primary.active {
+    background-color: #d21404 !important;
+    border: 1px solid #d21404 !important;
+    -webkit-box-shadow: 0 3px 10px rgba(255, 94, 94, 0.5);
+    box-shadow: 0 3px 10px rgba(255, 94, 94, 0.5);
+    color: #ffffff !important;
+  }
+
+  .text-sub {
+    color: #9b9bae !important;
+  }
+  .bg-grey {
+    background-color: #F8F6FA !important;
+  }
+  .title {
+    color: #343a40;
+  }
+  .header-colorize {
+    font-weight: 700;
+    color: #6C55A3;
+  }
+  .section {
+    padding: 120px 0px 120px 0px;
+    position: relative;
+  }
+  .size-10 {
+    font-size: 10px;
+  }
+  .size-14 {
+    font-size: 14px;
+  }
+  .size-15 {
+    font-size: 15px;
+  }
+  .size-18 {
+    font-size: 18px;
+  }
+  .right-icon {
+    line-height: 0;
+    font-size: 19px;
+  }
+  .learn-more {
+    color: #6C55A3;
+    font-weight: 700;
+  }
+  .highlight {
+    background: rgba(183, 96, 96, 0.1);
+    -webkit-box-shadow: 0 1px 2px rgba(183, 96, 96, 0.5);
+    box-shadow: 0 1px 2px rgba(183, 96, 96, 0.5);
+    color: #d21404;
+    border-radius: 13px;
+    display: inline-block;
+    padding: .25em .4em;
+    font-weight: 700;
+    line-height: 1;
+    text-align: center;
+    white-space: nowrap;
+    vertical-align: baseline;
+    border-radius: .25rem;
+    transition: color .15s ease-in-out, background-color .15s ease-in-out, border-color .15s ease-in-out, box-shadow .15s ease-in-out;
+  }
+  .header-bg {
+    padding: 170px 0 140px;
+    background-image: url('assets/santa-rosa-branch.jpg');
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: left bottom;
+  }
+  .header-bg .header-small-title {
+    letter-spacing: 2px;
+  }
+  .header-bg .main-title {
+    font-size: 2.8rem;
+    line-height: 1.35;
+    color: #d21404;
+  }
+  
