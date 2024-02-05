@@ -15,6 +15,14 @@ html, body {
     height: 100%;
 }
 
+.bg-blackred {
+  background-image: linear-gradient(rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.2)), url('assets/santa-rosa-branch.jpg');
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+
+}
+
 .bg-black {
     background-color: black;
 }

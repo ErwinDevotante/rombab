@@ -147,7 +147,7 @@ include '../conn.php';
             <div class="content p-4">
 
             <div class="container-fluid text-center p-4">
-                <h1>Inventory Reports</h1>
+                <h1 class="highlight header-colorize text-white">Inventory Reports</h1>
                 <!-- <p class="m-0">Start Time: <?php echo date("F d, Y", strtotime($currentDate)) ?></p>
                 <p>End Time: <?php echo date("F d, Y", strtotime($currentDate)) ?></p> -->
                 <div style="overflow-x:auto;">
@@ -166,7 +166,7 @@ include '../conn.php';
             </div>
 
             <div style="overflow-x:auto;">
-                <table class="table table-hover table-bordered table-dark mt-2" id="sortTable">
+                <table class="table table-dark mt-2" id="sortTable">
                 <thead>
                     <tr>
                         <th class="text-center" scope="col">Item</th>
@@ -176,7 +176,7 @@ include '../conn.php';
                         <th class="text-center" scope="col">Status</th>
                     </tr>
                 </thead>
-                    <tbody id = "menu_table">
+                    <tbody id="menu_table">
                     <?php 
                         $view_items = mysqli_query($connection, "SELECT * FROM inventory
                                                     INNER JOIN statuses ON statuses.status_id = inventory.item_status

@@ -127,7 +127,7 @@ include '../conn.php';
     <div class="content-wrapper bg-black mt-5">
         <div class="content p-4">
             <div class="container-fluid text-center p-4">
-                <h1>Appointment History</h1>
+              <h1 class="highlight header-colorize text-white">Appointment History</h1>
             </div>
             <div style="overflow-x:auto;">
               <table class="table table-hover table-striped table-dark mt-5 text-white" id="sortTable">

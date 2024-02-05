@@ -68,7 +68,7 @@
     ?>
 
     <div class="container-fluid text-center p-1 text-white">
-        <h1>SIDE DISHES MENU</h1>
+      <h1 class="highlight header-colorize text-uppercase text-white">SIDE DIHES MENU</h1>
     </div>
 
     <div class="container py-5">

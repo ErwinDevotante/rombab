@@ -45,6 +45,7 @@ $note = $_POST["note"];
 $description = "Online";
 $time = $_POST["timeInput"];
 $date = $_POST["dateInput"];
+$phone_number = $_POST["phone-number"];
 
 $senior = isset($_POST["senior"]) ? $_POST["senior"] : 0;
 $pwd = isset($_POST["pwd"]) ? $_POST["pwd"] : 0;
@@ -72,7 +73,7 @@ $activated_table_row = mysqli_fetch_array($activated_table_result);
         $table_id = $activated_table_row['user_id'];
 
         // Update the appointment table with the assigned table_id
-        $query = "INSERT INTO appointment (appointment_id, appointment_name, appointment_desc, table_id, count, date, time, senior_no, pwd_no, bday_no, note, appointment_session) VALUES('', '$name', '$description', '$table_id', '$pax', '$date', '$time', '$senior', '$pwd', '$bday_no', '$note', '1')";
+        $query = "INSERT INTO appointment (appointment_id, appointment_name, appointment_desc, table_id, count, date, time, senior_no, pwd_no, bday_no, note, appointment_session) VALUES('', '$name', '$description', '$table_id', '$pax', '$date', '$time', '$senior', '$pwd', '$bday_no', 'Phone number: $phone_number | Note: $note', '1')";
         $result_add = mysqli_query($connection, $query);
 
         // Deactivate the assigned table in the users table
@@ -80,11 +81,11 @@ $activated_table_row = mysqli_fetch_array($activated_table_result);
         $result_update_table = mysqli_query($connection, $update_table_query);
         
     } else {
-        $query_add = "INSERT INTO appointment(appointment_id, appointment_name, appointment_desc, table_id, count, date, time, senior_no, pwd_no, bday_no, note, appointment_session) VALUES('', '$name', '$description', NULL, '$pax', '$date', '$time', '$senior', '$pwd', '$bday_no', '$note', '1')";
+        $query_add = "INSERT INTO appointment(appointment_id, appointment_name, appointment_desc, table_id, count, date, time, senior_no, pwd_no, bday_no, note, appointment_session) VALUES('', '$name', '$description', NULL, '$pax', '$date', '$time', '$senior', '$pwd', '$bday_no', 'Phone number: $phone_number | Note: $note', '1')";
         $result_query_add = mysqli_query($connection, $query_add);
     }
 } else {
-    $query_add = "INSERT INTO appointment(appointment_id, appointment_name, appointment_desc, table_id, count, date, time, senior_no, pwd_no, bday_no, note, appointment_session) VALUES('', '$name', '$description', NULL, '$pax', '$date', '$time', '$senior', '$pwd', '$bday_no', '$note', '4')";
+    $query_add = "INSERT INTO appointment(appointment_id, appointment_name, appointment_desc, table_id, count, date, time, senior_no, pwd_no, bday_no, note, appointment_session) VALUES('', '$name', '$description', NULL, '$pax', '$date', '$time', '$senior', '$pwd', '$bday_no', 'Phone number: $phone_number | Note: $note', '4')";
     $result_query_add = mysqli_query($connection, $query_add);
 }
 
@@ -235,6 +236,10 @@ updateSessionTb($connection);
                                     ?>
                                     <input type="date" class="form-control" id="dateInput" name="dateInput" value="<?php echo date("Y-m-d"); ?>" max="<?php echo $futureDate; ?>" min="<?php echo date("Y-m-d"); ?>" required>
                                 </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="phone-number">Phone Number</label>
+                                <input class="form-control" type="text" id="phone-number" name="phone-number" placeholder="09XX XXX XXXX" pattern="^09\d{2} \d{3} \d{4}$" min="11" max="11" required>
                             </div>
                             <div class="form-group">
                                 <label>Note <small><i>(pls include a contact number)</i></small></label>

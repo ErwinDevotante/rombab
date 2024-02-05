@@ -166,7 +166,7 @@ include '../conn.php';
     <div class="content p-4">
 
     <div class="container-fluid text-center p-4">
-        <h1>Online Appointment</h1>
+        <h1 class="highlight header-colorize text-white">Online Appointment</h1>
     </div>
 
     <section class="home-section">
@@ -220,7 +220,7 @@ include '../conn.php';
         </form>
 
         <div style="overflow-x:auto;">
-            <table class="table table-hover table-bordered table-dark mt-5">
+            <table class="table mt-5">
                 <thead>
                     <tr>
                         <th class="text-center" scope="col">Name</th>
@@ -233,7 +233,7 @@ include '../conn.php';
 
                     </tr>
                 </thead>
-                    <tbody>
+                    <tbody class="bg-dark">
                     <?php 
                         $result_tb = mysqli_query($connection, "SELECT * FROM appointment
                         WHERE table_id is NULL 

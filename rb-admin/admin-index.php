@@ -70,7 +70,7 @@ include 'admin-auth.php';
       <div class="container-fluid">
         <div class="row mb-2">
           <div class="col-sm-6">
-            <h1 class="m-0 text-white mt-4">Inventory System</h1>
+            <h1 class="highlight header-colorize text-white mt-4">Inventory System</h1>
           </div>
         </div>
       </div>
@@ -232,7 +232,7 @@ include 'admin-auth.php';
       <div class="container-fluid">
         <div class="row mb-2">
           <div class="col-sm-6">
-            <h1 class="m-0 text-white">Appointment System</h1>
+            <h1 class="highlight header-colorize text-white mt-4">Appointment System</h1>
           </div>
         </div>
       </div>
@@ -368,7 +368,7 @@ include 'admin-auth.php';
       <div class="container-fluid">
         <div class="row mb-2">
           <div class="col-sm-6">
-            <h1 class="m-0 text-white">Super Admin Panel</h1>
+            <h1 class="highlight header-colorize text-white mt-4">Super Admin Panel</h1>
           </div>
         </div>
       </div>

@@ -152,7 +152,7 @@ include '../conn.php';
     <div class="content p-4">
 
     <div class="container-fluid text-center p-4">
-        <h1>Walk-in Appointment</h1>
+        <h1 class="highlight header-colorize text-white">Walk-In Appointment</h1>
     </div>
 
     <section class="home-section">
@@ -191,7 +191,7 @@ include '../conn.php';
             </div>
         </form>
         <div style="overflow-x:auto;">
-            <table class="table table-hover table-bordered table-dark mt-5">
+            <table class="table mt-5">
                 <thead>
                     <tr>
                         <th class="text-center" scope="col">Name</th>
@@ -203,7 +203,7 @@ include '../conn.php';
                         <th class="text-center" scope="col">Action</th>
                     </tr>
                 </thead>
-                    <tbody>
+                    <tbody class="bg-dark">
                     <?php 
                         $result_tb = mysqli_query($connection, "SELECT * FROM appointment
                         WHERE table_id is NULL 

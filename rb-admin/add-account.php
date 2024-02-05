@@ -88,7 +88,7 @@ include '../conn.php';
             <div class="content p-4">
 
             <div class="container-fluid text-center p-4">
-                <h1>Add Account</h1>
+                <h1 class="highlight header-colorize text-white">Add Accounts</h1>
             </div>
 
             <section class="h-100 h-custom">

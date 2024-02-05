@@ -46,14 +46,14 @@ if($_SESSION['user_id']==''){
             <div class="text-center">
                 <img src="/assets/unlimited_korean_grill.png" class="img-sub-logo img-fluid" alt="Your Photo">
             </div>
-            <p class="lead text-white text-center">Welcome, <?php echo $row['name']; ?>!</p>
+            <h2 class=" text-white text-center text-uppercase">Welcome, <?php echo $row['name']; ?>!</h2>
             <div class="lead text-center">
                 <?php 
                 if ($row['session_tb'] == '3'){
-                    echo '<a href="menus/activated-table.php" class="btn btn-lg btn-primary fw-bold border-white mb-5">Tap to start</a>';
+                    echo '<a href="menus/activated-table.php" class="btn btn-lg btn-primary fw-bold border-white mb-5">TAP TO START</a>';
                 }
                 else if($row['session_tb'] == '2') {
-                    echo '<a href="deactivated-table.php" class="btn btn-lg btn-primary fw-bold border-white mb-5">Tap to start</a>';
+                    echo '<h6 class="text-white text-center">Your table is deactivated.</h6>';
                 }
                 ?>
             </div>

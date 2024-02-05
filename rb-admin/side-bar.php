@@ -48,7 +48,7 @@
             <a href="add-menu.php" class="nav-link <?php if($a==11){ echo 'active'; }?>">
                <i class="ion ion-android-restaurant nav-icon"></i>
               <p>
-                Add Menu
+                Menu
               </p>
             </a>
         </li> 

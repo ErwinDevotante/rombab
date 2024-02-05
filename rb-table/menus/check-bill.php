@@ -34,7 +34,7 @@
 
     <div>
     <div class="container-fluid text-center p-1 text-white">
-        <h1>Bill Summary</h1>
+        <h1 class="highlight header-colorize text-uppercase text-white">BILL SUMMARY</h1>
         <h6><em><strong>*Note: This is not an official receipt; it only displays the total bill.</strong></em></h6>
     </div>
 
@@ -43,12 +43,12 @@
                 <div class="col-md-6 offset-md-3">
                     <div class="card">
                         <div class="card-header bg-dark text-white text-center">
-                            <h4><?=$row['name']; ?></h4>
+                            <h4 class="text-uppercase"><?=$row['name']; ?></h4>
                             <h5>Pax: <?=$customer['count']; ?></h5>
                         </div>
                         <div class="card-body">
-                            <table class="table table-bordered text-white">
-                                <thead>
+                            <table class="table text-white">
+                                <thead class="bg-dark">
                                     <tr>
                                         <th class="text-center">Quantity</th>
                                         <th class="text-center">Item</th>
@@ -178,7 +178,7 @@
                                         <td colspan="3"><p class="mb-0"><small>Total Discount</small></td>
                                         <td><p class="mb-0 text-right">₱<small><?php echo number_format($totalDiscount + $bdayPromoDiscount, 2)?></small></p></td>
                                     </tr>
-                                    <tr>
+                                    <tr class="bg-dark">
                                         <td colspan="3"><h3 class="mb-0"><strong>TO PAY</strong></h3></td>
                                         <td><h3 name="to_pay" class="text-right"><strong>₱<?php echo number_format($to_pay, 2 );?></strong></h3></td>
                                     </tr>
@@ -221,7 +221,8 @@
                     <option value="CARD">DEBIT/CREDIT CARD</option>
                 </select>
                 <div id="referenceNo" style="display:none;">
-                    <input type="text" id="referenceNoID" class="form-control mt-1" placeholder="ENTER REFERNCE NUMBER">
+                    <input type="number" id="referenceNoID" class="form-control mt-1" placeholder="ENTER REFERENCE NUMBER" max="13" min="13" oninput="validateReferenceNumber()">
+                    <div id="reminder" style="color: red;"></div>
                 </div>
                     <label for="passwordInput" class="mt-3">Enter password:</label>
                     <input type="password" id="passwordInput" class="form-control" placeholder="Enter Password">
@@ -365,7 +366,6 @@
         }
     }
 
-
         // Add an event listener to the link
         document.getElementById('disabled_click').addEventListener('click', function(event) {
             event.preventDefault(); // Prevent the link from being followed
@@ -386,6 +386,36 @@
                 inputElement.value = maxValue;
             }
         }
+
+        // Add an event listener to the referenceNoID input
+        const referenceNoInput = document.getElementById('referenceNoID');
+        referenceNoInput.addEventListener('input', function() {
+            const inputValue = referenceNoInput.value;
+
+            // Remove non-numeric characters
+            const sanitizedValue = inputValue.replace(/\D/g, '');
+
+            // Ensure the length is less than or equal to 13
+            //const sanitizedValue = inputValue.slice(0, 13);
+
+            // Update the input value with the sanitized value
+            referenceNoInput.value = sanitizedValue;
+        });
+
+        function validateReferenceNumber() {
+            var referenceNoInput = document.getElementById("referenceNoID");
+            var reminderDiv = document.getElementById("reminder");
+
+            var referenceNo = referenceNoInput.value;
+
+            if (isNaN(referenceNo) || referenceNo.length !== 13) {
+                reminderDiv.innerHTML = "Please enter a 13-digit number.";
+            } else {
+                reminderDiv.innerHTML = "";
+            }
+        }
+
+
     </script>
 </body>
 </html>

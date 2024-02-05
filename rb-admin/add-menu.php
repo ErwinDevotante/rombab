@@ -153,7 +153,7 @@ if (isset($_POST["archive_btn"])) {
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Romantic Baboy | Add Menu</title>
+    <title>Romantic Baboy | Menu</title>
     <!--Google Fonts-->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -191,7 +191,7 @@ if (isset($_POST["archive_btn"])) {
     <div class="content-wrapper bg-black mt-5">
         <div class="content p-4">
             <div class="container-fluid text-center p-4">
-                <h1>Add Menu</h1>
+                <h1 class="highlight header-colorize text-white">Menu</h1>
             </div>
 
             <form method="post" action="add-menu.php" enctype="multipart/form-data" onsubmit="rememberScrollPosition()">
@@ -240,9 +240,9 @@ if (isset($_POST["archive_btn"])) {
                 </div>
             </div>
 
-            <table class="table table-responsive table-hover table-bordered table-dark mt-2">
+            <table class="table mt-2">
             <thead>
-                <tr>
+                <tr class="bg-dark">
                     <th class="text-center" scope="col">Image</th>
                     <th class="text-center" scope="col">Name</th>
                     <th class="text-center" scope="col">Price (₱)</th>

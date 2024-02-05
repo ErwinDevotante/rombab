@@ -52,16 +52,16 @@ include '../conn.php';
     <div class="content p-4">
 
     <div class="container-fluid text-center p-4">
-        <h1>Manage Appointment</h1>
+        <h1 class="highlight header-colorize text-white">Appointments</h1>
     </div>
 
     <section class="home-section">
 
     <form action="manage-appointment.php" method="post" enctype="multipart/form-data" onsubmit="rememberScrollPosition()">
     <div style="overflow-x:auto;">
-        <table class="table table-hover table-bordered table-dark mt-5">
+        <table class="table mt-5">
             <thead>
-                <tr>
+                <tr class="bg-dark">
                     <th class="text-center" scope="col">Table Number</th>
                     <th class="text-center" scope="col">Customer</th>
                     <th class="text-center" scope="col">Activate Table</th>
@@ -72,7 +72,7 @@ include '../conn.php';
                 <tbody>
                     
                     <?php 
-                    $result_tb = mysqli_query($connection, "SELECT appointment.table_id, appointment.count, appointment.appointment_name, appointment.appointment_desc, appointment.appointment_session, appointment.pwd_no, appointment.senior_no, appointment.bday_no, appointment.time, appointment.date, appointment_id,
+                    $result_tb = mysqli_query($connection, "SELECT appointment.table_id, appointment.count, appointment.appointment_name, appointment.appointment_desc, appointment.appointment_session, appointment.pwd_no, appointment.senior_no, appointment.bday_no, appointment.time, appointment.date,  appointment.note, appointment_id,
                                                             users.user_id, users.name, users.session_tb, users.user_role 
                                                             FROM appointment RIGHT JOIN users 
                                                             ON users.user_id=appointment.table_id
@@ -98,12 +98,12 @@ include '../conn.php';
                             <td>
                                 <?php
                                     if ($row['session_tb'] == '3' && ($row['appointment_session'] == '1' && $row['table_id'] !== null)){ ?>
-                                            <select class="form-control" name="appointment" id="appointment" data-toggle="tooltip" data-placement="top" data-bs-html="true" title="<?php echo $row["appointment_desc"]; ?>, <b>Count</b>: <?php echo $row["count"]; ?> <br><b>Date</b>: <?php echo date("F j, Y", strtotime($row["date"])); ?>, <b>Time</b>: <?php echo date("h:i A", strtotime($row["time"])); ?> <br><b>PWD</b>: <?php echo $row["pwd_no"]; ?>, <b>Senior</b>: <?php echo $row["senior_no"]; ?>, <b>Bday</b>: <?php echo $row["bday_no"]; ?>" disabled>
+                                            <select class="form-control" name="appointment" id="appointment" data-toggle="tooltip" data-placement="top" data-bs-html="true" title="<?php echo $row["appointment_desc"]; ?>, <b>Count</b>: <?php echo $row["count"]; ?> <br><b>Date</b>: <?php echo date("F j, Y", strtotime($row["date"])); ?>, <b>Time</b>: <?php echo date("h:i A", strtotime($row["time"])); ?> <br><b>PWD</b>: <?php echo $row["pwd_no"]; ?>, <b>Senior</b>: <?php echo $row["senior_no"]; ?>, <b>Bday</b>: <?php echo $row["bday_no"]; ?>, <b>Note</b>: <?php echo $row["note"]; ?>" disabled>
                                                     <option> [OCCUPIED] <?php echo $row['appointment_name']; ?> </option>
                                             </select>
                                             <div class="d-flex flex-column flex-sm-row">
                                                 <a name="reset" type="submit" class="btn btn-info mt-2 mr-3 btn-xs" href="activate-table-edit.php?id_reset=<?php echo $row["appointment_id"]; ?>&reset=2&table_reset=<?php echo $row["user_id"]; ?>">RESET <i class="bi bi-arrow-clockwise"></i></a>
-                                                <a name="show" type="submit" value="<?php $row['appointment_id']; ?>" class="btn btn-danger mt-2 btn-xs">ORDERS <i class="bi bi-eye"></i></a>
+                                                <a name="show" type="submit" value="<?php $row['appointment_id']; ?>" class="btn btn-danger mt-2 btn-xs">INFO <i class="bi bi-eye"></i></a>
                                             </div>
                                     <?php }
                                     else {?>

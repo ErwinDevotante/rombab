@@ -151,7 +151,7 @@ include '../conn.php';
             <div class="content p-4">
 
             <div class="container-fluid text-center p-4">
-                <h1>Inventory</h1>
+                <h1 class="highlight header-colorize text-white">Inventory</h1>
             </div>
 
             <form method="post" action="inventory.php" enctype="multipart/form-data" onsubmit="rememberScrollPosition()">
@@ -216,9 +216,9 @@ include '../conn.php';
             </div>
 
             <div style="overflow-x:auto;">
-                <table class="table table-hover table-bordered table-dark mt-2" id="sortTable">
+                <table class="table mt-2" id="sortTable">
                 <thead>
-                    <tr>
+                    <tr class="bg-dark">
                         <th class="text-center" scope="col">Item</th>
                         <th class="text-center" scope="col">Description</th>
                         <th class="text-center" scope="col">UOM</th>

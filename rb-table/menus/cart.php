@@ -49,17 +49,17 @@
     ?>
 
     <div class="container-fluid text-center p-1 text-white">
-        <h1>Order Cart</h1>
+        <h1 class="highlight header-colorize text-uppercase text-white">ORDER CART</h1>
     </div>
 
     <div class="container py-5 text-white" style="overflow-x:auto;">
-    <table class="table table-hover table-bordered table-dark mt-5">
-        <thead>
-        <th>Image</th>
-        <th>Name</th>
-        <th>Price</th>
-        <th>Quantity</th>
-        <th>Action</th>
+    <table class="table text-white mt-3">
+        <thead class="bg-dark">
+        <th class="text-center">Image</th>
+        <th class="text-center">Name</th>
+        <th class="text-center">Price</th>
+        <th class="text-center">Quantity</th>
+        <th class="text-center">Action</th>
         </thead>
         <tbody>
         <?php 
@@ -88,20 +88,20 @@
             };
         };
         ?>
-        <tr class="table-bottom">
-            <td><a href="activated-table.php" class="option-btn btn btn-primary">Continue Ordering <i class="bi bi-arrow-right-square"></i></a></td>
-                <td></td>
-                <td></td>
-                <td></td>
+        <tr>
+            <td style="border: none; background: none;"><a href="activated-table.php" class="option-btn btn btn-primary">Continue Ordering <i class="bi bi-arrow-right-square"></i></a></td>
+                <td style="border: none; background: none;"></td>
+                <td style="border: none; background: none;"></td>
+                <td style="border: none; background: none;"></td>
             <?php 
             $scan_row = "SELECT COUNT(*) as count FROM `cart` WHERE cart_table = '$table'";
             $scan_result = mysqli_query($connection, $scan_row);
             $row = mysqli_fetch_assoc($scan_result);
             $rowCount = $row['count'];
             if ($rowCount > 0) { ?>
-            <td><a href="cart.php?delete_all" onclick="return confirm('Are you sure you want to delete all?');" class="delete-btn btn btn-primary">Delete All <i class="bi bi-trash3-fill"></i></a></td>
+            <td style="border: none; background: none;"><a href="cart.php?delete_all" onclick="return confirm('Are you sure you want to delete all?');" class="delete-btn btn btn-primary">Delete All <i class="bi bi-trash3-fill"></i></a></td>
             <?php } else { ?>
-                <td></td>
+                <td style="border: none; background: none;"></td>
             <?php } ?>
         </tr>
         </tbody>

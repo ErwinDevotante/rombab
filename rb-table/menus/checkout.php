@@ -84,7 +84,7 @@ include '../../conn.php';
     <!-- End of success alert modal -->
 
     <div class="container-fluid text-center p-1 text-white">
-        <h1>Check-out</h1>
+        <h1 class="highlight header-colorize text-uppercase text-white">CHECK-OUT</h1>
     </div>
 
     <div class="container mt-4">
@@ -95,10 +95,10 @@ include '../../conn.php';
                             <h4>Order Summary</h4>
                         </div>
                         <div class="card-body">
-                            <h5 class="text-center"><?=$row['name']; ?></h5>
+                            <h5 class="text-center text-uppercase"><?=$row['name']; ?></h5>
                             <hr>
-                            <table class="table table-bordered text-white">
-                                <thead>
+                            <table class="table text-white">
+                                <thead class="bg-black">
                                     <tr>
                                         <th class="text-center">Item</th>
                                         <th class="text-center">Quantity</th>
