@@ -15,20 +15,19 @@
       <!-- Sidebar Menu -->
       <nav class="mt-2">
         <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu">
-          <!-- Add icons to the links using the .nav-icon class
-               with font-awesome or any other icon font library -->
           <li class="nav-item has-treeview menu-open m-1">
-            <a href="admin-index.php" class="nav-link <?php if($a==1){ echo 'active bg-red'; }?>">
-              <i class="ion ion-speedometer nav-icon"></i>
-              <p>
-                Dashboard
-              </p>
-            </a>
+              <a href="admin-index.php" class="nav-link <?php if ($a == 1) { echo 'active'; }?>" style="<?php if ($a == 1) { echo 'background: #8b0000;'; } ?>">
+                  <i class="ion ion-speedometer nav-icon"></i>
+                  <p>
+                      Dashboard
+                  </p>
+              </a>
           </li>
+
           
         <?php if ($row['user_role'] == '1' || $row['user_role'] == '2') { ?>
 		    <li class="nav-item has-treeview menu-open m-1">
-            <a href="inventory.php" class="nav-link <?php if($a==2){ echo 'active bg-red'; }?>">
+            <a href="inventory.php" class="nav-link <?php if($a==2){ echo 'active'; }?>" style="<?php if ($a == 2) { echo 'background: #8b0000;'; } ?>">
                <i class="ion ion-ios-filing-outline nav-icon"></i>
               <p>
                Inventory
@@ -36,7 +35,7 @@
             </a>
         </li> 
         <li class="nav-item has-treeview menu-open m-1">
-            <a href="inventory-history.php" class="nav-link <?php if($a==3){ echo 'active bg-red'; }?>">
+            <a href="inventory-history.php" class="nav-link <?php if($a==3){ echo 'active'; }?>" style="<?php if ($a == 3) { echo 'background: #8b0000;'; } ?>">
                <i class="ion ion-document-text nav-icon"></i>
               <p>
                 Inventory Reports
@@ -44,7 +43,7 @@
             </a>
         </li> 
         <li class="nav-item has-treeview menu-open m-1">
-            <a href="add-menu.php" class="nav-link <?php if($a==11){ echo 'active bg-red'; }?>">
+            <a href="add-menu.php" class="nav-link <?php if($a==11){ echo 'active'; }?>" style="<?php if ($a == 11) { echo 'background: #8b0000;'; } ?>">
                <i class="ion ion-android-restaurant nav-icon"></i>
               <p>
                 Menu
@@ -54,7 +53,7 @@
 		
         <?php } if ($row['user_role'] == '1' || $row['user_role'] == '2' || $row['user_role'] == '5') { ?>
         <li class="nav-item has-treeview menu-open m-1">
-            <a href="manage-appointment.php" class="nav-link <?php if($a==4){ echo 'active bg-red'; }?>">
+            <a href="manage-appointment.php" class="nav-link <?php if($a==4){ echo 'active'; }?>" style="<?php if ($a == 4) { echo 'background: #8b0000;'; } ?>">
                <i class="ion ion-clipboard nav-icon"></i>
               <p>
                 Appointments
@@ -62,7 +61,7 @@
             </a>
           </li>
 		   <li class="nav-item has-treeview menu-open m-1">
-            <a href="online-appointment.php" class="nav-link <?php if($a==5){ echo 'active bg-red'; }?>">
+            <a href="online-appointment.php" class="nav-link <?php if($a==5){ echo 'active'; }?>" style="<?php if ($a == 5) { echo 'background: #8b0000;'; } ?>">
                <i class="ion ion-ios-paper-outline nav-icon"></i>
               <p>
                 Online
@@ -70,7 +69,7 @@
             </a>
           </li>
           <li class="nav-item has-treeview menu-open m-1">
-            <a href="create-walkin-appointment.php" class="nav-link <?php if($a==6){ echo 'active bg-red'; }?>">
+            <a href="create-walkin-appointment.php" class="nav-link <?php if($a==6){ echo 'active'; }?>" style="<?php if ($a == 6) { echo 'background: #8b0000;'; } ?>">
                <i class="ion ion-android-walk nav-icon"></i>
               <p>
                 Walk-Ins
@@ -78,7 +77,7 @@
             </a>
           </li> 
 		  <li class="nav-item has-treeview menu-open m-1">
-            <a href="appointment-history.php" class="nav-link <?php if($a==7){ echo 'active bg-red'; }?>">
+            <a href="appointment-history.php" class="nav-link <?php if($a==7){ echo 'active'; }?>" style="<?php if ($a == 7) { echo 'background: #8b0000;'; } ?>">
                <i class="ion ion-mouse nav-icon"></i>
               <p class="text-nowrap">
                 Appointment History
@@ -89,7 +88,7 @@
 
       <?php if ($row['user_role'] == 1) { ?>
 		   <li class="nav-item has-treeview menu-open m-1">
-            <a href="add-account.php" class="nav-link <?php if($a==8){ echo 'active bg-red'; }?>">
+            <a href="add-account.php" class="nav-link <?php if($a==8){ echo 'active'; }?>" style="<?php if ($a == 8) { echo 'background: #8b0000;'; } ?>">
                <i class="ion ion-person-add nav-icon"></i>
               <p>
                 Add Account

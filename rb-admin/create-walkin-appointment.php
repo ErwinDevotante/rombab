@@ -187,7 +187,7 @@ include '../conn.php';
                     <label>Note</label>
                     <textarea type="text" class="form-control" id="note" name="note" placeholder="ENTER NOTE" rows="2"></textarea>
                 </div>
-                <button type="submit" name="submit" class="btn btn-danger">Submit <i class="bi bi-arrow-right"></i></button>
+                <button type="submit" name="submit" class="btn btn-primary-red">Submit <i class="bi bi-arrow-right"></i></button>
             </div>
         </form>
         <div style="overflow-x:auto;">

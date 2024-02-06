@@ -201,7 +201,7 @@ include '../conn.php';
                 </div>
 
                 <div class="form-group">
-                    <button class="btn btn-danger" type="submit" name="upload_item">ADD ITEM <i class="bi bi-plus-square"></i></button>
+                    <button class="btn btn-primary-red" type="submit" name="upload_item">ADD ITEM <i class="bi bi-plus-square"></i></button>
                 </div>
             </form>
 

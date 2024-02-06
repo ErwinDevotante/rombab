@@ -53,7 +53,7 @@ if($_SESSION['user_id'] == ''){
                     
             </div>
             <div class="modal-footer">
-                <button class="btn btn-danger" data-bs-dismiss="modal" aria-label="Close">Close</button>
+                <button class="btn btn-primary-red" data-bs-dismiss="modal" aria-label="Close">Close</button>
             </div>
             </div>
         </div>
@@ -71,7 +71,7 @@ if($_SESSION['user_id'] == ''){
                     <input type="password" id="passwordInput" class="form-control" placeholder="Enter Password">
                 </div>
                 <div class="modal-footer">
-                    <button type="submit" class="btn btn-primary" onclick="checkPassword()">SUBMIT</button>
+                    <button type="submit" class="btn btn-primary-red" onclick="checkPassword()">SUBMIT</button>
                 </div>
             </div>
         </div>

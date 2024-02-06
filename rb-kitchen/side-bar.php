@@ -19,7 +19,7 @@
           <!-- Add icons to the links using the .nav-icon class
                with font-awesome or any other icon font library -->
           <li class="nav-item has-treeview menu-open m-1">
-            <a href="kitchen-index.php" class="nav-link <?php if($a==1){ echo 'active bg-red'; }?>">
+            <a href="kitchen-index.php" class="nav-link <?php if($a==1){ echo 'active'; }?>" style="<?php if ($a == 1) { echo 'background: #8b0000;'; } ?>">
               <i class="ion ion-speedometer nav-icon"></i>
               <p>
                 Dashboard
@@ -28,7 +28,7 @@
           </li>
 		
 		    <li class="nav-item has-treeview menu-open m-1">
-            <a href="see-orders.php" class="nav-link <?php if($a==2){ echo 'active bg-red'; }?>">
+            <a href="see-orders.php" class="nav-link <?php if($a==2){ echo 'active'; }?>" style="<?php if ($a == 2) { echo 'background: #8b0000;'; } ?>">
                <i class="ion ion-android-restaurant nav-icon"></i>
               <p>
                See Orders
@@ -36,7 +36,7 @@
             </a>
         </li> 
         <li class="nav-item has-treeview menu-open m-1">
-            <a href="order-history.php" class="nav-link <?php if($a==3){ echo 'active bg-red'; }?>">
+            <a href="order-history.php" class="nav-link <?php if($a==3){ echo 'active'; }?>" style="<?php if ($a == 3) { echo 'background: #8b0000;'; } ?>">
                <i class="ion ion-document-text nav-icon"></i>
               <p>
                 Orders History
@@ -44,7 +44,7 @@
             </a>
         </li> 
         <li class="nav-item has-treeview menu-open m-1">
-            <a href="log-reports.php" class="nav-link <?php if($a==4){ echo 'active bg-red'; }?>">
+            <a href="log-reports.php" class="nav-link <?php if($a==4){ echo 'active'; }?>" style="<?php if ($a == 4) { echo 'background: #8b0000;'; } ?>">
                <i class="ion ion-ios-paper nav-icon"></i>
               <p>
                 Inventory Reports
@@ -52,7 +52,7 @@
             </a>
         </li>
         <li class="nav-item has-treeview menu-open m-1">
-            <a href="menu-inventory.php" class="nav-link <?php if($a==5){ echo 'active bg-red'; }?>">
+            <a href="menu-inventory.php" class="nav-link <?php if($a==5){ echo 'active'; }?>" style="<?php if ($a == 5) { echo 'background: #8b0000;'; } ?>">
                <i class="ion ion-cube nav-icon"></i>
               <p>
                 Menu and Inventory
