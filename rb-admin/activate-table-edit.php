@@ -42,6 +42,25 @@ if ($id_reset !==null && $reset !==null && $table_reset !== null) {
     $result_activate_table = mysqli_query($connection, $ctivate_table_query);
 }
 
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && (isset($_POST['update_id']) && isset($_POST['update_value']))) {
+    $update_id = $_POST['update_id'];
+    $update_value = $_POST['update_value'];
+
+    // Update the database
+    $update_quantity_query = mysqli_query($connection, "UPDATE `summary_orders` SET summary_qty = '$update_value' WHERE summary_order_id = '$update_id'");
+    if ($update_quantity_query) {
+        // Successfully updated the database
+        echo json_encode(['success' => true, 'message' => 'Cart updated successfully']);
+    } else {
+        // Error updating the database
+        echo json_encode(['success' => false, 'message' => 'Failed to update cart']);
+    }
+} else {
+    // Invalid request parameters
+    echo json_encode(['success' => false, 'message' => 'Invalid request']);
+}
+
     unset($_GET);
     header("Location: manage-appointment.php");
+    
 ?>

@@ -289,7 +289,7 @@ if (isset($_POST["archive_btn"])) {
         </div>
     </div>
 
-    <div class="modal fade" id="editmodal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+    <div class="modal fade text-black" id="editmodal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
         aria-hidden="true">
         <div class="modal-dialog" role="document">
             <div class="modal-content">

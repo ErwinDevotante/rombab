@@ -468,6 +468,17 @@ function checkForAvailableTable() {
         }
     });
 
+    document.getElementById("timeInput").addEventListener("change", function() {
+        var selectedTime = this.value;
+        var currentTime = new Date();
+        var selectedDateTime = new Date(currentTime.toDateString() + " " + selectedTime);
+
+        if (selectedDateTime < currentTime) {
+            alert("Please select a future time.");
+            this.value = ""; // Clear the input value if it's in the past
+        }
+    });
+    
     // Function for input validation
     function validateInput(inputElement, minValue, maxValue) {
         const inputValue = inputElement.value;
