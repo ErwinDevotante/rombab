@@ -50,7 +50,7 @@ if($_SESSION['user_id']==''){
             <div class="lead text-center">
                 <?php 
                 if ($row['session_tb'] == '3'){
-                    echo '<a href="menus/activated-table.php" class="btn btn-lg btn-primary fw-bold border-white mb-5">TAP TO START</a>';
+                    echo '<button type="button" onclick="showModal()" data-toggle="modal" data-target="#stopModal" class="btn btn-lg btn-primary fw-bold border-white mb-5">TAP TO START</button>';
                 }
                 else if($row['session_tb'] == '2') {
                     echo '<h6 class="text-white text-center">Your table is deactivated.</h6>';
@@ -81,12 +81,33 @@ if($_SESSION['user_id']==''){
             </div>
         </div>
     </div>
+    <!-- Your modal code -->
+    <div id="stopModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="stopModalLabel">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="stopModalLabel">REMINDER</h5>
+            </div>
+            <div class="modal-body">
+                <p>Customers are limited to selecting a maximum of four products for their first order.</p>
+            </div>
+            <div class="modal-footer">
+                <a class="btn btn-primary" href="menus/activated-table.php">Proceed</a>
+            </div>
+            </div>
+        </div>
+    </div>
 
     <script>
         // JavaScript function to handle logout
         function confirmLogout() {
             // Show the password input dialog
             $('#passwordDialog').modal('show');
+        }
+
+        function showModal() {
+            // Show the password input dialog
+            $('#stopModal').modal('show');
         }
 
         // JavaScript function to check the password

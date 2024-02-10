@@ -98,7 +98,7 @@ include '../../conn.php';
                             <h5 class="text-center text-uppercase"><?=$row['name']; ?></h5>
                             <hr>
                             <table class="table text-white">
-                                <thead class="bg-black">
+                                <thead class="bg-dark">
                                     <tr>
                                         <th class="text-center">Item</th>
                                         <th class="text-center">Quantity</th>
