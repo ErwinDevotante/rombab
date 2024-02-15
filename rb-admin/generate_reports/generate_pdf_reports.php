@@ -343,7 +343,7 @@ if (!empty($duration)) {
 
                     $html .= '<tr>
                     <td colspan="3" class="text-right">Menu Bill:</td>
-                    <td><strong> ₱ '.number_format($othersBill, 2).'</strong></td>
+                    <td><strong> P '.number_format($othersBill, 2).'</strong></td>
                     </tr>';
                 }        
                 else {
